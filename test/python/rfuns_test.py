@@ -16,8 +16,3 @@ def test_rfuns(duckdb_conn):
     duckdb_conn.execute("SELECT rfuns('Sam') as value;");
     res = duckdb_conn.fetchall()
     assert res[0][0] == "Rfuns Sam 🐥"
-
-def test_rfuns_openssl_version_test(duckdb_conn):
-    duckdb_conn.execute("SELECT rfuns_openssl_version('Michael');");
-    res = duckdb_conn.fetchall()
-    assert res[0][0][0:51] == "Rfuns Michael, my linked OpenSSL version is OpenSSL"
