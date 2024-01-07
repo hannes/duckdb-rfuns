@@ -16,3 +16,39 @@ query I
 SELECT rfuns('Sam');
 ----
 Rfuns Sam 🐥
+
+# Addition for integers
+query IIIIII
+SELECT
+	"r_base::+"(1, 2),
+	"r_base::+"(1000000, 2000000),
+	"r_base::+"(1000000000, 2000000000),
+	"r_base::+"(1, NULL),
+	"r_base::+"(NULL, 2),
+	NULL
+	;
+----
+3
+3000000
+NULL
+NULL
+NULL
+NULL
+
+# Addition for doubles
+query IIIIII
+SELECT
+	"r_base::+"(1.0, 2.0),
+	"r_base::+"(CAST('NaN' AS DOUBLE), 2),
+	"r_base::+"(1, CAST('NaN' AS DOUBLE)),
+	"r_base::+"(NULL, 2),
+	"r_base::+"(1, NULL),
+	NULL
+	;
+----
+3.0
+NULL
+NULL
+NULL
+NULL
+NULL
