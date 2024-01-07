@@ -52,3 +52,52 @@ NULL
 NULL
 NULL
 NULL
+
+
+# Equality for integers
+query IIIII
+SELECT
+	"r_base::=="(1, 2),
+	"r_base::=="(1, 1),
+	"r_base::=="(1, NULL),
+	"r_base::=="(NULL, 2),
+	NULL
+	;
+----
+FALSE
+TRUE
+NULL
+NULL
+NULL
+
+# Equality for doubles
+query IIIII
+SELECT
+	"r_base::=="(1.5, 2),
+	"r_base::=="(1.5, 1.5),
+	"r_base::=="(1.5, NULL),
+	"r_base::=="(NULL, 2.5),
+	NULL
+	;
+----
+FALSE
+TRUE
+NULL
+NULL
+NULL
+
+# Equality for strings
+query IIIII
+SELECT
+	"r_base::=="('a', 'b'),
+	"r_base::=="('a', 'a'),
+	"r_base::=="('a', NULL),
+	"r_base::=="(NULL, 'a'),
+	NULL
+	;
+----
+FALSE
+TRUE
+NULL
+NULL
+NULL
