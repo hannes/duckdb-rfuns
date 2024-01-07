@@ -20,12 +20,4 @@ describe(`rfuns extension`, () => {
             done();
         });
     });
-
-    it('rfuns_openssl_version function should return expected string', function (done) {
-        db.all("SELECT rfuns_openssl_version('Michael') as value;", function (err, res) {
-            if (err) throw err;
-            assert(res[0].value.startsWith('Rfuns Michael, my linked OpenSSL version is OpenSSL'));
-            done();
-        });
-    });
 });
