@@ -79,6 +79,32 @@ static void BaseREqFunctionString(DataChunk &args, ExpressionState &state, Vecto
                                                     [&](string_t left, string_t right) { return (left == right); });
 }
 
+static bool ExecuteBaseREqFunctionStringDouble(string_t left, double right) {
+	char right_chr[100];
+	snprintf(right_chr, sizeof(right_chr), "%.17g", right);
+	return (left == right_chr);
+}
+
+static void BaseREqFunctionStringDouble(DataChunk &args, ExpressionState &state, Vector &result) {
+  auto &lefts = args.data[0];
+  D_ASSERT(lefts.GetType() == LogicalType::VARCHAR);
+  auto &rights = args.data[1];
+  D_ASSERT(rights.GetType() == LogicalType::DOUBLE);
+
+  return BinaryExecutor::Execute<string_t, double, bool>(
+      lefts, rights, result, args.size(), &ExecuteBaseREqFunctionStringDouble);
+}
+
+static void BaseREqFunctionDoubleString(DataChunk &args, ExpressionState &state, Vector &result) {
+  auto &lefts = args.data[0];
+  D_ASSERT(lefts.GetType() == LogicalType::DOUBLE);
+  auto &rights = args.data[1];
+  D_ASSERT(rights.GetType() == LogicalType::VARCHAR);
+
+  return BinaryExecutor::Execute<string_t, double, bool>(
+      rights, lefts, result, args.size(), &ExecuteBaseREqFunctionStringDouble);
+}
+
 inline void RfunsScalarFun(DataChunk &args, ExpressionState &state, Vector &result) {
     auto &name_vector = args.data[0];
     UnaryExecutor::Execute<string_t, string_t>(
@@ -104,6 +130,10 @@ static void LoadInternal(DatabaseInstance &instance) {
         ScalarFunction({LogicalType::DOUBLE, LogicalType::DOUBLE}, LogicalType::BOOLEAN, BaseREqFunctionDouble));
     base_r_eq.AddFunction(
         ScalarFunction({LogicalType::VARCHAR, LogicalType::VARCHAR}, LogicalType::BOOLEAN, BaseREqFunctionString));
+    base_r_eq.AddFunction(
+        ScalarFunction({LogicalType::VARCHAR, LogicalType::DOUBLE}, LogicalType::BOOLEAN, BaseREqFunctionStringDouble));
+    base_r_eq.AddFunction(
+        ScalarFunction({LogicalType::DOUBLE, LogicalType::VARCHAR}, LogicalType::BOOLEAN, BaseREqFunctionDoubleString));
 
     ExtensionUtil::RegisterFunction(instance, base_r_eq);
 

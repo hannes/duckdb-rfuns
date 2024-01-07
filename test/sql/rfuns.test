@@ -101,3 +101,27 @@ TRUE
 NULL
 NULL
 NULL
+
+# Equality for strings with doubles
+query III
+SELECT
+	"r_base::=="('2', 1.0),
+	"r_base::=="('1', 1.0),
+	NULL
+	;
+----
+FALSE
+TRUE
+NULL
+
+# Equality for doubles with strings
+query III
+SELECT
+	"r_base::=="(1.0, '2'),
+	"r_base::=="(1.0, '1'),
+	NULL
+	;
+----
+FALSE
+TRUE
+NULL
