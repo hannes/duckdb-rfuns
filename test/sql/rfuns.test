@@ -1,0 +1,23 @@
+# name: test/sql/rfuns.test
+# description: test rfuns extension
+# group: [rfuns]
+
+# Before we load the extension, this will fail
+statement error
+SELECT rfuns('Sam');
+----
+Catalog Error: Scalar Function with name rfuns does not exist!
+
+# Require statement will ensure this test is run with this extension loaded
+require rfuns
+
+# Confirm the extension works
+query I
+SELECT rfuns('Sam');
+----
+Rfuns Sam 🐥
+
+query I
+SELECT rfuns_openssl_version('Michael');
+----
+<REGEX>:Rfuns Michael, my linked OpenSSL version is OpenSSL.*
