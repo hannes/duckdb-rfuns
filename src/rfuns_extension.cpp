@@ -77,6 +77,32 @@ static void BaseREqFunctionString(DataChunk &args, ExpressionState &state, Vecto
 	                                                  [&](string_t left, string_t right) { return (left == right); });
 }
 
+static bool ExecuteBaseREqFunctionStringInteger(string_t left, int32_t right) {
+	char right_chr[100];
+	snprintf(right_chr, sizeof(right_chr), "%d", right);
+	return (left == right_chr);
+}
+
+static void BaseREqFunctionStringInteger(DataChunk &args, ExpressionState &state, Vector &result) {
+	auto &lefts = args.data[0];
+	D_ASSERT(lefts.GetType() == LogicalType::VARCHAR);
+	auto &rights = args.data[1];
+	D_ASSERT(rights.GetType() == LogicalType::INTEGER);
+
+	return BinaryExecutor::Execute<string_t, int32_t, bool>(lefts, rights, result, args.size(),
+	                                                       &ExecuteBaseREqFunctionStringInteger);
+}
+
+static void BaseREqFunctionIntegerString(DataChunk &args, ExpressionState &state, Vector &result) {
+	auto &lefts = args.data[0];
+	D_ASSERT(lefts.GetType() == LogicalType::INTEGER);
+	auto &rights = args.data[1];
+	D_ASSERT(rights.GetType() == LogicalType::VARCHAR);
+
+	return BinaryExecutor::Execute<string_t, int32_t, bool>(rights, lefts, result, args.size(),
+	                                                       &ExecuteBaseREqFunctionStringInteger);
+}
+
 static bool ExecuteBaseREqFunctionStringDouble(string_t left, double right) {
 	char right_chr[100];
 	snprintf(right_chr, sizeof(right_chr), "%.17g", right);
@@ -127,6 +153,10 @@ static void LoadInternal(DatabaseInstance &instance) {
 	    ScalarFunction({LogicalType::DOUBLE, LogicalType::DOUBLE}, LogicalType::BOOLEAN, BaseREqFunctionDouble));
 	base_r_eq.AddFunction(
 	    ScalarFunction({LogicalType::VARCHAR, LogicalType::VARCHAR}, LogicalType::BOOLEAN, BaseREqFunctionString));
+	base_r_eq.AddFunction(
+	    ScalarFunction({LogicalType::VARCHAR, LogicalType::INTEGER}, LogicalType::BOOLEAN, BaseREqFunctionStringInteger));
+	base_r_eq.AddFunction(
+	    ScalarFunction({LogicalType::INTEGER, LogicalType::VARCHAR}, LogicalType::BOOLEAN, BaseREqFunctionIntegerString));
 	base_r_eq.AddFunction(
 	    ScalarFunction({LogicalType::VARCHAR, LogicalType::DOUBLE}, LogicalType::BOOLEAN, BaseREqFunctionStringDouble));
 	base_r_eq.AddFunction(

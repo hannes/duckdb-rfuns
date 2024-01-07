@@ -125,3 +125,27 @@ SELECT
 FALSE
 TRUE
 NULL
+
+# Equality for ints with doubles
+query III
+SELECT
+	"r_base::=="('2', 1),
+	"r_base::=="('1', 1),
+	NULL
+	;
+----
+FALSE
+TRUE
+NULL
+
+# Equality for doubles with ints
+query III
+SELECT
+	"r_base::=="(1, '2'),
+	"r_base::=="(1, '1'),
+	NULL
+	;
+----
+FALSE
+TRUE
+NULL
