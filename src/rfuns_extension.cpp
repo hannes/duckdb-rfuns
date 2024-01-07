@@ -49,14 +49,8 @@ static void BaseREqFunctionInteger(DataChunk &args, ExpressionState &state, Vect
   D_ASSERT(lefts.GetType() == LogicalType::INTEGER);
   auto &rights = args.data[1];
   D_ASSERT(rights.GetType() == LogicalType::INTEGER);
-  BinaryExecutor::ExecuteWithNulls<int32_t, int32_t, bool>(
-      lefts, rights, result, args.size(),[&](int32_t left, int32_t right, ValidityMask &mask, idx_t idx) {
-        // FIXME: Include R.h, use from there
-        const int32_t NA_INTEGER = 0x80000000;
-        if (left == NA_INTEGER || right == NA_INTEGER) {
-          mask.SetInvalid(idx);
-          return false;
-        }
+  BinaryExecutor::Execute<int32_t, int32_t, bool>(
+      lefts, rights, result, args.size(),[&](int32_t left, int32_t right) {
         return (left == right);
       });
 }
