@@ -13,70 +13,68 @@
 namespace duckdb {
 
 static void BaseRAddFunctionInteger(DataChunk &args, ExpressionState &state, Vector &result) {
-  auto &lefts = args.data[0];
-  D_ASSERT(lefts.GetType() == LogicalType::INTEGER);
-  auto &rights = args.data[1];
-  D_ASSERT(rights.GetType() == LogicalType::INTEGER);
-  BinaryExecutor::ExecuteWithNulls<int32_t, int32_t, int32_t>(
-      lefts, rights, result, args.size(), [&](int32_t left, int32_t right, ValidityMask &mask, idx_t idx) {
-        int64_t result = (int64_t)left + right;
-        if (result > INT_MAX || result < (INT_MIN + 1)) {
-          // FIXME: Need warning: NAs produced by integer overflow
-          mask.SetInvalid(idx);
-          return 0;
-        }
-        return (int32_t)result;
-      });
+	auto &lefts = args.data[0];
+	D_ASSERT(lefts.GetType() == LogicalType::INTEGER);
+	auto &rights = args.data[1];
+	D_ASSERT(rights.GetType() == LogicalType::INTEGER);
+	BinaryExecutor::ExecuteWithNulls<int32_t, int32_t, int32_t>(
+	    lefts, rights, result, args.size(), [&](int32_t left, int32_t right, ValidityMask &mask, idx_t idx) {
+		    int64_t result = (int64_t)left + right;
+		    if (result > INT_MAX || result < (INT_MIN + 1)) {
+			    // FIXME: Need warning: NAs produced by integer overflow
+			    mask.SetInvalid(idx);
+			    return 0;
+		    }
+		    return (int32_t)result;
+	    });
 }
 
 static void BaseRAddFunctionDouble(DataChunk &args, ExpressionState &state, Vector &result) {
-  auto &lefts = args.data[0];
-  D_ASSERT(lefts.GetType() == LogicalType::DOUBLE);
-  auto &rights = args.data[1];
-  D_ASSERT(rights.GetType() == LogicalType::DOUBLE);
-  BinaryExecutor::ExecuteWithNulls<double, double, double>(
-      lefts, rights, result, args.size(),[&](double left, double right, ValidityMask &mask, idx_t idx) {
-        if (isnan(left) || isnan(right)) {
-          mask.SetInvalid(idx);
-          return 0.0;
-        }
-        return left + right;
-      });
+	auto &lefts = args.data[0];
+	D_ASSERT(lefts.GetType() == LogicalType::DOUBLE);
+	auto &rights = args.data[1];
+	D_ASSERT(rights.GetType() == LogicalType::DOUBLE);
+	BinaryExecutor::ExecuteWithNulls<double, double, double>(
+	    lefts, rights, result, args.size(), [&](double left, double right, ValidityMask &mask, idx_t idx) {
+		    if (isnan(left) || isnan(right)) {
+			    mask.SetInvalid(idx);
+			    return 0.0;
+		    }
+		    return left + right;
+	    });
 }
 
 static void BaseREqFunctionInteger(DataChunk &args, ExpressionState &state, Vector &result) {
-  auto &lefts = args.data[0];
-  D_ASSERT(lefts.GetType() == LogicalType::INTEGER);
-  auto &rights = args.data[1];
-  D_ASSERT(rights.GetType() == LogicalType::INTEGER);
-  BinaryExecutor::Execute<int32_t, int32_t, bool>(
-      lefts, rights, result, args.size(),[&](int32_t left, int32_t right) {
-        return (left == right);
-      });
+	auto &lefts = args.data[0];
+	D_ASSERT(lefts.GetType() == LogicalType::INTEGER);
+	auto &rights = args.data[1];
+	D_ASSERT(rights.GetType() == LogicalType::INTEGER);
+	BinaryExecutor::Execute<int32_t, int32_t, bool>(lefts, rights, result, args.size(),
+	                                                [&](int32_t left, int32_t right) { return (left == right); });
 }
 
 static void BaseREqFunctionDouble(DataChunk &args, ExpressionState &state, Vector &result) {
-  auto &lefts = args.data[0];
-  D_ASSERT(lefts.GetType() == LogicalType::DOUBLE);
-  auto &rights = args.data[1];
-  D_ASSERT(rights.GetType() == LogicalType::DOUBLE);
-  BinaryExecutor::ExecuteWithNulls<double, double, bool>(
-      lefts, rights, result, args.size(), [&](double left, double right, ValidityMask &mask, idx_t idx) {
-        if (isnan(left) || isnan(right)) {
-          mask.SetInvalid(idx);
-          return false;
-        }
-        return (left == right);
-      });
+	auto &lefts = args.data[0];
+	D_ASSERT(lefts.GetType() == LogicalType::DOUBLE);
+	auto &rights = args.data[1];
+	D_ASSERT(rights.GetType() == LogicalType::DOUBLE);
+	BinaryExecutor::ExecuteWithNulls<double, double, bool>(
+	    lefts, rights, result, args.size(), [&](double left, double right, ValidityMask &mask, idx_t idx) {
+		    if (isnan(left) || isnan(right)) {
+			    mask.SetInvalid(idx);
+			    return false;
+		    }
+		    return (left == right);
+	    });
 }
 
 static void BaseREqFunctionString(DataChunk &args, ExpressionState &state, Vector &result) {
-  auto &lefts = args.data[0];
-  D_ASSERT(lefts.GetType() == LogicalType::VARCHAR);
-  auto &rights = args.data[1];
-  D_ASSERT(rights.GetType() == LogicalType::VARCHAR);
-  BinaryExecutor::Execute<string_t, string_t, bool>(lefts, rights, result, args.size(),
-                                                    [&](string_t left, string_t right) { return (left == right); });
+	auto &lefts = args.data[0];
+	D_ASSERT(lefts.GetType() == LogicalType::VARCHAR);
+	auto &rights = args.data[1];
+	D_ASSERT(rights.GetType() == LogicalType::VARCHAR);
+	BinaryExecutor::Execute<string_t, string_t, bool>(lefts, rights, result, args.size(),
+	                                                  [&](string_t left, string_t right) { return (left == right); });
 }
 
 static bool ExecuteBaseREqFunctionStringDouble(string_t left, double right) {
@@ -86,60 +84,59 @@ static bool ExecuteBaseREqFunctionStringDouble(string_t left, double right) {
 }
 
 static void BaseREqFunctionStringDouble(DataChunk &args, ExpressionState &state, Vector &result) {
-  auto &lefts = args.data[0];
-  D_ASSERT(lefts.GetType() == LogicalType::VARCHAR);
-  auto &rights = args.data[1];
-  D_ASSERT(rights.GetType() == LogicalType::DOUBLE);
+	auto &lefts = args.data[0];
+	D_ASSERT(lefts.GetType() == LogicalType::VARCHAR);
+	auto &rights = args.data[1];
+	D_ASSERT(rights.GetType() == LogicalType::DOUBLE);
 
-  return BinaryExecutor::Execute<string_t, double, bool>(
-      lefts, rights, result, args.size(), &ExecuteBaseREqFunctionStringDouble);
+	return BinaryExecutor::Execute<string_t, double, bool>(lefts, rights, result, args.size(),
+	                                                       &ExecuteBaseREqFunctionStringDouble);
 }
 
 static void BaseREqFunctionDoubleString(DataChunk &args, ExpressionState &state, Vector &result) {
-  auto &lefts = args.data[0];
-  D_ASSERT(lefts.GetType() == LogicalType::DOUBLE);
-  auto &rights = args.data[1];
-  D_ASSERT(rights.GetType() == LogicalType::VARCHAR);
+	auto &lefts = args.data[0];
+	D_ASSERT(lefts.GetType() == LogicalType::DOUBLE);
+	auto &rights = args.data[1];
+	D_ASSERT(rights.GetType() == LogicalType::VARCHAR);
 
-  return BinaryExecutor::Execute<string_t, double, bool>(
-      rights, lefts, result, args.size(), &ExecuteBaseREqFunctionStringDouble);
+	return BinaryExecutor::Execute<string_t, double, bool>(rights, lefts, result, args.size(),
+	                                                       &ExecuteBaseREqFunctionStringDouble);
 }
 
 inline void RfunsScalarFun(DataChunk &args, ExpressionState &state, Vector &result) {
-    auto &name_vector = args.data[0];
-    UnaryExecutor::Execute<string_t, string_t>(
-	    name_vector, result, args.size(),
-	    [&](string_t name) {
-			return StringVector::AddString(result, "Rfuns "+name.GetString()+" 🐥");;
-        });
+	auto &name_vector = args.data[0];
+	UnaryExecutor::Execute<string_t, string_t>(name_vector, result, args.size(), [&](string_t name) {
+		return StringVector::AddString(result, "Rfuns " + name.GetString() + " 🐥");
+		;
+	});
 }
 
 static void LoadInternal(DatabaseInstance &instance) {
-    ScalarFunctionSet base_r_add("r_base::+");
-    base_r_add.AddFunction(
-        ScalarFunction({LogicalType::INTEGER, LogicalType::INTEGER}, LogicalType::INTEGER, BaseRAddFunctionInteger));
-    base_r_add.AddFunction(
-        ScalarFunction({LogicalType::DOUBLE, LogicalType::DOUBLE}, LogicalType::DOUBLE, BaseRAddFunctionDouble));
+	ScalarFunctionSet base_r_add("r_base::+");
+	base_r_add.AddFunction(
+	    ScalarFunction({LogicalType::INTEGER, LogicalType::INTEGER}, LogicalType::INTEGER, BaseRAddFunctionInteger));
+	base_r_add.AddFunction(
+	    ScalarFunction({LogicalType::DOUBLE, LogicalType::DOUBLE}, LogicalType::DOUBLE, BaseRAddFunctionDouble));
 
-    ExtensionUtil::RegisterFunction(instance, base_r_add);
+	ExtensionUtil::RegisterFunction(instance, base_r_add);
 
-    ScalarFunctionSet base_r_eq("r_base::==");
-    base_r_eq.AddFunction(
-        ScalarFunction({LogicalType::INTEGER, LogicalType::INTEGER}, LogicalType::BOOLEAN, BaseREqFunctionInteger));
-    base_r_eq.AddFunction(
-        ScalarFunction({LogicalType::DOUBLE, LogicalType::DOUBLE}, LogicalType::BOOLEAN, BaseREqFunctionDouble));
-    base_r_eq.AddFunction(
-        ScalarFunction({LogicalType::VARCHAR, LogicalType::VARCHAR}, LogicalType::BOOLEAN, BaseREqFunctionString));
-    base_r_eq.AddFunction(
-        ScalarFunction({LogicalType::VARCHAR, LogicalType::DOUBLE}, LogicalType::BOOLEAN, BaseREqFunctionStringDouble));
-    base_r_eq.AddFunction(
-        ScalarFunction({LogicalType::DOUBLE, LogicalType::VARCHAR}, LogicalType::BOOLEAN, BaseREqFunctionDoubleString));
+	ScalarFunctionSet base_r_eq("r_base::==");
+	base_r_eq.AddFunction(
+	    ScalarFunction({LogicalType::INTEGER, LogicalType::INTEGER}, LogicalType::BOOLEAN, BaseREqFunctionInteger));
+	base_r_eq.AddFunction(
+	    ScalarFunction({LogicalType::DOUBLE, LogicalType::DOUBLE}, LogicalType::BOOLEAN, BaseREqFunctionDouble));
+	base_r_eq.AddFunction(
+	    ScalarFunction({LogicalType::VARCHAR, LogicalType::VARCHAR}, LogicalType::BOOLEAN, BaseREqFunctionString));
+	base_r_eq.AddFunction(
+	    ScalarFunction({LogicalType::VARCHAR, LogicalType::DOUBLE}, LogicalType::BOOLEAN, BaseREqFunctionStringDouble));
+	base_r_eq.AddFunction(
+	    ScalarFunction({LogicalType::DOUBLE, LogicalType::VARCHAR}, LogicalType::BOOLEAN, BaseREqFunctionDoubleString));
 
-    ExtensionUtil::RegisterFunction(instance, base_r_eq);
+	ExtensionUtil::RegisterFunction(instance, base_r_eq);
 
-    // Register a scalar function
-    auto rfuns_scalar_function = ScalarFunction("rfuns", {LogicalType::VARCHAR}, LogicalType::VARCHAR, RfunsScalarFun);
-    ExtensionUtil::RegisterFunction(instance, rfuns_scalar_function);
+	// Register a scalar function
+	auto rfuns_scalar_function = ScalarFunction("rfuns", {LogicalType::VARCHAR}, LogicalType::VARCHAR, RfunsScalarFun);
+	ExtensionUtil::RegisterFunction(instance, rfuns_scalar_function);
 }
 
 void RfunsExtension::Load(DuckDB &db) {
@@ -154,8 +151,8 @@ std::string RfunsExtension::Name() {
 extern "C" {
 
 DUCKDB_EXTENSION_API void rfuns_init(duckdb::DatabaseInstance &db) {
-    duckdb::DuckDB db_wrapper(db);
-    db_wrapper.LoadExtension<duckdb::RfunsExtension>();
+	duckdb::DuckDB db_wrapper(db);
+	db_wrapper.LoadExtension<duckdb::RfunsExtension>();
 }
 
 DUCKDB_EXTENSION_API const char *rfuns_version() {
