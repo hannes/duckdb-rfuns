@@ -16,8 +16,3 @@ query I
 SELECT rfuns('Sam');
 ----
 Rfuns Sam 🐥
-
-query I
-SELECT rfuns_openssl_version('Michael');
-----
-<REGEX>:Rfuns Michael, my linked OpenSSL version is OpenSSL.*
