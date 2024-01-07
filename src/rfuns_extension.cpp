@@ -9,6 +9,7 @@
 #include <duckdb/parser/parsed_data/create_scalar_function_info.hpp>
 
 #include <math.h>
+#include <climits>
 
 namespace duckdb {
 
