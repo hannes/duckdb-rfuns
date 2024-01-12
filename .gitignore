@@ -7,3 +7,4 @@ testext
 test/python/__pycache__/
 .Rhistory
 .Rproj.user
+vcpkg/
