@@ -8,6 +8,16 @@ This extension, Quack, allow you to ... <extension_goal>.
 
 
 ## Building
+
+### Getting started
+
+First step is to clone this repo and make sure you pull in 
+DuckDB by using `--recurse-submodules`: 
+
+```shell
+git clone --recurse-submodules https://github.com/<you>/duckdb-rfuns.git
+```
+
 ### Managing dependencies
 DuckDB extensions uses VCPKG for dependency management. Enabling VCPKG is very simple: follow the [installation instructions](https://vcpkg.io/en/getting-started) or just run the following:
 ```shell
