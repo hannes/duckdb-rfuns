@@ -48,6 +48,9 @@ Then, the extension can be used:
 > dbGetQuery(con, "select rfuns('Jane')")
   rfuns('Jane')
 1 Rfuns Jane 🐥
+> dbGetQuery(con, 'SELECT "r_base::+"(1, 2)')
+  r_base::+(1, 2)
+1               3
 ```
 
 The extension may also be used outside of R, via the `./build/release/duckdb` executable: 
