@@ -18,15 +18,6 @@ DuckDB by using `--recurse-submodules`:
 git clone --recurse-submodules https://github.com/krlmlr/duckdb-rfuns.git
 ```
 
-### Managing dependencies
-DuckDB extensions uses VCPKG for dependency management. Enabling VCPKG is very simple: follow the [installation instructions](https://vcpkg.io/en/getting-started) or just run the following:
-```shell
-git clone https://github.com/Microsoft/vcpkg.git
-./vcpkg/bootstrap-vcpkg.sh
-export VCPKG_TOOLCHAIN_PATH=`pwd`/vcpkg/scripts/buildsystems/vcpkg.cmake
-```
-Note: VCPKG is only required for extensions that want to rely on it for dependency management. If you want to develop an extension without dependencies, or want to do your own dependency management, just skip this step. Note that the example extension uses VCPKG to build with a dependency for instructive purposes, so when skipping this step the build may not work without removing the dependency.
-
 ### Build steps
 Now to build the extension, run:
 ```sh
@@ -52,7 +43,7 @@ D select rfuns('Jane') as result;
 │    result     │
 │    varchar    │
 ├───────────────┤
-│ Quack Jane 🐥 │
+│ Rfuns Jane 🐥 │
 └───────────────┘
 ```
 
