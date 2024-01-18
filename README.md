@@ -15,7 +15,7 @@ First step is to clone this repo and make sure you pull in
 DuckDB by using `--recurse-submodules`: 
 
 ```shell
-git clone --recurse-submodules https://github.com/<you>/duckdb-rfuns.git
+git clone --recurse-submodules https://github.com/krlmlr/duckdb-rfuns.git
 ```
 
 ### Managing dependencies
