@@ -68,7 +68,7 @@ section of the [duckdb](https://github.com/duckdb/duckdb-r) R package:
 
 ```r
 library(duckdb)
-con <- DBI::dbConnect(duckdb(config=list('allow_unsigned_extensions'='true')))
+con <- DBI::dbConnect(duckdb(config=list('allow_unsigned_extensions' = 'true')))
 ```
 
 Then the extension can be loaded from with the `LOAD` command
