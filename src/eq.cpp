@@ -26,6 +26,14 @@ EqChunk EqTypeAssert(DataChunk &args) {
     return {lefts, rights};
 }
 
+template <LogicalTypeId LHS_LOGICAL, typename LHS, LogicalTypeId RHS_LOGICAL, typename RHS>
+void BaseREqFunctionSimple(DataChunk &args, ExpressionState &state, Vector &result) {
+    auto parts = EqTypeAssert<LHS_LOGICAL, RHS_LOGICAL>(args);
+
+    auto fun = [](LHS left, RHS right) { return (left == right); };
+    BinaryExecutor::Execute<LHS, RHS, bool>(parts.lefts, parts.rights, result, args.size(), fun);
+}
+
 void BaseREqFunctionInteger(DataChunk &args, ExpressionState &state, Vector &result) {
     auto parts = EqTypeAssert<LogicalType::INTEGER, LogicalType::INTEGER>(args);
 
@@ -96,8 +104,12 @@ static void BaseREqFunctionDoubleString(DataChunk &args, ExpressionState &state,
 
 ScalarFunctionSet base_r_eq() {
     ScalarFunctionSet set("r_base::==");
-	set.AddFunction(
-	    ScalarFunction({LogicalType::INTEGER, LogicalType::INTEGER}, LogicalType::BOOLEAN, BaseREqFunctionInteger));    
+    // simple 
+    set.AddFunction(ScalarFunction({LogicalType::BOOLEAN, LogicalType::BOOLEAN}, LogicalType::BOOLEAN, BaseREqFunctionSimple<LogicalType::BOOLEAN, bool   , LogicalType::BOOLEAN, bool>));
+    set.AddFunction(ScalarFunction({LogicalType::BOOLEAN, LogicalType::INTEGER}, LogicalType::BOOLEAN, BaseREqFunctionSimple<LogicalType::BOOLEAN, bool   , LogicalType::INTEGER, int32_t>));
+    set.AddFunction(ScalarFunction({LogicalType::INTEGER, LogicalType::BOOLEAN}, LogicalType::BOOLEAN, BaseREqFunctionSimple<LogicalType::INTEGER, int32_t, LogicalType::BOOLEAN, bool>));    
+    set.AddFunction(ScalarFunction({LogicalType::INTEGER, LogicalType::INTEGER}, LogicalType::BOOLEAN, BaseREqFunctionSimple<LogicalType::INTEGER, int32_t, LogicalType::INTEGER, int32_t>));    
+
 	set.AddFunction(
 	    ScalarFunction({LogicalType::DOUBLE, LogicalType::DOUBLE}, LogicalType::BOOLEAN, BaseREqFunctionDouble));
 	set.AddFunction(
