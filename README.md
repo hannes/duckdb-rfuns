@@ -6,7 +6,6 @@ This repository is based on https://github.com/duckdb/extension-template, check 
 
 This extension, Quack, allow you to ... <extension_goal>.
 
-
 ## Building
 
 ### Getting started
@@ -17,15 +16,6 @@ DuckDB by using `--recurse-submodules`:
 ```shell
 git clone --recurse-submodules https://github.com/krlmlr/duckdb-rfuns.git
 ```
-
-### Managing dependencies
-DuckDB extensions uses VCPKG for dependency management. Enabling VCPKG is very simple: follow the [installation instructions](https://vcpkg.io/en/getting-started) or just run the following:
-```shell
-git clone https://github.com/Microsoft/vcpkg.git
-./vcpkg/bootstrap-vcpkg.sh
-export VCPKG_TOOLCHAIN_PATH=`pwd`/vcpkg/scripts/buildsystems/vcpkg.cmake
-```
-Note: VCPKG is only required for extensions that want to rely on it for dependency management. If you want to develop an extension without dependencies, or want to do your own dependency management, just skip this step. Note that the example extension uses VCPKG to build with a dependency for instructive purposes, so when skipping this step the build may not work without removing the dependency.
 
 ### Build steps
 Now to build the extension, run:
@@ -43,48 +33,45 @@ The main binaries that will be built are:
 - `rfuns.duckdb_extension` is the loadable binary as it would be distributed.
 
 ## Running the extension
-To run the extension code, simply start the shell with `./build/release/duckdb`.
 
-Now we can use the features from the extension directly in DuckDB. The template contains a single scalar function `rfuns()` that takes a string arguments and returns a string:
+To `LOAD` the extension, `duckdb` should be initialized with the `allow_unsigned_extensions` option set to true. 
+
+```r
+library(duckdb)
+con <- DBI::dbConnect(duckdb(config=list('allow_unsigned_extensions' = 'true')))
+dbExecute(con, "LOAD '{{path to duckdb-rfuns}}/build/release/extension/rfuns/rfuns.duckdb_extension'")
+```
+
+Then, the extension can be used: 
+
+```r
+> dbGetQuery(con, "select rfuns('Jane')")
+  rfuns('Jane')
+1 Rfuns Jane 🐥
+> dbGetQuery(con, 'SELECT "r_base::+"(1, 2)')
+  r_base::+(1, 2)
+1               3
+```
+
+The extension may also be used outside of R, via the `./build/release/duckdb` executable: 
+
 ```
 D select rfuns('Jane') as result;
 ┌───────────────┐
 │    result     │
 │    varchar    │
 ├───────────────┤
-│ Quack Jane 🐥 │
+│ rfuns Jane 🐥 │
 └───────────────┘
 ```
 
 ## Running the tests
+
 Different tests can be created for DuckDB extensions. The primary way of testing DuckDB extensions should be the SQL tests in `./test/sql`. These SQL tests can be run using:
+
 ```sh
 make test
 ```
-
-### Installing locally
-Firstly, DuckDB should be launched with the `allow_unsigned_extensions` option set to true. This is documented in the [Developing with extensions](https://github.com/duckdb/duckdb-r#developing-with-extensions)
-section of the [duckdb](https://github.com/duckdb/duckdb-r) R package: 
-
-```r
-library(duckdb)
-con <- DBI::dbConnect(duckdb(config=list('allow_unsigned_extensions' = 'true')))
-```
-
-Then the extension can be loaded from with the `LOAD` command
-
-```r
-dbExecute(con, "LOAD '{{path to duckdb-rfuns}}/build/release/extension/rfuns/rfuns.duckdb_extension'")
-```
-
-And then used: 
-
-```
-> dbGetQuery(con, "select rfuns('Jane')")
-  rfuns('Jane')
-1 Rfuns Jane 🐥
-```
-
 
 ### Installing the deployed binaries
 
