@@ -3,42 +3,52 @@
 
 #include <math.h>
 #include <climits>
+#include <tuple>
 
 namespace duckdb {
 namespace rfuns {
 
 namespace {
 
-static void BaseREqFunctionInteger(DataChunk &args, ExpressionState &state, Vector &result) {
-	auto &lefts = args.data[0];
-	D_ASSERT(lefts.GetType() == LogicalType::INTEGER);
-	auto &rights = args.data[1];
-	D_ASSERT(rights.GetType() == LogicalType::INTEGER);
-	BinaryExecutor::Execute<int32_t, int32_t, bool>(lefts, rights, result, args.size(),
-	                                                [&](int32_t left, int32_t right) { return (left == right); });
+struct EqChunk {
+    duckdb::Vector& lefts;
+    duckdb::Vector& rights;
+};
+
+template <LogicalTypeId LHS_LOGICAL_TYPE, LogicalTypeId RHS_LOGICAL_TYPE>
+EqChunk EqTypeAssert(DataChunk &args) {
+    auto &lefts = args.data[0];
+    D_ASSERT(lefts.GetType() == LHS_LOGICAL_TYPE);
+
+    auto &rights = args.data[1];
+    D_ASSERT(rights.GetType() == LHS_LOGICAL_TYPE);
+
+    return {lefts, rights};
 }
 
-static void BaseREqFunctionDouble(DataChunk &args, ExpressionState &state, Vector &result) {
-	auto &lefts = args.data[0];
-	D_ASSERT(lefts.GetType() == LogicalType::DOUBLE);
-	auto &rights = args.data[1];
-	D_ASSERT(rights.GetType() == LogicalType::DOUBLE);
-	BinaryExecutor::ExecuteWithNulls<double, double, bool>(
-	    lefts, rights, result, args.size(), [&](double left, double right, ValidityMask &mask, idx_t idx) {
-		    if (isnan(left) || isnan(right)) {
-			    mask.SetInvalid(idx);
-			    return false;
-		    }
-		    return (left == right);
-	    });
+void BaseREqFunctionInteger(DataChunk &args, ExpressionState &state, Vector &result) {
+    auto parts = EqTypeAssert<LogicalType::INTEGER, LogicalType::INTEGER>(args);
+
+    auto fun = [](int32_t left, int32_t right) { return (left == right); };
+    BinaryExecutor::Execute<int32_t, int32_t, bool>(parts.lefts, parts.rights, result, args.size(), fun);
+}
+
+void BaseREqFunctionDouble(DataChunk &args, ExpressionState &state, Vector &result) {
+    auto parts = EqTypeAssert<LogicalType::DOUBLE, LogicalType::DOUBLE>(args);
+	auto fun = [&](double left, double right, ValidityMask &mask, idx_t idx) {
+        if (isnan(left) || isnan(right)) {
+            mask.SetInvalid(idx);
+            return false;
+        }
+        return (left == right);
+    };
+
+    BinaryExecutor::ExecuteWithNulls<double, double, bool>(parts.lefts, parts.rights, result, args.size(), fun);
 }
 
 static void BaseREqFunctionString(DataChunk &args, ExpressionState &state, Vector &result) {
-	auto &lefts = args.data[0];
-	D_ASSERT(lefts.GetType() == LogicalType::VARCHAR);
-	auto &rights = args.data[1];
-	D_ASSERT(rights.GetType() == LogicalType::VARCHAR);
-	BinaryExecutor::Execute<string_t, string_t, bool>(lefts, rights, result, args.size(),
+	auto parts = EqTypeAssert<LogicalType::VARCHAR, LogicalType::VARCHAR>(args);
+	BinaryExecutor::Execute<string_t, string_t, bool>(parts.lefts, parts.rights, result, args.size(),
 	                                                  [&](string_t left, string_t right) { return (left == right); });
 }
 
@@ -49,22 +59,16 @@ static bool ExecuteBaseREqFunctionStringInteger(string_t left, int32_t right) {
 }
 
 static void BaseREqFunctionStringInteger(DataChunk &args, ExpressionState &state, Vector &result) {
-	auto &lefts = args.data[0];
-	D_ASSERT(lefts.GetType() == LogicalType::VARCHAR);
-	auto &rights = args.data[1];
-	D_ASSERT(rights.GetType() == LogicalType::INTEGER);
-
-	return BinaryExecutor::Execute<string_t, int32_t, bool>(lefts, rights, result, args.size(),
+	auto parts = EqTypeAssert<LogicalType::VARCHAR, LogicalType::INTEGER>(args);
+    
+	return BinaryExecutor::Execute<string_t, int32_t, bool>(parts.lefts, parts.rights, result, args.size(),
 	                                                        &ExecuteBaseREqFunctionStringInteger);
 }
 
 static void BaseREqFunctionIntegerString(DataChunk &args, ExpressionState &state, Vector &result) {
-	auto &lefts = args.data[0];
-	D_ASSERT(lefts.GetType() == LogicalType::INTEGER);
-	auto &rights = args.data[1];
-	D_ASSERT(rights.GetType() == LogicalType::VARCHAR);
+	auto parts = EqTypeAssert<LogicalType::INTEGER, LogicalType::VARCHAR>(args);
 
-	return BinaryExecutor::Execute<string_t, int32_t, bool>(rights, lefts, result, args.size(),
+	return BinaryExecutor::Execute<string_t, int32_t, bool>(parts.rights, parts.lefts, result, args.size(),
 	                                                        &ExecuteBaseREqFunctionStringInteger);
 }
 
@@ -75,22 +79,16 @@ static bool ExecuteBaseREqFunctionStringDouble(string_t left, double right) {
 }
 
 static void BaseREqFunctionStringDouble(DataChunk &args, ExpressionState &state, Vector &result) {
-	auto &lefts = args.data[0];
-	D_ASSERT(lefts.GetType() == LogicalType::VARCHAR);
-	auto &rights = args.data[1];
-	D_ASSERT(rights.GetType() == LogicalType::DOUBLE);
-
-	return BinaryExecutor::Execute<string_t, double, bool>(lefts, rights, result, args.size(),
+	auto parts = EqTypeAssert<LogicalType::VARCHAR, LogicalType::DOUBLE>(args);
+    
+	return BinaryExecutor::Execute<string_t, double, bool>(parts.lefts, parts.rights, result, args.size(),
 	                                                       &ExecuteBaseREqFunctionStringDouble);
 }
 
 static void BaseREqFunctionDoubleString(DataChunk &args, ExpressionState &state, Vector &result) {
-	auto &lefts = args.data[0];
-	D_ASSERT(lefts.GetType() == LogicalType::DOUBLE);
-	auto &rights = args.data[1];
-	D_ASSERT(rights.GetType() == LogicalType::VARCHAR);
+	auto parts = EqTypeAssert<LogicalType::DOUBLE, LogicalType::VARCHAR>(args);
 
-	return BinaryExecutor::Execute<string_t, double, bool>(rights, lefts, result, args.size(),
+	return BinaryExecutor::Execute<string_t, double, bool>(parts.rights, parts.lefts, result, args.size(),
 	                                                       &ExecuteBaseREqFunctionStringDouble);
 }
 
@@ -99,7 +97,7 @@ static void BaseREqFunctionDoubleString(DataChunk &args, ExpressionState &state,
 ScalarFunctionSet base_r_eq() {
     ScalarFunctionSet set("r_base::==");
 	set.AddFunction(
-	    ScalarFunction({LogicalType::INTEGER, LogicalType::INTEGER}, LogicalType::BOOLEAN, BaseREqFunctionInteger));
+	    ScalarFunction({LogicalType::INTEGER, LogicalType::INTEGER}, LogicalType::BOOLEAN, BaseREqFunctionInteger));    
 	set.AddFunction(
 	    ScalarFunction({LogicalType::DOUBLE, LogicalType::DOUBLE}, LogicalType::BOOLEAN, BaseREqFunctionDouble));
 	set.AddFunction(
