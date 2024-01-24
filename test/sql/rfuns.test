@@ -220,6 +220,26 @@ NULL
 NULL
 NULL
 
+# Equality for strings with booleans
+query IIIIIII
+SELECT
+	"r_base::=="('TRUE', TRUE),
+	"r_base::=="('TRUE', FALSE),
+	"r_base::=="('FALSE', TRUE),
+	"r_base::=="('FALSE', FALSE),
+	"r_base::=="('tRue', TRUE),
+	"r_base::=="('fAlse', FALSE),
+	NULL
+	;
+----
+TRUE
+FALSE
+FALSE
+TRUE
+NULL
+NULL
+NULL
+
 # Equality for strings with doubles
 query III
 SELECT

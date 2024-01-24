@@ -109,6 +109,28 @@ static void BaseREqFunctionIntegerString(DataChunk &args, ExpressionState &state
 	                                                        &ExecuteBaseREqFunctionStringInteger);
 }
 
+static bool ExecuteBaseREqFunctionStringBoolean(string_t left, bool right) {
+	return left == (right ? "TRUE" : "FALSE");
+}
+
+static void BaseREqFunctionStringBoolean(DataChunk &args, ExpressionState &state, Vector &result) {
+	auto parts = EqTypeAssert<LogicalType::VARCHAR, LogicalType::BOOLEAN>(args);
+    
+	return BinaryExecutor::Execute<string_t, bool, bool>(
+        parts.lefts, parts.rights, result, args.size(),
+	    &ExecuteBaseREqFunctionStringBoolean
+    );
+}
+
+static void BaseREqFunctionBooleanString(DataChunk &args, ExpressionState &state, Vector &result) {
+	auto parts = EqTypeAssert<LogicalType::BOOLEAN, LogicalType::VARCHAR>(args);
+    
+	return BinaryExecutor::Execute<string_t, bool, bool>(
+        parts.rights, parts.lefts, result, args.size(),
+	    &ExecuteBaseREqFunctionStringBoolean
+    );
+}
+
 static bool ExecuteBaseREqFunctionStringDouble(string_t left, double right) {
 	char right_chr[100];
 	snprintf(right_chr, sizeof(right_chr), "%.17g", right);
@@ -145,10 +167,17 @@ ScalarFunctionSet base_r_eq() {
     set.AddFunction(ScalarFunction({LogicalType::DOUBLE, LogicalType::BOOLEAN}, LogicalType::BOOLEAN, BaseREqFunctionDoubleInteger<LogicalType::BOOLEAN>));
     set.AddFunction(ScalarFunction({LogicalType::BOOLEAN, LogicalType::DOUBLE}, LogicalType::BOOLEAN, BaseREqFunctionIntegerDouble<LogicalType::BOOLEAN>));
 
+    // string == int 
+    set.AddFunction(ScalarFunction({LogicalType::VARCHAR, LogicalType::INTEGER}, LogicalType::BOOLEAN, BaseREqFunctionStringInteger));
+	set.AddFunction(ScalarFunction({LogicalType::INTEGER, LogicalType::VARCHAR}, LogicalType::BOOLEAN, BaseREqFunctionIntegerString));
+	
+    // string == lgl
+    set.AddFunction(ScalarFunction({LogicalType::VARCHAR, LogicalType::BOOLEAN}, LogicalType::BOOLEAN, BaseREqFunctionStringBoolean));
+	set.AddFunction(ScalarFunction({LogicalType::BOOLEAN, LogicalType::VARCHAR}, LogicalType::BOOLEAN, BaseREqFunctionBooleanString));
+	
+
 	set.AddFunction(ScalarFunction({LogicalType::DOUBLE, LogicalType::DOUBLE}, LogicalType::BOOLEAN, BaseREqFunctionDouble));
 	set.AddFunction(ScalarFunction({LogicalType::VARCHAR, LogicalType::VARCHAR}, LogicalType::BOOLEAN, BaseREqFunctionString));
-	set.AddFunction(ScalarFunction({LogicalType::VARCHAR, LogicalType::INTEGER}, LogicalType::BOOLEAN,BaseREqFunctionStringInteger));
-	set.AddFunction(ScalarFunction({LogicalType::INTEGER, LogicalType::VARCHAR}, LogicalType::BOOLEAN,BaseREqFunctionIntegerString));
 	set.AddFunction(ScalarFunction({LogicalType::VARCHAR, LogicalType::DOUBLE}, LogicalType::BOOLEAN, BaseREqFunctionStringDouble));
 	set.AddFunction(ScalarFunction({LogicalType::DOUBLE, LogicalType::VARCHAR}, LogicalType::BOOLEAN, BaseREqFunctionDoubleString));
 
