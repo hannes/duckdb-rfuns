@@ -40,17 +40,17 @@ static void BaseRAddFunctionDouble(DataChunk &args, ExpressionState &state, Vect
 		    return left + right;
 	    });
 }
-}
+} // namespace
 
 ScalarFunctionSet base_r_add() {
-    ScalarFunctionSet set("r_base::+");
+	ScalarFunctionSet set("r_base::+");
 	set.AddFunction(
 	    ScalarFunction({LogicalType::INTEGER, LogicalType::INTEGER}, LogicalType::INTEGER, BaseRAddFunctionInteger));
 	set.AddFunction(
 	    ScalarFunction({LogicalType::DOUBLE, LogicalType::DOUBLE}, LogicalType::DOUBLE, BaseRAddFunctionDouble));
 
-    return set;
+	return set;
 }
 
-}
-}
+} // namespace rfuns
+} // namespace duckdb

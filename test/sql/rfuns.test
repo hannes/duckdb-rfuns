@@ -70,6 +70,84 @@ NULL
 NULL
 NULL
 
+# Equality for booleans
+query IIIIIIIIII
+SELECT
+	"r_base::=="(TRUE, TRUE),
+	"r_base::=="(TRUE, FALSE),
+	"r_base::=="(FALSE, TRUE),
+	"r_base::=="(FALSE, FALSE),
+	"r_base::=="(NULL, FALSE),
+	"r_base::=="(NULL, TRUE),
+	"r_base::=="(TRUE, NULL),
+	"r_base::=="(FALSE, NULL),
+	"r_base::=="(NULL, NULL),
+	NULL
+	;
+----
+TRUE
+FALSE
+FALSE
+TRUE
+NULL
+NULL
+NULL
+NULL
+NULL
+NULL
+
+# Equality for integers with boolean
+query IIIIIIIIII
+SELECT
+	"r_base::=="(1   , TRUE),
+	"r_base::=="(1   , FALSE),
+	"r_base::=="(2   , TRUE),
+	"r_base::=="(2   , FALSE),
+	"r_base::=="(0   , TRUE),
+	"r_base::=="(0   , FALSE),
+	"r_base::=="(NULL, TRUE),
+	"r_base::=="(NULL, NULL),
+	"r_base::=="(42  , NULL),
+	NULL
+	;
+----
+TRUE
+FALSE
+FALSE
+FALSE
+FALSE
+TRUE
+NULL
+NULL
+NULL
+NULL
+
+# Equality for boolean with integer
+query IIIIIIIIII
+SELECT
+	"r_base::=="(TRUE , 1),
+	"r_base::=="(FALSE, 1),
+	"r_base::=="(TRUE , 2),
+	"r_base::=="(FALSE, 2),
+	"r_base::=="(TRUE , 0),
+	"r_base::=="(FALSE, 0),
+	"r_base::=="(TRUE , NULL),
+	"r_base::=="(NULL , NULL),
+	"r_base::=="(NULL , 42),
+	NULL
+	;
+----
+TRUE
+FALSE
+FALSE
+FALSE
+FALSE
+TRUE
+NULL
+NULL
+NULL
+NULL
+
 # Equality for doubles
 query IIIII
 SELECT
@@ -84,6 +162,46 @@ FALSE
 TRUE
 NULL
 NULL
+NULL
+
+# Equality for doubles with integer or boolean
+query IIIIIII
+SELECT
+	"r_base::=="(2.0, 2),
+	"r_base::=="(3.5, 2),
+	"r_base::=="(1.0, TRUE),
+	"r_base::=="(1.0, FALSE),
+	"r_base::=="(0.0, FALSE),
+	"r_base::=="(0.0, TRUE),
+	NULL
+	;
+----
+TRUE
+FALSE
+TRUE
+FALSE
+TRUE
+FALSE
+NULL
+
+# Equality for integer or boolean with double
+query IIIIIII
+SELECT
+	"r_base::=="(2, 2.0),
+	"r_base::=="(2, 3.5),
+	"r_base::=="(TRUE, 1.0),
+	"r_base::=="(FALSE, 1.0),
+	"r_base::=="(FALSE, 0.0),
+	"r_base::=="(TRUE, 0.0),
+	NULL
+	;
+----
+TRUE
+FALSE
+TRUE
+FALSE
+TRUE
+FALSE
 NULL
 
 # Equality for strings
@@ -101,6 +219,47 @@ TRUE
 NULL
 NULL
 NULL
+
+# Equality for strings with booleans
+query IIIIIII
+SELECT
+	"r_base::=="('TRUE', TRUE),
+	"r_base::=="('TRUE', FALSE),
+	"r_base::=="('FALSE', TRUE),
+	"r_base::=="('FALSE', FALSE),
+	"r_base::=="('tRue', TRUE),
+	"r_base::=="('fAlse', FALSE),
+	NULL
+	;
+----
+TRUE
+FALSE
+FALSE
+TRUE
+FALSE
+FALSE
+NULL
+
+# Equality for booleans with strings
+query IIIIIII
+SELECT
+	"r_base::=="(TRUE, 'TRUE'),
+	"r_base::=="(FALSE, 'TRUE'),
+	"r_base::=="(TRUE, 'FALSE'),
+	"r_base::=="(FALSE, 'FALSE'),
+	"r_base::=="(TRUE, 'tRue'),
+	"r_base::=="(FALSE, 'fAlse'),
+	NULL
+	;
+----
+TRUE
+FALSE
+FALSE
+TRUE
+FALSE
+FALSE
+NULL
+
 
 # Equality for strings with doubles
 query III
