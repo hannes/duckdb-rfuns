@@ -164,6 +164,30 @@ NULL
 NULL
 NULL
 
+# Equality for doubles with integer
+query III
+SELECT
+	"r_base::=="(2.0, 2),
+	"r_base::=="(3.5, 2),
+	NULL
+	;
+----
+TRUE
+FALSE
+NULL
+
+# Equality for integer with double
+query III
+SELECT
+	"r_base::=="(2, 2.0),
+	"r_base::=="(2, 3.5),
+	NULL
+	;
+----
+TRUE
+FALSE
+NULL
+
 # Equality for strings
 query IIIII
 SELECT
