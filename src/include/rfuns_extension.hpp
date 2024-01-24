@@ -8,7 +8,7 @@ namespace rfuns {
 ScalarFunctionSet base_r_add();
 ScalarFunctionSet base_r_eq();
 
-}
+} // namespace rfuns
 
 class RfunsExtension : public Extension {
 public:
