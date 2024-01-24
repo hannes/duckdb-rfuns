@@ -164,26 +164,42 @@ NULL
 NULL
 NULL
 
-# Equality for doubles with integer
-query III
+# Equality for doubles with integer or boolean
+query IIIIIII
 SELECT
 	"r_base::=="(2.0, 2),
 	"r_base::=="(3.5, 2),
+	"r_base::=="(1.0, TRUE),
+	"r_base::=="(1.0, FALSE),
+	"r_base::=="(0.0, FALSE),
+	"r_base::=="(0.0, TRUE),
 	NULL
 	;
 ----
 TRUE
 FALSE
+TRUE
+FALSE
+TRUE
+FALSE
 NULL
 
-# Equality for integer with double
-query III
+# Equality for integer or boolean with double
+query IIIIIII
 SELECT
 	"r_base::=="(2, 2.0),
 	"r_base::=="(2, 3.5),
+	"r_base::=="(TRUE, 1.0),
+	"r_base::=="(FALSE, 1.0),
+	"r_base::=="(FALSE, 0.0),
+	"r_base::=="(TRUE, 0.0),
 	NULL
 	;
 ----
+TRUE
+FALSE
+TRUE
+FALSE
 TRUE
 FALSE
 NULL

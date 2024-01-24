@@ -54,7 +54,8 @@ void BaseREqFunctionDouble(DataChunk &args, ExpressionState &state, Vector &resu
     BinaryExecutor::ExecuteWithNulls<double, double, bool>(parts.lefts, parts.rights, result, args.size(), fun);
 }
 
-bool ExecuteBaseREqFunctionDoubleInteger(double left, int32_t right, ValidityMask &mask, idx_t idx) {
+template <typename type>
+bool ExecuteBaseREqFunctionDoubleInteger(double left, type right, ValidityMask &mask, idx_t idx) {
     if (isnan(left)) {
         mask.SetInvalid(idx);
         return false;
@@ -62,17 +63,23 @@ bool ExecuteBaseREqFunctionDoubleInteger(double left, int32_t right, ValidityMas
     return (left == right);
 }
 
+template <LogicalTypeId LOGICAL_TYPE>
 void BaseREqFunctionDoubleInteger(DataChunk &args, ExpressionState &state, Vector &result) {
-    auto parts = EqTypeAssert<LogicalType::DOUBLE, LogicalType::INTEGER>(args);
-	BinaryExecutor::ExecuteWithNulls<double, int32_t, bool>(parts.lefts, parts.rights, result, args.size(), 
-        ExecuteBaseREqFunctionDoubleInteger
+    using type = typename std::conditional<LOGICAL_TYPE == LogicalType::INTEGER, int32_t, bool>::type;
+    
+    auto parts = EqTypeAssert<LogicalType::DOUBLE, LOGICAL_TYPE>(args);
+	BinaryExecutor::ExecuteWithNulls<double, type, bool>(parts.lefts, parts.rights, result, args.size(), 
+        ExecuteBaseREqFunctionDoubleInteger<type>
     );
 }
 
+template <LogicalTypeId LOGICAL_TYPE>
 void BaseREqFunctionIntegerDouble(DataChunk &args, ExpressionState &state, Vector &result) {
-    auto parts = EqTypeAssert<LogicalType::INTEGER, LogicalType::DOUBLE>(args);
-	BinaryExecutor::ExecuteWithNulls<double, int32_t, bool>(parts.rights, parts.lefts, result, args.size(), 
-        ExecuteBaseREqFunctionDoubleInteger
+    using type = typename std::conditional<LOGICAL_TYPE == LogicalType::INTEGER, int32_t, bool>::type;
+
+    auto parts = EqTypeAssert<LOGICAL_TYPE, LogicalType::DOUBLE>(args);
+	BinaryExecutor::ExecuteWithNulls<double, type, bool>(parts.rights, parts.lefts, result, args.size(), 
+        ExecuteBaseREqFunctionDoubleInteger<type>
     );
 }
 
@@ -132,9 +139,11 @@ ScalarFunctionSet base_r_eq() {
     set.AddFunction(ScalarFunction({LogicalType::INTEGER, LogicalType::BOOLEAN}, LogicalType::BOOLEAN, BaseREqFunctionSimple<LogicalType::INTEGER, int32_t, LogicalType::BOOLEAN, bool>));    
     set.AddFunction(ScalarFunction({LogicalType::INTEGER, LogicalType::INTEGER}, LogicalType::BOOLEAN, BaseREqFunctionSimple<LogicalType::INTEGER, int32_t, LogicalType::INTEGER, int32_t>));    
 
-    // double == int
-    set.AddFunction(ScalarFunction({LogicalType::DOUBLE, LogicalType::INTEGER}, LogicalType::BOOLEAN, BaseREqFunctionDoubleInteger));
-    set.AddFunction(ScalarFunction({LogicalType::INTEGER, LogicalType::DOUBLE}, LogicalType::BOOLEAN, BaseREqFunctionIntegerDouble));
+    // double == (int | lgl)
+    set.AddFunction(ScalarFunction({LogicalType::DOUBLE, LogicalType::INTEGER}, LogicalType::BOOLEAN, BaseREqFunctionDoubleInteger<LogicalType::INTEGER>));
+    set.AddFunction(ScalarFunction({LogicalType::INTEGER, LogicalType::DOUBLE}, LogicalType::BOOLEAN, BaseREqFunctionIntegerDouble<LogicalType::INTEGER>));
+    set.AddFunction(ScalarFunction({LogicalType::DOUBLE, LogicalType::BOOLEAN}, LogicalType::BOOLEAN, BaseREqFunctionDoubleInteger<LogicalType::BOOLEAN>));
+    set.AddFunction(ScalarFunction({LogicalType::BOOLEAN, LogicalType::DOUBLE}, LogicalType::BOOLEAN, BaseREqFunctionIntegerDouble<LogicalType::BOOLEAN>));
 
 	set.AddFunction(ScalarFunction({LogicalType::DOUBLE, LogicalType::DOUBLE}, LogicalType::BOOLEAN, BaseREqFunctionDouble));
 	set.AddFunction(ScalarFunction({LogicalType::VARCHAR, LogicalType::VARCHAR}, LogicalType::BOOLEAN, BaseREqFunctionString));
