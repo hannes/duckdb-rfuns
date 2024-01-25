@@ -32,37 +32,48 @@ The main binaries that will be built are:
 - `unittest` is the test runner of duckdb. Again, the extension is already linked into the binary.
 - `rfuns.duckdb_extension` is the loadable binary as it would be distributed.
 
-## Running the extension
+### Build the duckdbrfuns R package
 
-To `LOAD` the extension, `duckdb` should be initialized with the `allow_unsigned_extensions` option set to true. 
+The `duckdbrfuns` package in the `r/` directory has some tools to facilitate 
+working with the extension. 
+
+One you've `make` the extension, you can develop the :package: normally, i.e. open the `r/duckdbrfuns.Rproj`
+in RStudio and use `load_all()`, `document()` ... 
+
+You can also use the `pkg` target
+
+```sh
+make pkg
+```
+
+## Running the extension in R
+
+One you have the extension built and the R package installed, you can use the 
+user defined functions: 
 
 ```r
 library(duckdb)
-con <- DBI::dbConnect(duckdb(config=list('allow_unsigned_extensions' = 'true')))
-dbExecute(con, "LOAD '{{path to duckdb-rfuns}}/build/release/extension/rfuns/rfuns.duckdb_extension'")
+con <- duckdbrfuns:::con()
 ```
 
-Then, the extension can be used: 
-
 ```r
-> dbGetQuery(con, "select rfuns('Jane')")
-  rfuns('Jane')
-1 Rfuns Jane 🐥
 > dbGetQuery(con, 'SELECT "r_base::+"(1, 2)')
   r_base::+(1, 2)
 1               3
 ```
 
+## Running the extension outside of R
+
 The extension may also be used outside of R, via the `./build/release/duckdb` executable: 
 
-```
-D select rfuns('Jane') as result;
-┌───────────────┐
-│    result     │
-│    varchar    │
-├───────────────┤
-│ rfuns Jane 🐥 │
-└───────────────┘
+```duckdb
+D select "r_base::+"(1, 2);
+┌─────────────────┐
+│ r_base::+(1, 2) │
+│      int32      │
+├─────────────────┤
+│               3 │
+└─────────────────┘
 ```
 
 ## Running the tests
