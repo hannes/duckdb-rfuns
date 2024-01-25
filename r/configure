@@ -1,0 +1,7 @@
+#!/bin/sh
+
+set -ex
+
+# copy the extension from the parent project
+cp ../build/release/extension/rfuns/rfuns.duckdb_extension inst/extension/
+

@@ -8,3 +8,5 @@ test/python/__pycache__/
 .Rhistory
 .Rproj.user
 vcpkg/
+*.duckdb_extension
+*.tar.gz
