@@ -10,3 +10,6 @@ test/python/__pycache__/
 vcpkg/
 *.duckdb_extension
 *.tar.gz
+/.cache/
+/.vscode/
+/compile_commands.json
