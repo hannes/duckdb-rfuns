@@ -79,7 +79,7 @@ if [[ $7 = 'true' ]]; then
     # New style paths for duckdb-wasm, more uniforms
     aws s3 cp $ext.compressed s3://$5/$1/$2/$3/$4/$1.duckdb_extension.wasm --acl public-read --content-encoding br --content-type="application/wasm"
   else
-    aws s3 cp $ext.compressed s3://$5/$1/$2/$3/$4/$1.duckdb_extension.gz --acl public-read
+    aws s3 cp $ext.compressed s3://$5/$1/$2/$3/$4/$1.duckdb_extension.gz --acl public-read --debug
   fi
 fi
 
@@ -91,6 +91,6 @@ if [[ $6 = 'true' ]]; then
     # New style paths for duckdb-wasm, more uniforms
     aws s3 cp $ext.compressed s3://$5/$3/$4/$1.duckdb_extension.wasm --acl public-read --content-encoding br --content-type="application/wasm"
   else
-    aws s3 cp $ext.compressed s3://$5/$3/$4/$1.duckdb_extension.gz --acl public-read
+    aws s3 cp $ext.compressed s3://$5/$3/$4/$1.duckdb_extension.gz --acl public-read --debug
   fi
 fi
