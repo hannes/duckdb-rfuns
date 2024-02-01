@@ -133,4 +133,4 @@ wasm_threads:
 	cd build/wasm_threads/extension/${EXT_NAME} && emcc $f -sSIDE_MODULE=1 -o ../../${EXT_NAME}.duckdb_extension.wasm -O3 ${EXT_NAME}.duckdb_extension $(WASM_LINK_TIME_FLAGS)
 
 pkg:
-	R CMD INSTALL r
+	R CMD INSTALL duckdb-rfuns-r
