@@ -1,7 +1,7 @@
 # To be generated from test.R
 
 test_that("int + int", {
-  con <- con(); on.exit(dbDisconnect(con, shutdown=TRUE))
+  con <- local_con()
 
   in_df <- data.frame(a = 0L, b = 0L)
   in_rel <- duckdb:::rel_from_df(con, in_df)
