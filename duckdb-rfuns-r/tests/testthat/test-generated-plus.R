@@ -88,3 +88,92 @@ test_that('<dbl> + <dbl>', {
 
 })
 
+test_that('<int> + <int>', {
+  con <- local_con()
+  #  1 + 2 
+  in_df <- structure(list(x1 = 1, x2 = 2), class = c("tbl_df", "tbl", "data.frame"
+), row.names = c(NA, -1L))
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(in_rel,
+      list(duckdb:::expr_function(
+        'r_base::+', 
+        list(
+          duckdb:::expr_reference('x1'),
+          duckdb:::expr_reference('x2')
+        )
+      ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+  expect_snapshot(out_df)
+
+
+  #  NaN + 2 
+  in_df <- structure(list(x1 = NaN, x2 = 2), class = c("tbl_df", "tbl", 
+"data.frame"), row.names = c(NA, -1L))
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(in_rel,
+      list(duckdb:::expr_function(
+        'r_base::+', 
+        list(
+          duckdb:::expr_reference('x1'),
+          duckdb:::expr_reference('x2')
+        )
+      ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+  expect_snapshot(out_df)
+
+
+  #  NA_real_ + 2 
+  in_df <- structure(list(x1 = NA_real_, x2 = 2), class = c("tbl_df", "tbl", 
+"data.frame"), row.names = c(NA, -1L))
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(in_rel,
+      list(duckdb:::expr_function(
+        'r_base::+', 
+        list(
+          duckdb:::expr_reference('x1'),
+          duckdb:::expr_reference('x2')
+        )
+      ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+  expect_snapshot(out_df)
+
+
+  #  1 + NA_real_ 
+  in_df <- structure(list(x1 = 1, x2 = NA_real_), class = c("tbl_df", "tbl", 
+"data.frame"), row.names = c(NA, -1L))
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(in_rel,
+      list(duckdb:::expr_function(
+        'r_base::+', 
+        list(
+          duckdb:::expr_reference('x1'),
+          duckdb:::expr_reference('x2')
+        )
+      ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+  expect_snapshot(out_df)
+
+
+  #  1 + NaN 
+  in_df <- structure(list(x1 = 1, x2 = NaN), class = c("tbl_df", "tbl", 
+"data.frame"), row.names = c(NA, -1L))
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(in_rel,
+      list(duckdb:::expr_function(
+        'r_base::+', 
+        list(
+          duckdb:::expr_reference('x1'),
+          duckdb:::expr_reference('x2')
+        )
+      ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+  expect_snapshot(out_df)
+
+
+})
+

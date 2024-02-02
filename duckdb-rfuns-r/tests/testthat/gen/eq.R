@@ -122,4 +122,3 @@ NA_integer_ == 1.0
 1.0 == 1L
 1.0 == NA_integer_
 NA_real_ == 3L
-

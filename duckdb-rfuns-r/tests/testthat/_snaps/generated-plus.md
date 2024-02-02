@@ -38,3 +38,43 @@
         r_base::+(x1, x2)
       1                NA
 
+# <int> + <int>
+
+    Code
+      out_df
+    Output
+        r_base::+(x1, x2)
+      1                 3
+
+---
+
+    Code
+      out_df
+    Output
+        r_base::+(x1, x2)
+      1                NA
+
+---
+
+    Code
+      out_df
+    Output
+        r_base::+(x1, x2)
+      1                NA
+
+---
+
+    Code
+      out_df
+    Output
+        r_base::+(x1, x2)
+      1                NA
+
+---
+
+    Code
+      out_df
+    Output
+        r_base::+(x1, x2)
+      1                NA
+
