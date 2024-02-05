@@ -15,7 +15,7 @@ test_that('<int> == <int> :: 0L == 0L', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], 0L == 0L)
+  expect_identical(out_df[, 1], 0L == 0L)
 })
 
 test_that('<int> == <int> :: 1L == 0L', {
@@ -34,7 +34,7 @@ test_that('<int> == <int> :: 1L == 0L', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], 1L == 0L)
+  expect_identical(out_df[, 1], 1L == 0L)
 })
 
 test_that('<int> == <int> :: 1L == NA_integer_', {
@@ -53,7 +53,7 @@ test_that('<int> == <int> :: 1L == NA_integer_', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], 1L == NA_integer_)
+  expect_identical(out_df[, 1], 1L == NA_integer_)
 })
 
 test_that('<int> == <int> :: NA_integer_ == 2L', {
@@ -72,7 +72,7 @@ test_that('<int> == <int> :: NA_integer_ == 2L', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], NA_integer_ == 2L)
+  expect_identical(out_df[, 1], NA_integer_ == 2L)
 })
 
 test_that('<int> == <int> :: NA_integer_ == NA_integer_', {
@@ -91,7 +91,7 @@ test_that('<int> == <int> :: NA_integer_ == NA_integer_', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], NA_integer_ == NA_integer_)
+  expect_identical(out_df[, 1], NA_integer_ == NA_integer_)
 })
 
 test_that('<lgl> == <lgl> :: TRUE == TRUE', {
@@ -110,7 +110,7 @@ test_that('<lgl> == <lgl> :: TRUE == TRUE', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], TRUE == TRUE)
+  expect_identical(out_df[, 1], TRUE == TRUE)
 })
 
 test_that('<lgl> == <lgl> :: TRUE == FALSE', {
@@ -129,7 +129,7 @@ test_that('<lgl> == <lgl> :: TRUE == FALSE', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], TRUE == FALSE)
+  expect_identical(out_df[, 1], TRUE == FALSE)
 })
 
 test_that('<lgl> == <lgl> :: FALSE == TRUE', {
@@ -148,7 +148,7 @@ test_that('<lgl> == <lgl> :: FALSE == TRUE', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], FALSE == TRUE)
+  expect_identical(out_df[, 1], FALSE == TRUE)
 })
 
 test_that('<lgl> == <lgl> :: FALSE == FALSE', {
@@ -167,7 +167,7 @@ test_that('<lgl> == <lgl> :: FALSE == FALSE', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], FALSE == FALSE)
+  expect_identical(out_df[, 1], FALSE == FALSE)
 })
 
 test_that('<lgl> == <lgl> :: NA == FALSE', {
@@ -186,7 +186,7 @@ test_that('<lgl> == <lgl> :: NA == FALSE', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], NA == FALSE)
+  expect_identical(out_df[, 1], NA == FALSE)
 })
 
 test_that('<lgl> == <lgl> :: NA == TRUE', {
@@ -205,7 +205,7 @@ test_that('<lgl> == <lgl> :: NA == TRUE', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], NA == TRUE)
+  expect_identical(out_df[, 1], NA == TRUE)
 })
 
 test_that('<lgl> == <lgl> :: TRUE == NA', {
@@ -224,7 +224,7 @@ test_that('<lgl> == <lgl> :: TRUE == NA', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], TRUE == NA)
+  expect_identical(out_df[, 1], TRUE == NA)
 })
 
 test_that('<lgl> == <lgl> :: FALSE == NA', {
@@ -243,7 +243,7 @@ test_that('<lgl> == <lgl> :: FALSE == NA', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], FALSE == NA)
+  expect_identical(out_df[, 1], FALSE == NA)
 })
 
 test_that('<int> == <lgl> :: 1 == TRUE', {
@@ -262,7 +262,7 @@ test_that('<int> == <lgl> :: 1 == TRUE', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], 1 == TRUE)
+  expect_identical(out_df[, 1], 1 == TRUE)
 })
 
 test_that('<int> == <lgl> :: 1 == FALSE', {
@@ -281,7 +281,7 @@ test_that('<int> == <lgl> :: 1 == FALSE', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], 1 == FALSE)
+  expect_identical(out_df[, 1], 1 == FALSE)
 })
 
 test_that('<int> == <lgl> :: 2 == TRUE', {
@@ -300,7 +300,7 @@ test_that('<int> == <lgl> :: 2 == TRUE', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], 2 == TRUE)
+  expect_identical(out_df[, 1], 2 == TRUE)
 })
 
 test_that('<int> == <lgl> :: 2 == FALSE', {
@@ -319,7 +319,7 @@ test_that('<int> == <lgl> :: 2 == FALSE', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], 2 == FALSE)
+  expect_identical(out_df[, 1], 2 == FALSE)
 })
 
 test_that('<int> == <lgl> :: 0 == TRUE', {
@@ -338,7 +338,7 @@ test_that('<int> == <lgl> :: 0 == TRUE', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], 0 == TRUE)
+  expect_identical(out_df[, 1], 0 == TRUE)
 })
 
 test_that('<int> == <lgl> :: 0 == FALSE', {
@@ -357,7 +357,7 @@ test_that('<int> == <lgl> :: 0 == FALSE', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], 0 == FALSE)
+  expect_identical(out_df[, 1], 0 == FALSE)
 })
 
 test_that('<int> == <lgl> :: NA_integer_ == TRUE', {
@@ -376,7 +376,7 @@ test_that('<int> == <lgl> :: NA_integer_ == TRUE', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], NA_integer_ == TRUE)
+  expect_identical(out_df[, 1], NA_integer_ == TRUE)
 })
 
 test_that('<int> == <lgl> :: NA_integer_ == NA', {
@@ -395,7 +395,7 @@ test_that('<int> == <lgl> :: NA_integer_ == NA', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], NA_integer_ == NA)
+  expect_identical(out_df[, 1], NA_integer_ == NA)
 })
 
 test_that('<int> == <lgl> :: 42 == NA_integer_', {
@@ -414,7 +414,7 @@ test_that('<int> == <lgl> :: 42 == NA_integer_', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], 42 == NA_integer_)
+  expect_identical(out_df[, 1], 42 == NA_integer_)
 })
 
 test_that('<lgl> == <int> :: TRUE == 1', {
@@ -433,7 +433,7 @@ test_that('<lgl> == <int> :: TRUE == 1', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], TRUE == 1)
+  expect_identical(out_df[, 1], TRUE == 1)
 })
 
 test_that('<lgl> == <int> :: FALSE == 1', {
@@ -452,7 +452,7 @@ test_that('<lgl> == <int> :: FALSE == 1', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], FALSE == 1)
+  expect_identical(out_df[, 1], FALSE == 1)
 })
 
 test_that('<lgl> == <int> :: TRUE == 2', {
@@ -471,7 +471,7 @@ test_that('<lgl> == <int> :: TRUE == 2', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], TRUE == 2)
+  expect_identical(out_df[, 1], TRUE == 2)
 })
 
 test_that('<lgl> == <int> :: FALSE == 2', {
@@ -490,7 +490,7 @@ test_that('<lgl> == <int> :: FALSE == 2', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], FALSE == 2)
+  expect_identical(out_df[, 1], FALSE == 2)
 })
 
 test_that('<lgl> == <int> :: TRUE == 0', {
@@ -509,7 +509,7 @@ test_that('<lgl> == <int> :: TRUE == 0', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], TRUE == 0)
+  expect_identical(out_df[, 1], TRUE == 0)
 })
 
 test_that('<lgl> == <int> :: FALSE == 0', {
@@ -528,7 +528,7 @@ test_that('<lgl> == <int> :: FALSE == 0', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], FALSE == 0)
+  expect_identical(out_df[, 1], FALSE == 0)
 })
 
 test_that('<lgl> == <int> :: TRUE == NA_integer_', {
@@ -547,7 +547,7 @@ test_that('<lgl> == <int> :: TRUE == NA_integer_', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], TRUE == NA_integer_)
+  expect_identical(out_df[, 1], TRUE == NA_integer_)
 })
 
 test_that('<lgl> == <int> :: NA == NA_integer_', {
@@ -566,7 +566,7 @@ test_that('<lgl> == <int> :: NA == NA_integer_', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], NA == NA_integer_)
+  expect_identical(out_df[, 1], NA == NA_integer_)
 })
 
 test_that('<lgl> == <int> :: NA == 42', {
@@ -585,7 +585,7 @@ test_that('<lgl> == <int> :: NA == 42', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], NA == 42)
+  expect_identical(out_df[, 1], NA == 42)
 })
 
 test_that('<dbl> == <dbl> :: 1.5 == 2', {
@@ -604,7 +604,7 @@ test_that('<dbl> == <dbl> :: 1.5 == 2', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], 1.5 == 2)
+  expect_identical(out_df[, 1], 1.5 == 2)
 })
 
 test_that('<dbl> == <dbl> :: 1.5 == 1.5', {
@@ -623,7 +623,7 @@ test_that('<dbl> == <dbl> :: 1.5 == 1.5', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], 1.5 == 1.5)
+  expect_identical(out_df[, 1], 1.5 == 1.5)
 })
 
 test_that('<dbl> == <dbl> :: 1.5 == NA_real_', {
@@ -642,7 +642,7 @@ test_that('<dbl> == <dbl> :: 1.5 == NA_real_', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], 1.5 == NA_real_)
+  expect_identical(out_df[, 1], 1.5 == NA_real_)
 })
 
 test_that('<dbl> == <dbl> :: NA_real_ == 2.5', {
@@ -661,7 +661,7 @@ test_that('<dbl> == <dbl> :: NA_real_ == 2.5', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], NA_real_ == 2.5)
+  expect_identical(out_df[, 1], NA_real_ == 2.5)
 })
 
 test_that('<dbl> == <int | lgl> :: 2 == 2L', {
@@ -680,7 +680,7 @@ test_that('<dbl> == <int | lgl> :: 2 == 2L', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], 2 == 2L)
+  expect_identical(out_df[, 1], 2 == 2L)
 })
 
 test_that('<dbl> == <int | lgl> :: 3.5 == 2L', {
@@ -699,7 +699,7 @@ test_that('<dbl> == <int | lgl> :: 3.5 == 2L', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], 3.5 == 2L)
+  expect_identical(out_df[, 1], 3.5 == 2L)
 })
 
 test_that('<dbl> == <int | lgl> :: 3.5 == NA_integer_', {
@@ -718,7 +718,7 @@ test_that('<dbl> == <int | lgl> :: 3.5 == NA_integer_', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], 3.5 == NA_integer_)
+  expect_identical(out_df[, 1], 3.5 == NA_integer_)
 })
 
 test_that('<dbl> == <int | lgl> :: 1 == TRUE', {
@@ -737,7 +737,7 @@ test_that('<dbl> == <int | lgl> :: 1 == TRUE', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], 1 == TRUE)
+  expect_identical(out_df[, 1], 1 == TRUE)
 })
 
 test_that('<dbl> == <int | lgl> :: 1 == FALSE', {
@@ -756,7 +756,7 @@ test_that('<dbl> == <int | lgl> :: 1 == FALSE', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], 1 == FALSE)
+  expect_identical(out_df[, 1], 1 == FALSE)
 })
 
 test_that('<dbl> == <int | lgl> :: 0 == FALSE', {
@@ -775,7 +775,7 @@ test_that('<dbl> == <int | lgl> :: 0 == FALSE', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], 0 == FALSE)
+  expect_identical(out_df[, 1], 0 == FALSE)
 })
 
 test_that('<dbl> == <int | lgl> :: 0 == TRUE', {
@@ -794,7 +794,7 @@ test_that('<dbl> == <int | lgl> :: 0 == TRUE', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], 0 == TRUE)
+  expect_identical(out_df[, 1], 0 == TRUE)
 })
 
 test_that('<dbl> == <int | lgl> :: 2 == NA', {
@@ -813,7 +813,7 @@ test_that('<dbl> == <int | lgl> :: 2 == NA', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], 2 == NA)
+  expect_identical(out_df[, 1], 2 == NA)
 })
 
 test_that('<dbl> == <int | lgl> :: NA_real_ == 42L', {
@@ -832,7 +832,7 @@ test_that('<dbl> == <int | lgl> :: NA_real_ == 42L', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], NA_real_ == 42L)
+  expect_identical(out_df[, 1], NA_real_ == 42L)
 })
 
 test_that('<dbl> == <int | lgl> :: NA_real_ == TRUE', {
@@ -851,7 +851,7 @@ test_that('<dbl> == <int | lgl> :: NA_real_ == TRUE', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], NA_real_ == TRUE)
+  expect_identical(out_df[, 1], NA_real_ == TRUE)
 })
 
 test_that('<dbl> == <int | lgl> :: NA_real_ == FALSE', {
@@ -870,7 +870,7 @@ test_that('<dbl> == <int | lgl> :: NA_real_ == FALSE', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], NA_real_ == FALSE)
+  expect_identical(out_df[, 1], NA_real_ == FALSE)
 })
 
 test_that('<int | lgl> == <dbl> :: 2L == 2', {
@@ -889,7 +889,7 @@ test_that('<int | lgl> == <dbl> :: 2L == 2', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], 2L == 2)
+  expect_identical(out_df[, 1], 2L == 2)
 })
 
 test_that('<int | lgl> == <dbl> :: 2L == 3.5', {
@@ -908,7 +908,7 @@ test_that('<int | lgl> == <dbl> :: 2L == 3.5', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], 2L == 3.5)
+  expect_identical(out_df[, 1], 2L == 3.5)
 })
 
 test_that('<int | lgl> == <dbl> :: NA_integer_ == 3.5', {
@@ -927,7 +927,7 @@ test_that('<int | lgl> == <dbl> :: NA_integer_ == 3.5', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], NA_integer_ == 3.5)
+  expect_identical(out_df[, 1], NA_integer_ == 3.5)
 })
 
 test_that('<int | lgl> == <dbl> :: TRUE == 1', {
@@ -946,7 +946,7 @@ test_that('<int | lgl> == <dbl> :: TRUE == 1', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], TRUE == 1)
+  expect_identical(out_df[, 1], TRUE == 1)
 })
 
 test_that('<int | lgl> == <dbl> :: FALSE == 1', {
@@ -965,7 +965,7 @@ test_that('<int | lgl> == <dbl> :: FALSE == 1', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], FALSE == 1)
+  expect_identical(out_df[, 1], FALSE == 1)
 })
 
 test_that('<int | lgl> == <dbl> :: FALSE == 0', {
@@ -984,7 +984,7 @@ test_that('<int | lgl> == <dbl> :: FALSE == 0', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], FALSE == 0)
+  expect_identical(out_df[, 1], FALSE == 0)
 })
 
 test_that('<int | lgl> == <dbl> :: TRUE == 0', {
@@ -1003,7 +1003,7 @@ test_that('<int | lgl> == <dbl> :: TRUE == 0', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], TRUE == 0)
+  expect_identical(out_df[, 1], TRUE == 0)
 })
 
 test_that('<int | lgl> == <dbl> :: NA == 0', {
@@ -1022,7 +1022,7 @@ test_that('<int | lgl> == <dbl> :: NA == 0', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], NA == 0)
+  expect_identical(out_df[, 1], NA == 0)
 })
 
 test_that('<int | lgl> == <dbl> :: 42L == NA_real_', {
@@ -1041,7 +1041,7 @@ test_that('<int | lgl> == <dbl> :: 42L == NA_real_', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], 42L == NA_real_)
+  expect_identical(out_df[, 1], 42L == NA_real_)
 })
 
 test_that('<int | lgl> == <dbl> :: TRUE == NA_real_', {
@@ -1060,7 +1060,7 @@ test_that('<int | lgl> == <dbl> :: TRUE == NA_real_', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], TRUE == NA_real_)
+  expect_identical(out_df[, 1], TRUE == NA_real_)
 })
 
 test_that('<int | lgl> == <dbl> :: FALSE == NA_real_', {
@@ -1079,7 +1079,7 @@ test_that('<int | lgl> == <dbl> :: FALSE == NA_real_', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], FALSE == NA_real_)
+  expect_identical(out_df[, 1], FALSE == NA_real_)
 })
 
 test_that('<str> == <str> :: "a" == "b"', {
@@ -1098,7 +1098,7 @@ test_that('<str> == <str> :: "a" == "b"', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], "a" == "b")
+  expect_identical(out_df[, 1], "a" == "b")
 })
 
 test_that('<str> == <str> :: "a" == "a"', {
@@ -1117,7 +1117,7 @@ test_that('<str> == <str> :: "a" == "a"', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], "a" == "a")
+  expect_identical(out_df[, 1], "a" == "a")
 })
 
 test_that('<str> == <str> :: "a" == NA_character_', {
@@ -1136,7 +1136,7 @@ test_that('<str> == <str> :: "a" == NA_character_', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], "a" == NA_character_)
+  expect_identical(out_df[, 1], "a" == NA_character_)
 })
 
 test_that('<str> == <str> :: NA_character_ == "a"', {
@@ -1155,7 +1155,7 @@ test_that('<str> == <str> :: NA_character_ == "a"', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], NA_character_ == "a")
+  expect_identical(out_df[, 1], NA_character_ == "a")
 })
 
 test_that('<str>        == <lgl> :: "TRUE" == TRUE', {
@@ -1174,7 +1174,7 @@ test_that('<str>        == <lgl> :: "TRUE" == TRUE', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], "TRUE" == TRUE)
+  expect_identical(out_df[, 1], "TRUE" == TRUE)
 })
 
 test_that('<str>        == <lgl> :: "TRUE" == FALSE', {
@@ -1193,7 +1193,7 @@ test_that('<str>        == <lgl> :: "TRUE" == FALSE', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], "TRUE" == FALSE)
+  expect_identical(out_df[, 1], "TRUE" == FALSE)
 })
 
 test_that('<str>        == <lgl> :: "TRUE" == NA', {
@@ -1212,7 +1212,7 @@ test_that('<str>        == <lgl> :: "TRUE" == NA', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], "TRUE" == NA)
+  expect_identical(out_df[, 1], "TRUE" == NA)
 })
 
 test_that('<str>        == <lgl> :: NA_character_ == TRUE', {
@@ -1231,7 +1231,7 @@ test_that('<str>        == <lgl> :: NA_character_ == TRUE', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], NA_character_ == TRUE)
+  expect_identical(out_df[, 1], NA_character_ == TRUE)
 })
 
 test_that('<str>        == <lgl> :: NA_character_ == FALSE', {
@@ -1250,7 +1250,7 @@ test_that('<str>        == <lgl> :: NA_character_ == FALSE', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], NA_character_ == FALSE)
+  expect_identical(out_df[, 1], NA_character_ == FALSE)
 })
 
 test_that('<str>        == <lgl> :: "FALSE" == TRUE', {
@@ -1269,7 +1269,7 @@ test_that('<str>        == <lgl> :: "FALSE" == TRUE', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], "FALSE" == TRUE)
+  expect_identical(out_df[, 1], "FALSE" == TRUE)
 })
 
 test_that('<str>        == <lgl> :: "FALSE" == FALSE', {
@@ -1288,7 +1288,7 @@ test_that('<str>        == <lgl> :: "FALSE" == FALSE', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], "FALSE" == FALSE)
+  expect_identical(out_df[, 1], "FALSE" == FALSE)
 })
 
 test_that('<str>        == <lgl> :: "tRue" == TRUE', {
@@ -1307,7 +1307,7 @@ test_that('<str>        == <lgl> :: "tRue" == TRUE', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], "tRue" == TRUE)
+  expect_identical(out_df[, 1], "tRue" == TRUE)
 })
 
 test_that('<str>        == <lgl> :: "fAlse" == FALSE', {
@@ -1326,7 +1326,7 @@ test_that('<str>        == <lgl> :: "fAlse" == FALSE', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], "fAlse" == FALSE)
+  expect_identical(out_df[, 1], "fAlse" == FALSE)
 })
 
 test_that('<lgl> == <str> :: TRUE == "TRUE"', {
@@ -1345,7 +1345,7 @@ test_that('<lgl> == <str> :: TRUE == "TRUE"', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], TRUE == "TRUE")
+  expect_identical(out_df[, 1], TRUE == "TRUE")
 })
 
 test_that('<lgl> == <str> :: FALSE == "TRUE"', {
@@ -1364,7 +1364,7 @@ test_that('<lgl> == <str> :: FALSE == "TRUE"', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], FALSE == "TRUE")
+  expect_identical(out_df[, 1], FALSE == "TRUE")
 })
 
 test_that('<lgl> == <str> :: NA == "TRUE"', {
@@ -1383,7 +1383,7 @@ test_that('<lgl> == <str> :: NA == "TRUE"', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], NA == "TRUE")
+  expect_identical(out_df[, 1], NA == "TRUE")
 })
 
 test_that('<lgl> == <str> :: TRUE == NA_character_', {
@@ -1402,7 +1402,7 @@ test_that('<lgl> == <str> :: TRUE == NA_character_', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], TRUE == NA_character_)
+  expect_identical(out_df[, 1], TRUE == NA_character_)
 })
 
 test_that('<lgl> == <str> :: FALSE == NA_character_', {
@@ -1421,7 +1421,7 @@ test_that('<lgl> == <str> :: FALSE == NA_character_', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], FALSE == NA_character_)
+  expect_identical(out_df[, 1], FALSE == NA_character_)
 })
 
 test_that('<lgl> == <str> :: TRUE == "FALSE"', {
@@ -1440,7 +1440,7 @@ test_that('<lgl> == <str> :: TRUE == "FALSE"', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], TRUE == "FALSE")
+  expect_identical(out_df[, 1], TRUE == "FALSE")
 })
 
 test_that('<lgl> == <str> :: FALSE == "FALSE"', {
@@ -1459,7 +1459,7 @@ test_that('<lgl> == <str> :: FALSE == "FALSE"', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], FALSE == "FALSE")
+  expect_identical(out_df[, 1], FALSE == "FALSE")
 })
 
 test_that('<lgl> == <str> :: TRUE == "tRue"', {
@@ -1478,7 +1478,7 @@ test_that('<lgl> == <str> :: TRUE == "tRue"', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], TRUE == "tRue")
+  expect_identical(out_df[, 1], TRUE == "tRue")
 })
 
 test_that('<lgl> == <str> :: FALSE == "fAlse"', {
@@ -1497,7 +1497,7 @@ test_that('<lgl> == <str> :: FALSE == "fAlse"', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], FALSE == "fAlse")
+  expect_identical(out_df[, 1], FALSE == "fAlse")
 })
 
 test_that('<str> == <dbl> :: "2" == 1', {
@@ -1516,7 +1516,7 @@ test_that('<str> == <dbl> :: "2" == 1', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], "2" == 1)
+  expect_identical(out_df[, 1], "2" == 1)
 })
 
 test_that('<str> == <dbl> :: "1" == 1', {
@@ -1535,7 +1535,7 @@ test_that('<str> == <dbl> :: "1" == 1', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], "1" == 1)
+  expect_identical(out_df[, 1], "1" == 1)
 })
 
 test_that('<str> == <dbl> :: "1" == NA_real_', {
@@ -1554,7 +1554,7 @@ test_that('<str> == <dbl> :: "1" == NA_real_', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], "1" == NA_real_)
+  expect_identical(out_df[, 1], "1" == NA_real_)
 })
 
 test_that('<str> == <dbl> :: NA_character_ == 3', {
@@ -1573,7 +1573,7 @@ test_that('<str> == <dbl> :: NA_character_ == 3', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], NA_character_ == 3)
+  expect_identical(out_df[, 1], NA_character_ == 3)
 })
 
 test_that('<str> == <dbl> :: 1 == "2"', {
@@ -1592,7 +1592,7 @@ test_that('<str> == <dbl> :: 1 == "2"', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], 1 == "2")
+  expect_identical(out_df[, 1], 1 == "2")
 })
 
 test_that('<str> == <dbl> :: 1 == "1"', {
@@ -1611,7 +1611,7 @@ test_that('<str> == <dbl> :: 1 == "1"', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], 1 == "1")
+  expect_identical(out_df[, 1], 1 == "1")
 })
 
 test_that('<str> == <dbl> :: NA_real_ == "2"', {
@@ -1630,7 +1630,7 @@ test_that('<str> == <dbl> :: NA_real_ == "2"', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], NA_real_ == "2")
+  expect_identical(out_df[, 1], NA_real_ == "2")
 })
 
 test_that('<str> == <dbl> :: 3 == NA_character_', {
@@ -1649,7 +1649,7 @@ test_that('<str> == <dbl> :: 3 == NA_character_', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], 3 == NA_character_)
+  expect_identical(out_df[, 1], 3 == NA_character_)
 })
 
 test_that('<int> == <str> :: NA_integer_ == "string"', {
@@ -1668,7 +1668,7 @@ test_that('<int> == <str> :: NA_integer_ == "string"', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], NA_integer_ == "string")
+  expect_identical(out_df[, 1], NA_integer_ == "string")
 })
 
 test_that('<int> == <str> :: 1L == "1"', {
@@ -1687,7 +1687,7 @@ test_that('<int> == <str> :: 1L == "1"', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], 1L == "1")
+  expect_identical(out_df[, 1], 1L == "1")
 })
 
 test_that('<int> == <str> :: "string" == NA_integer_', {
@@ -1706,7 +1706,7 @@ test_that('<int> == <str> :: "string" == NA_integer_', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], "string" == NA_integer_)
+  expect_identical(out_df[, 1], "string" == NA_integer_)
 })
 
 test_that('<int> == <str> :: "1" == 1L', {
@@ -1725,7 +1725,7 @@ test_that('<int> == <str> :: "1" == 1L', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], "1" == 1L)
+  expect_identical(out_df[, 1], "1" == 1L)
 })
 
 test_that('<int> == <dbl> :: 2L == 1', {
@@ -1744,7 +1744,7 @@ test_that('<int> == <dbl> :: 2L == 1', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], 2L == 1)
+  expect_identical(out_df[, 1], 2L == 1)
 })
 
 test_that('<int> == <dbl> :: 1L == 1', {
@@ -1763,7 +1763,7 @@ test_that('<int> == <dbl> :: 1L == 1', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], 1L == 1)
+  expect_identical(out_df[, 1], 1L == 1)
 })
 
 test_that('<int> == <dbl> :: NA_integer_ == 1', {
@@ -1782,7 +1782,7 @@ test_that('<int> == <dbl> :: NA_integer_ == 1', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], NA_integer_ == 1)
+  expect_identical(out_df[, 1], NA_integer_ == 1)
 })
 
 test_that('<int> == <dbl> :: 3L == NA_real_', {
@@ -1801,7 +1801,7 @@ test_that('<int> == <dbl> :: 3L == NA_real_', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], 3L == NA_real_)
+  expect_identical(out_df[, 1], 3L == NA_real_)
 })
 
 test_that('<int> == <dbl> :: 1 == 2L', {
@@ -1820,7 +1820,7 @@ test_that('<int> == <dbl> :: 1 == 2L', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], 1 == 2L)
+  expect_identical(out_df[, 1], 1 == 2L)
 })
 
 test_that('<int> == <dbl> :: 1 == 1L', {
@@ -1839,7 +1839,7 @@ test_that('<int> == <dbl> :: 1 == 1L', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], 1 == 1L)
+  expect_identical(out_df[, 1], 1 == 1L)
 })
 
 test_that('<int> == <dbl> :: 1 == NA_integer_', {
@@ -1858,7 +1858,7 @@ test_that('<int> == <dbl> :: 1 == NA_integer_', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], 1 == NA_integer_)
+  expect_identical(out_df[, 1], 1 == NA_integer_)
 })
 
 test_that('<int> == <dbl> :: NA_real_ == 3L', {
@@ -1877,6 +1877,6 @@ test_that('<int> == <dbl> :: NA_real_ == 3L', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], NA_real_ == 3L)
+  expect_identical(out_df[, 1], NA_real_ == 3L)
 })
 

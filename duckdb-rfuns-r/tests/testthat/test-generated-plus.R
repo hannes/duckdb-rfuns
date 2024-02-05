@@ -15,7 +15,7 @@ test_that('<dbl> + <dbl> :: 1 + 1', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], 1 + 1)
+  expect_identical(out_df[, 1], 1 + 1)
 })
 
 test_that('<dbl> + <dbl> :: 1e+06 + 2e+06', {
@@ -34,7 +34,7 @@ test_that('<dbl> + <dbl> :: 1e+06 + 2e+06', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], 1e+06 + 2e+06)
+  expect_identical(out_df[, 1], 1e+06 + 2e+06)
 })
 
 test_that('<dbl> + <dbl> :: 1e+09 + 2e+09', {
@@ -53,7 +53,7 @@ test_that('<dbl> + <dbl> :: 1e+09 + 2e+09', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], 1e+09 + 2e+09)
+  expect_identical(out_df[, 1], 1e+09 + 2e+09)
 })
 
 test_that('<dbl> + <dbl> :: 1 + NA_real_', {
@@ -72,7 +72,7 @@ test_that('<dbl> + <dbl> :: 1 + NA_real_', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], 1 + NA_real_)
+  expect_identical(out_df[, 1], 1 + NA_real_)
 })
 
 test_that('<dbl> + <dbl> :: NA_real_ + 2', {
@@ -91,7 +91,7 @@ test_that('<dbl> + <dbl> :: NA_real_ + 2', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], NA_real_ + 2)
+  expect_identical(out_df[, 1], NA_real_ + 2)
 })
 
 test_that('<int> + <int> :: 1 + 2', {
@@ -110,7 +110,7 @@ test_that('<int> + <int> :: 1 + 2', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], 1 + 2)
+  expect_identical(out_df[, 1], 1 + 2)
 })
 
 test_that('<int> + <int> :: NaN + 2', {
@@ -129,7 +129,7 @@ test_that('<int> + <int> :: NaN + 2', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], NaN + 2)
+  expect_identical(out_df[, 1], NaN + 2)
 })
 
 test_that('<int> + <int> :: NA_real_ + 2', {
@@ -148,7 +148,7 @@ test_that('<int> + <int> :: NA_real_ + 2', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], NA_real_ + 2)
+  expect_identical(out_df[, 1], NA_real_ + 2)
 })
 
 test_that('<int> + <int> :: 1 + NA_real_', {
@@ -167,7 +167,7 @@ test_that('<int> + <int> :: 1 + NA_real_', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], 1 + NA_real_)
+  expect_identical(out_df[, 1], 1 + NA_real_)
 })
 
 test_that('<int> + <int> :: 1 + NaN', {
@@ -186,6 +186,6 @@ test_that('<int> + <int> :: 1 + NaN', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], 1 + NaN)
+  expect_identical(out_df[, 1], 1 + NaN)
 })
 

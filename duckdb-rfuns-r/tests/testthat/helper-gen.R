@@ -65,7 +65,7 @@ test_that('{desc} :: {expr$expression}', {{
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_equal(out_df[, 1], {expr$expression})
+  expect_identical(out_df[, 1], {expr$expression})
 }})
 
 
