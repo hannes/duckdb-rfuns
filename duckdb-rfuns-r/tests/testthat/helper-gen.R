@@ -11,7 +11,7 @@ if (Sys.getenv("CI") == "" ) {
     "+"  = "r_base::+"
   )
 
-  convert_call <- function(expr, type, ...) {
+  convert_expr <- function(expr) {
     fun <- as.character(rlang::node_car(expr))
 
     args <- as.list(expr[-1])
@@ -22,24 +22,8 @@ if (Sys.getenv("CI") == "" ) {
       fun = fun,
       udf = udfs[[fun]],
       data = tibble::as_tibble(args),
-      expression = deparse(expr, nlines = 1L),
-      type = type,
-      ...
+      expression = deparse(expr, nlines = 1L)
     )
-  }
-
-  convert_expr <- function(expr) {
-    if (rlang::is_call(expr, "expect_udf_eq")){
-      convert_call(
-        rlang::node_cadr(expr),
-        type = "udf_equal",
-        expected = deparse(rlang::node_car(rlang::node_cddr(expr)))
-      )
-    } else if (rlang::is_call(expr, "expect_udf_na")) {
-      convert_call(rlang::node_cadr(expr), type = "udf_na")
-    } else {
-      convert_call(expr, type = "udf_snapshot")
-    }
   }
 
   gen_dir <- system.file(package = "duckdbrfuns", "tests", "testthat", "gen")
@@ -64,11 +48,7 @@ if (Sys.getenv("CI") == "" ) {
       for (expr in exprs) {
         in_df <- paste(constructive::construct(expr$data)$code, collapse = "\n")
         args_references <- paste(glue::glue("             duckdb:::expr_reference('{names(expr$data)}')"), collapse = ", \n")
-        expectation <- switch(expr$type,
-          udf_equal    = glue::glue('expect_equal(out_df[, 1L], {expr$expected})'),
-          udf_na       = glue::glue('expect_true(is.na(out_df[, 1L]))'),
-          udf_snapshot = glue::glue('expect_snapshot(out_df)')
-        )
+        expectation <- glue::glue('expect_equal(out_df[, 1], {expr$expression})')
 
         test_expr <- glue::glue(r"[
 test_that('{desc} :: {expr$expression}', {{
