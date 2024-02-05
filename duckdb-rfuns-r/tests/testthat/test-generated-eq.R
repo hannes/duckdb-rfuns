@@ -8,14 +8,15 @@ test_that('<int> == <int> :: 0L == 0L', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<int> == <int> :: 1L == 0L', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = 1L, x2 = 0L)
@@ -25,14 +26,15 @@ test_that('<int> == <int> :: 1L == 0L', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<int> == <int> :: 1L == NA_integer_', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = 1L, x2 = NA_integer_)
@@ -42,14 +44,15 @@ test_that('<int> == <int> :: 1L == NA_integer_', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<int> == <int> :: NA_integer_ == 2L', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = NA_integer_, x2 = 2L)
@@ -59,14 +62,15 @@ test_that('<int> == <int> :: NA_integer_ == 2L', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<int> == <int> :: NA_integer_ == NA_integer_', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = NA_integer_, x2 = NA_integer_)
@@ -76,14 +80,15 @@ test_that('<int> == <int> :: NA_integer_ == NA_integer_', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<lgl> == <lgl> :: TRUE == TRUE', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = TRUE, x2 = TRUE)
@@ -93,14 +98,15 @@ test_that('<lgl> == <lgl> :: TRUE == TRUE', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<lgl> == <lgl> :: TRUE == FALSE', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = TRUE, x2 = FALSE)
@@ -110,14 +116,15 @@ test_that('<lgl> == <lgl> :: TRUE == FALSE', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<lgl> == <lgl> :: FALSE == TRUE', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = FALSE, x2 = TRUE)
@@ -127,14 +134,15 @@ test_that('<lgl> == <lgl> :: FALSE == TRUE', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<lgl> == <lgl> :: FALSE == FALSE', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = FALSE, x2 = FALSE)
@@ -144,14 +152,15 @@ test_that('<lgl> == <lgl> :: FALSE == FALSE', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<lgl> == <lgl> :: NA == FALSE', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = NA, x2 = FALSE)
@@ -161,14 +170,15 @@ test_that('<lgl> == <lgl> :: NA == FALSE', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<lgl> == <lgl> :: NA == TRUE', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = NA, x2 = TRUE)
@@ -178,14 +188,15 @@ test_that('<lgl> == <lgl> :: NA == TRUE', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<lgl> == <lgl> :: TRUE == NA', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = TRUE, x2 = NA)
@@ -195,14 +206,15 @@ test_that('<lgl> == <lgl> :: TRUE == NA', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<lgl> == <lgl> :: FALSE == NA', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = FALSE, x2 = NA)
@@ -212,14 +224,15 @@ test_that('<lgl> == <lgl> :: FALSE == NA', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<int> == <lgl> :: 1 == TRUE', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = 1, x2 = TRUE)
@@ -229,14 +242,15 @@ test_that('<int> == <lgl> :: 1 == TRUE', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<int> == <lgl> :: 1 == FALSE', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = 1, x2 = FALSE)
@@ -246,14 +260,15 @@ test_that('<int> == <lgl> :: 1 == FALSE', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<int> == <lgl> :: 2 == TRUE', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = 2, x2 = TRUE)
@@ -263,14 +278,15 @@ test_that('<int> == <lgl> :: 2 == TRUE', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<int> == <lgl> :: 2 == FALSE', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = 2, x2 = FALSE)
@@ -280,14 +296,15 @@ test_that('<int> == <lgl> :: 2 == FALSE', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<int> == <lgl> :: 0 == TRUE', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = 0, x2 = TRUE)
@@ -297,14 +314,15 @@ test_that('<int> == <lgl> :: 0 == TRUE', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<int> == <lgl> :: 0 == FALSE', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = 0, x2 = FALSE)
@@ -314,14 +332,15 @@ test_that('<int> == <lgl> :: 0 == FALSE', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<int> == <lgl> :: NA_integer_ == TRUE', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = NA_integer_, x2 = TRUE)
@@ -331,14 +350,15 @@ test_that('<int> == <lgl> :: NA_integer_ == TRUE', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<int> == <lgl> :: NA_integer_ == NA', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = NA_integer_, x2 = NA)
@@ -348,14 +368,15 @@ test_that('<int> == <lgl> :: NA_integer_ == NA', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<int> == <lgl> :: 42 == NA_integer_', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = 42, x2 = NA_integer_)
@@ -365,14 +386,15 @@ test_that('<int> == <lgl> :: 42 == NA_integer_', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<lgl> == <int> :: TRUE == 1', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = TRUE, x2 = 1)
@@ -382,14 +404,15 @@ test_that('<lgl> == <int> :: TRUE == 1', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<lgl> == <int> :: FALSE == 1', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = FALSE, x2 = 1)
@@ -399,14 +422,15 @@ test_that('<lgl> == <int> :: FALSE == 1', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<lgl> == <int> :: TRUE == 2', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = TRUE, x2 = 2)
@@ -416,14 +440,15 @@ test_that('<lgl> == <int> :: TRUE == 2', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<lgl> == <int> :: FALSE == 2', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = FALSE, x2 = 2)
@@ -433,14 +458,15 @@ test_that('<lgl> == <int> :: FALSE == 2', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<lgl> == <int> :: TRUE == 0', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = TRUE, x2 = 0)
@@ -450,14 +476,15 @@ test_that('<lgl> == <int> :: TRUE == 0', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<lgl> == <int> :: FALSE == 0', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = FALSE, x2 = 0)
@@ -467,14 +494,15 @@ test_that('<lgl> == <int> :: FALSE == 0', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<lgl> == <int> :: TRUE == NA_integer_', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = TRUE, x2 = NA_integer_)
@@ -484,14 +512,15 @@ test_that('<lgl> == <int> :: TRUE == NA_integer_', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<lgl> == <int> :: NA == NA_integer_', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = NA, x2 = NA_integer_)
@@ -501,14 +530,15 @@ test_that('<lgl> == <int> :: NA == NA_integer_', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<lgl> == <int> :: NA == 42', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = NA, x2 = 42)
@@ -518,14 +548,15 @@ test_that('<lgl> == <int> :: NA == 42', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<dbl> == <dbl> :: 1.5 == 2', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = 1.5, x2 = 2)
@@ -535,14 +566,15 @@ test_that('<dbl> == <dbl> :: 1.5 == 2', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<dbl> == <dbl> :: 1.5 == 1.5', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = 1.5, x2 = 1.5)
@@ -552,14 +584,15 @@ test_that('<dbl> == <dbl> :: 1.5 == 1.5', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<dbl> == <dbl> :: 1.5 == NA_real_', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = 1.5, x2 = NA_real_)
@@ -569,14 +602,15 @@ test_that('<dbl> == <dbl> :: 1.5 == NA_real_', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<dbl> == <dbl> :: NA_real_ == 2.5', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = NA_real_, x2 = 2.5)
@@ -586,14 +620,15 @@ test_that('<dbl> == <dbl> :: NA_real_ == 2.5', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<dbl> == <int | lgl> :: 2 == 2L', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = 2, x2 = 2L)
@@ -603,14 +638,15 @@ test_that('<dbl> == <int | lgl> :: 2 == 2L', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<dbl> == <int | lgl> :: 3.5 == 2L', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = 3.5, x2 = 2L)
@@ -620,14 +656,15 @@ test_that('<dbl> == <int | lgl> :: 3.5 == 2L', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<dbl> == <int | lgl> :: 3.5 == NA_integer_', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = 3.5, x2 = NA_integer_)
@@ -637,14 +674,15 @@ test_that('<dbl> == <int | lgl> :: 3.5 == NA_integer_', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<dbl> == <int | lgl> :: 1 == TRUE', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = 1, x2 = TRUE)
@@ -654,14 +692,15 @@ test_that('<dbl> == <int | lgl> :: 1 == TRUE', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<dbl> == <int | lgl> :: 1 == FALSE', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = 1, x2 = FALSE)
@@ -671,14 +710,15 @@ test_that('<dbl> == <int | lgl> :: 1 == FALSE', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<dbl> == <int | lgl> :: 0 == FALSE', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = 0, x2 = FALSE)
@@ -688,14 +728,15 @@ test_that('<dbl> == <int | lgl> :: 0 == FALSE', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<dbl> == <int | lgl> :: 0 == TRUE', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = 0, x2 = TRUE)
@@ -705,14 +746,15 @@ test_that('<dbl> == <int | lgl> :: 0 == TRUE', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<dbl> == <int | lgl> :: 2 == NA', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = 2, x2 = NA)
@@ -722,14 +764,15 @@ test_that('<dbl> == <int | lgl> :: 2 == NA', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<dbl> == <int | lgl> :: NA_real_ == 42L', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = NA_real_, x2 = 42L)
@@ -739,14 +782,15 @@ test_that('<dbl> == <int | lgl> :: NA_real_ == 42L', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<dbl> == <int | lgl> :: NA_real_ == TRUE', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = NA_real_, x2 = TRUE)
@@ -756,14 +800,15 @@ test_that('<dbl> == <int | lgl> :: NA_real_ == TRUE', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<dbl> == <int | lgl> :: NA_real_ == FALSE', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = NA_real_, x2 = FALSE)
@@ -773,14 +818,15 @@ test_that('<dbl> == <int | lgl> :: NA_real_ == FALSE', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<int | lgl> == <dbl> :: 2L == 2', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = 2L, x2 = 2)
@@ -790,14 +836,15 @@ test_that('<int | lgl> == <dbl> :: 2L == 2', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<int | lgl> == <dbl> :: 2L == 3.5', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = 2L, x2 = 3.5)
@@ -807,14 +854,15 @@ test_that('<int | lgl> == <dbl> :: 2L == 3.5', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<int | lgl> == <dbl> :: NA_integer_ == 3.5', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = NA_integer_, x2 = 3.5)
@@ -824,14 +872,15 @@ test_that('<int | lgl> == <dbl> :: NA_integer_ == 3.5', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<int | lgl> == <dbl> :: TRUE == 1', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = TRUE, x2 = 1)
@@ -841,14 +890,15 @@ test_that('<int | lgl> == <dbl> :: TRUE == 1', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<int | lgl> == <dbl> :: FALSE == 1', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = FALSE, x2 = 1)
@@ -858,14 +908,15 @@ test_that('<int | lgl> == <dbl> :: FALSE == 1', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<int | lgl> == <dbl> :: FALSE == 0', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = FALSE, x2 = 0)
@@ -875,14 +926,15 @@ test_that('<int | lgl> == <dbl> :: FALSE == 0', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<int | lgl> == <dbl> :: TRUE == 0', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = TRUE, x2 = 0)
@@ -892,14 +944,15 @@ test_that('<int | lgl> == <dbl> :: TRUE == 0', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<int | lgl> == <dbl> :: NA == 0', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = NA, x2 = 0)
@@ -909,14 +962,15 @@ test_that('<int | lgl> == <dbl> :: NA == 0', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<int | lgl> == <dbl> :: 42L == NA_real_', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = 42L, x2 = NA_real_)
@@ -926,14 +980,15 @@ test_that('<int | lgl> == <dbl> :: 42L == NA_real_', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<int | lgl> == <dbl> :: TRUE == NA_real_', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = TRUE, x2 = NA_real_)
@@ -943,14 +998,15 @@ test_that('<int | lgl> == <dbl> :: TRUE == NA_real_', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<int | lgl> == <dbl> :: FALSE == NA_real_', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = FALSE, x2 = NA_real_)
@@ -960,14 +1016,15 @@ test_that('<int | lgl> == <dbl> :: FALSE == NA_real_', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<str> == <str> :: "a" == "b"', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = "a", x2 = "b")
@@ -977,14 +1034,15 @@ test_that('<str> == <str> :: "a" == "b"', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<str> == <str> :: "a" == "a"', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = "a", x2 = "a")
@@ -994,14 +1052,15 @@ test_that('<str> == <str> :: "a" == "a"', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<str> == <str> :: "a" == NA_character_', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = "a", x2 = NA_character_)
@@ -1011,14 +1070,15 @@ test_that('<str> == <str> :: "a" == NA_character_', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<str> == <str> :: NA_character_ == "a"', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = NA_character_, x2 = "a")
@@ -1028,14 +1088,15 @@ test_that('<str> == <str> :: NA_character_ == "a"', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<str>        == <lgl> :: "TRUE" == TRUE', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = "TRUE", x2 = TRUE)
@@ -1045,14 +1106,15 @@ test_that('<str>        == <lgl> :: "TRUE" == TRUE', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<str>        == <lgl> :: "TRUE" == FALSE', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = "TRUE", x2 = FALSE)
@@ -1062,14 +1124,15 @@ test_that('<str>        == <lgl> :: "TRUE" == FALSE', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<str>        == <lgl> :: "TRUE" == NA', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = "TRUE", x2 = NA)
@@ -1079,14 +1142,15 @@ test_that('<str>        == <lgl> :: "TRUE" == NA', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<str>        == <lgl> :: NA_character_ == TRUE', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = NA_character_, x2 = TRUE)
@@ -1096,14 +1160,15 @@ test_that('<str>        == <lgl> :: NA_character_ == TRUE', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<str>        == <lgl> :: NA_character_ == FALSE', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = NA_character_, x2 = FALSE)
@@ -1113,14 +1178,15 @@ test_that('<str>        == <lgl> :: NA_character_ == FALSE', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<str>        == <lgl> :: "FALSE" == TRUE', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = "FALSE", x2 = TRUE)
@@ -1130,14 +1196,15 @@ test_that('<str>        == <lgl> :: "FALSE" == TRUE', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<str>        == <lgl> :: "FALSE" == FALSE', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = "FALSE", x2 = FALSE)
@@ -1147,14 +1214,15 @@ test_that('<str>        == <lgl> :: "FALSE" == FALSE', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<str>        == <lgl> :: "tRue" == TRUE', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = "tRue", x2 = TRUE)
@@ -1164,14 +1232,15 @@ test_that('<str>        == <lgl> :: "tRue" == TRUE', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<str>        == <lgl> :: "fAlse" == FALSE', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = "fAlse", x2 = FALSE)
@@ -1181,14 +1250,15 @@ test_that('<str>        == <lgl> :: "fAlse" == FALSE', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<lgl> == <str> :: TRUE == "TRUE"', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = TRUE, x2 = "TRUE")
@@ -1198,14 +1268,15 @@ test_that('<lgl> == <str> :: TRUE == "TRUE"', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<lgl> == <str> :: FALSE == "TRUE"', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = FALSE, x2 = "TRUE")
@@ -1215,14 +1286,15 @@ test_that('<lgl> == <str> :: FALSE == "TRUE"', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<lgl> == <str> :: NA == "TRUE"', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = NA, x2 = "TRUE")
@@ -1232,14 +1304,15 @@ test_that('<lgl> == <str> :: NA == "TRUE"', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<lgl> == <str> :: TRUE == NA_character_', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = TRUE, x2 = NA_character_)
@@ -1249,14 +1322,15 @@ test_that('<lgl> == <str> :: TRUE == NA_character_', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<lgl> == <str> :: FALSE == NA_character_', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = FALSE, x2 = NA_character_)
@@ -1266,14 +1340,15 @@ test_that('<lgl> == <str> :: FALSE == NA_character_', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<lgl> == <str> :: TRUE == "FALSE"', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = TRUE, x2 = "FALSE")
@@ -1283,14 +1358,15 @@ test_that('<lgl> == <str> :: TRUE == "FALSE"', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<lgl> == <str> :: FALSE == "FALSE"', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = FALSE, x2 = "FALSE")
@@ -1300,14 +1376,15 @@ test_that('<lgl> == <str> :: FALSE == "FALSE"', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<lgl> == <str> :: TRUE == "tRue"', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = TRUE, x2 = "tRue")
@@ -1317,14 +1394,15 @@ test_that('<lgl> == <str> :: TRUE == "tRue"', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<lgl> == <str> :: FALSE == "fAlse"', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = FALSE, x2 = "fAlse")
@@ -1334,14 +1412,15 @@ test_that('<lgl> == <str> :: FALSE == "fAlse"', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<str> == <dbl> :: "2" == 1', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = "2", x2 = 1)
@@ -1351,14 +1430,15 @@ test_that('<str> == <dbl> :: "2" == 1', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<str> == <dbl> :: "1" == 1', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = "1", x2 = 1)
@@ -1368,14 +1448,15 @@ test_that('<str> == <dbl> :: "1" == 1', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<str> == <dbl> :: "1" == NA_real_', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = "1", x2 = NA_real_)
@@ -1385,14 +1466,15 @@ test_that('<str> == <dbl> :: "1" == NA_real_', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<str> == <dbl> :: NA_character_ == 3', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = NA_character_, x2 = 3)
@@ -1402,14 +1484,15 @@ test_that('<str> == <dbl> :: NA_character_ == 3', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<str> == <dbl> :: 1 == "2"', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = 1, x2 = "2")
@@ -1419,14 +1502,15 @@ test_that('<str> == <dbl> :: 1 == "2"', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<str> == <dbl> :: 1 == "1"', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = 1, x2 = "1")
@@ -1436,14 +1520,15 @@ test_that('<str> == <dbl> :: 1 == "1"', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<str> == <dbl> :: NA_real_ == "2"', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = NA_real_, x2 = "2")
@@ -1453,14 +1538,15 @@ test_that('<str> == <dbl> :: NA_real_ == "2"', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<str> == <dbl> :: 3 == NA_character_', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = 3, x2 = NA_character_)
@@ -1470,14 +1556,15 @@ test_that('<str> == <dbl> :: 3 == NA_character_', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<int> == <str> :: NA_integer_ == "string"', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = NA_integer_, x2 = "string")
@@ -1487,14 +1574,15 @@ test_that('<int> == <str> :: NA_integer_ == "string"', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<int> == <str> :: 1L == "1"', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = 1L, x2 = "1")
@@ -1504,14 +1592,15 @@ test_that('<int> == <str> :: 1L == "1"', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<int> == <str> :: "string" == NA_integer_', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = "string", x2 = NA_integer_)
@@ -1521,14 +1610,15 @@ test_that('<int> == <str> :: "string" == NA_integer_', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<int> == <str> :: "1" == 1L', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = "1", x2 = 1L)
@@ -1538,14 +1628,15 @@ test_that('<int> == <str> :: "1" == 1L', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<int> == <dbl> :: 2L == 1', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = 2L, x2 = 1)
@@ -1555,14 +1646,15 @@ test_that('<int> == <dbl> :: 2L == 1', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<int> == <dbl> :: 1L == 1', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = 1L, x2 = 1)
@@ -1572,14 +1664,15 @@ test_that('<int> == <dbl> :: 1L == 1', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<int> == <dbl> :: NA_integer_ == 1', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = NA_integer_, x2 = 1)
@@ -1589,14 +1682,15 @@ test_that('<int> == <dbl> :: NA_integer_ == 1', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<int> == <dbl> :: 3L == NA_real_', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = 3L, x2 = NA_real_)
@@ -1606,14 +1700,15 @@ test_that('<int> == <dbl> :: 3L == NA_real_', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<int> == <dbl> :: 1 == 2L', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = 1, x2 = 2L)
@@ -1623,14 +1718,15 @@ test_that('<int> == <dbl> :: 1 == 2L', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<int> == <dbl> :: 1 == 1L', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = 1, x2 = 1L)
@@ -1640,14 +1736,15 @@ test_that('<int> == <dbl> :: 1 == 1L', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<int> == <dbl> :: 1 == NA_integer_', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = 1, x2 = NA_integer_)
@@ -1657,14 +1754,15 @@ test_that('<int> == <dbl> :: 1 == NA_integer_', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<int> == <dbl> :: NA_real_ == 3L', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = NA_real_, x2 = 3L)
@@ -1674,11 +1772,12 @@ test_that('<int> == <dbl> :: NA_real_ == 3L', {
         list(duckdb:::expr_function(
           'r_base::==',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+

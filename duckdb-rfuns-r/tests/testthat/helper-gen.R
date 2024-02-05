@@ -38,7 +38,7 @@ for (f in gen_files) {
 
     for (expr in exprs) {
       in_df <- paste(constructive::construct(expr$data)$code, collapse = "\n")
-      args_references <- paste(glue::glue("                duckdb:::expr_reference('{names(expr$data)}')"), collapse = ", \n")
+      args_references <- paste(glue::glue("             duckdb:::expr_reference('{names(expr$data)}')"), collapse = ", \n")
 
       test_expr <- glue::glue(r"[
 test_that('{desc} :: {expr$expression}', {{
@@ -57,6 +57,7 @@ test_that('{desc} :: {expr$expression}', {{
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 }})
+
 
 ]")
 

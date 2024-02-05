@@ -8,14 +8,15 @@ test_that('<dbl> + <dbl> :: 1 + 1', {
         list(duckdb:::expr_function(
           'r_base::+',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<dbl> + <dbl> :: 1e+06 + 2e+06', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = 1e+06, x2 = 2e+06)
@@ -25,14 +26,15 @@ test_that('<dbl> + <dbl> :: 1e+06 + 2e+06', {
         list(duckdb:::expr_function(
           'r_base::+',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<dbl> + <dbl> :: 1e+09 + 2e+09', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = 1e+09, x2 = 2e+09)
@@ -42,14 +44,15 @@ test_that('<dbl> + <dbl> :: 1e+09 + 2e+09', {
         list(duckdb:::expr_function(
           'r_base::+',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<dbl> + <dbl> :: 1 + NA_real_', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = 1, x2 = NA_real_)
@@ -59,14 +62,15 @@ test_that('<dbl> + <dbl> :: 1 + NA_real_', {
         list(duckdb:::expr_function(
           'r_base::+',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<dbl> + <dbl> :: NA_real_ + 2', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = NA_real_, x2 = 2)
@@ -76,14 +80,15 @@ test_that('<dbl> + <dbl> :: NA_real_ + 2', {
         list(duckdb:::expr_function(
           'r_base::+',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<int> + <int> :: 1 + 2', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = 1, x2 = 2)
@@ -93,14 +98,15 @@ test_that('<int> + <int> :: 1 + 2', {
         list(duckdb:::expr_function(
           'r_base::+',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<int> + <int> :: NaN + 2', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = NaN, x2 = 2)
@@ -110,14 +116,15 @@ test_that('<int> + <int> :: NaN + 2', {
         list(duckdb:::expr_function(
           'r_base::+',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<int> + <int> :: NA_real_ + 2', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = NA_real_, x2 = 2)
@@ -127,14 +134,15 @@ test_that('<int> + <int> :: NA_real_ + 2', {
         list(duckdb:::expr_function(
           'r_base::+',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<int> + <int> :: 1 + NA_real_', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = 1, x2 = NA_real_)
@@ -144,14 +152,15 @@ test_that('<int> + <int> :: 1 + NA_real_', {
         list(duckdb:::expr_function(
           'r_base::+',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
 test_that('<int> + <int> :: 1 + NaN', {
     con <- local_con()
     in_df <- tibble::tibble(x1 = 1, x2 = NaN)
@@ -161,11 +170,12 @@ test_that('<int> + <int> :: 1 + NaN', {
         list(duckdb:::expr_function(
           'r_base::+',
           list(
-                duckdb:::expr_reference('x1'), 
-                duckdb:::expr_reference('x2')
+             duckdb:::expr_reference('x1'), 
+             duckdb:::expr_reference('x2')
           )
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
     expect_snapshot(out_df)
 })
+
