@@ -47,26 +47,25 @@ if (Sys.getenv("CI") == "" ) {
 
       for (expr in exprs) {
         in_df <- paste(constructive::construct(expr$data)$code, collapse = "\n")
-        args_references <- paste(glue::glue("             duckdb:::expr_reference('{names(expr$data)}')"), collapse = ", \n")
-        expectation <- glue::glue('expect_equal(out_df[, 1], {expr$expression})')
+        args_references <- paste(glue::glue("        duckdb:::expr_reference('{names(expr$data)}')"), collapse = ", \n")
 
         test_expr <- glue::glue(r"[
 test_that('{desc} :: {expr$expression}', {{
-    con <- local_con()
-    in_df <- {in_df}
-    in_rel <- duckdb:::rel_from_df(con, in_df)
-    out_rel <- duckdb:::rel_project(
-        in_rel,
-        list(duckdb:::expr_function(
-          '{expr$udf}',
-          list(
+  con <- local_con()
+  in_df <- {in_df}
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      '{expr$udf}',
+      list(
 {args_references}
-          )
-        ))
-    )
-    out_df <- duckdb:::rel_to_altrep(out_rel)
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
 
-    {expectation}
+  expect_equal(out_df[, 1], {expr$expression})
 }})
 
 
