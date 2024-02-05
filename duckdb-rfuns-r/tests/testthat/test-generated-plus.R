@@ -2,8 +2,7 @@
 test_that('<dbl> + <dbl>', {
   con <- local_con()
   #  1 + 1 
-  in_df <- structure(list(x1 = 1, x2 = 1), class = c("tbl_df", "tbl", "data.frame"
-), row.names = c(NA, -1L))
+  in_df <- tibble::tibble(x1 = 1, x2 = 1)
   in_rel <- duckdb:::rel_from_df(con, in_df)
   out_rel <- duckdb:::rel_project(in_rel,
       list(duckdb:::expr_function(
@@ -19,8 +18,7 @@ test_that('<dbl> + <dbl>', {
 
 
   #  1e+06 + 2e+06 
-  in_df <- structure(list(x1 = 1e+06, x2 = 2e+06), class = c("tbl_df", "tbl", 
-"data.frame"), row.names = c(NA, -1L))
+  in_df <- tibble::tibble(x1 = 1e+06, x2 = 2e+06)
   in_rel <- duckdb:::rel_from_df(con, in_df)
   out_rel <- duckdb:::rel_project(in_rel,
       list(duckdb:::expr_function(
@@ -36,8 +34,7 @@ test_that('<dbl> + <dbl>', {
 
 
   #  1e+09 + 2e+09 
-  in_df <- structure(list(x1 = 1e+09, x2 = 2e+09), class = c("tbl_df", "tbl", 
-"data.frame"), row.names = c(NA, -1L))
+  in_df <- tibble::tibble(x1 = 1e+09, x2 = 2e+09)
   in_rel <- duckdb:::rel_from_df(con, in_df)
   out_rel <- duckdb:::rel_project(in_rel,
       list(duckdb:::expr_function(
@@ -53,8 +50,7 @@ test_that('<dbl> + <dbl>', {
 
 
   #  1 + NA_real_ 
-  in_df <- structure(list(x1 = 1, x2 = NA_real_), class = c("tbl_df", "tbl", 
-"data.frame"), row.names = c(NA, -1L))
+  in_df <- tibble::tibble(x1 = 1, x2 = NA_real_)
   in_rel <- duckdb:::rel_from_df(con, in_df)
   out_rel <- duckdb:::rel_project(in_rel,
       list(duckdb:::expr_function(
@@ -70,8 +66,7 @@ test_that('<dbl> + <dbl>', {
 
 
   #  NA_real_ + 2 
-  in_df <- structure(list(x1 = NA_real_, x2 = 2), class = c("tbl_df", "tbl", 
-"data.frame"), row.names = c(NA, -1L))
+  in_df <- tibble::tibble(x1 = NA_real_, x2 = 2)
   in_rel <- duckdb:::rel_from_df(con, in_df)
   out_rel <- duckdb:::rel_project(in_rel,
       list(duckdb:::expr_function(
@@ -91,8 +86,7 @@ test_that('<dbl> + <dbl>', {
 test_that('<int> + <int>', {
   con <- local_con()
   #  1 + 2 
-  in_df <- structure(list(x1 = 1, x2 = 2), class = c("tbl_df", "tbl", "data.frame"
-), row.names = c(NA, -1L))
+  in_df <- tibble::tibble(x1 = 1, x2 = 2)
   in_rel <- duckdb:::rel_from_df(con, in_df)
   out_rel <- duckdb:::rel_project(in_rel,
       list(duckdb:::expr_function(
@@ -108,8 +102,7 @@ test_that('<int> + <int>', {
 
 
   #  NaN + 2 
-  in_df <- structure(list(x1 = NaN, x2 = 2), class = c("tbl_df", "tbl", 
-"data.frame"), row.names = c(NA, -1L))
+  in_df <- tibble::tibble(x1 = NaN, x2 = 2)
   in_rel <- duckdb:::rel_from_df(con, in_df)
   out_rel <- duckdb:::rel_project(in_rel,
       list(duckdb:::expr_function(
@@ -125,8 +118,7 @@ test_that('<int> + <int>', {
 
 
   #  NA_real_ + 2 
-  in_df <- structure(list(x1 = NA_real_, x2 = 2), class = c("tbl_df", "tbl", 
-"data.frame"), row.names = c(NA, -1L))
+  in_df <- tibble::tibble(x1 = NA_real_, x2 = 2)
   in_rel <- duckdb:::rel_from_df(con, in_df)
   out_rel <- duckdb:::rel_project(in_rel,
       list(duckdb:::expr_function(
@@ -142,8 +134,7 @@ test_that('<int> + <int>', {
 
 
   #  1 + NA_real_ 
-  in_df <- structure(list(x1 = 1, x2 = NA_real_), class = c("tbl_df", "tbl", 
-"data.frame"), row.names = c(NA, -1L))
+  in_df <- tibble::tibble(x1 = 1, x2 = NA_real_)
   in_rel <- duckdb:::rel_from_df(con, in_df)
   out_rel <- duckdb:::rel_project(in_rel,
       list(duckdb:::expr_function(
@@ -159,8 +150,7 @@ test_that('<int> + <int>', {
 
 
   #  1 + NaN 
-  in_df <- structure(list(x1 = 1, x2 = NaN), class = c("tbl_df", "tbl", 
-"data.frame"), row.names = c(NA, -1L))
+  in_df <- tibble::tibble(x1 = 1, x2 = NaN)
   in_rel <- duckdb:::rel_from_df(con, in_df)
   out_rel <- duckdb:::rel_project(in_rel,
       list(duckdb:::expr_function(

@@ -43,7 +43,7 @@ for (f in gen_files) {
     for (expr in exprs) {
       cat("  # ", expr$expression, "\n", file = test_file)
       cat("  in_df <- ", file = test_file)
-      dput(expr$data, file = test_file)
+      cat(constructive::construct(expr$data)$code, file = test_file, sep = "\n")
       cat("  in_rel <- duckdb:::rel_from_df(con, in_df)\n", file = test_file)
 
       cat("  out_rel <- duckdb:::rel_project(in_rel,\n", file = test_file)
