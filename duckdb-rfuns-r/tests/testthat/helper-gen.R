@@ -37,28 +37,30 @@ for (f in gen_files) {
     exprs <- lapply(tail(expressions[group == i], -1), convert_expr)
 
     for (expr in exprs) {
+      in_df <- paste(constructive::construct(expr$data)$code, collapse = "\n")
+      args_references <- paste(glue::glue("                duckdb:::expr_reference('{names(expr$data)}')"), collapse = ", \n")
 
-      cat(glue::glue((r"[test_that('{desc} :: {expr$expression}', ]")), file = test_file)
-      cat("{\n", file = test_file)
-      cat("  con <- local_con()\n", file = test_file)
+      test_expr <- glue::glue(r"[
+test_that('{desc} :: {expr$expression}', {{
+    con <- local_con()
+    in_df <- {in_df}
+    in_rel <- duckdb:::rel_from_df(con, in_df)
+    out_rel <- duckdb:::rel_project(
+        in_rel,
+        list(duckdb:::expr_function(
+          '{expr$udf}',
+          list(
+{args_references}
+          )
+        ))
+    )
+    out_df <- duckdb:::rel_to_altrep(out_rel)
+    expect_snapshot(out_df)
+}})
 
-      cat("  # ", expr$expression, "\n", file = test_file)
-      cat("  in_df <- ", file = test_file)
-      cat(constructive::construct(expr$data)$code, file = test_file, sep = "\n")
-      cat("  in_rel <- duckdb:::rel_from_df(con, in_df)\n", file = test_file)
+]")
 
-      cat("  out_rel <- duckdb:::rel_project(in_rel,\n", file = test_file)
-      cat("      list(duckdb:::expr_function(\n", file = test_file)
-      cat(paste0("        '", expr$udf, "', \n        list(\n"), file = test_file)
-      cat(paste(paste0("          duckdb:::expr_reference('", names(expr$data), "')"), collapse = ",\n"), file = test_file)
-      cat("\n", file = test_file)
-      cat("        )\n", file = test_file)
-      cat("      ))\n", file = test_file)
-      cat("  )\n", file = test_file)
-      cat("  out_df <- duckdb:::rel_to_altrep(out_rel)\n", file = test_file)
-      cat("  expect_snapshot(out_df)\n", file = test_file)
-
-      cat("})\n\n", file = test_file)
+      cat(test_expr, file = test_file)
     }
 
 
