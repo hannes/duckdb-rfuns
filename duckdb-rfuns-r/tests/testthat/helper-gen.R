@@ -16,7 +16,7 @@ convert_expr <- function(expr) {
   args <- lapply(args, convert_arg)
   names(args) <- paste0("x", seq_along(args))
 
-  list(fun = fun, udf = udfs[[fun]], data = tibble::as_tibble(args), expression = deparse(expr))
+  list(fun = fun, udf = udfs[[fun]], data = tibble::as_tibble(args), expression = deparse(expr, nlines = 1L))
 }
 
 gen_dir <- file.path("tests", "testthat", "gen")
@@ -34,13 +34,14 @@ for (f in gen_files) {
   for (i in seq_along(description)) {
     desc <- description[[i]]
 
-    cat(glue::glue((r"[test_that('{desc}', ]")), file = test_file)
-    cat("{\n", file = test_file)
-    cat("  con <- local_con()\n", file = test_file)
-
     exprs <- lapply(tail(expressions[group == i], -1), convert_expr)
 
     for (expr in exprs) {
+
+      cat(glue::glue((r"[test_that('{desc} :: {expr$expression}', ]")), file = test_file)
+      cat("{\n", file = test_file)
+      cat("  con <- local_con()\n", file = test_file)
+
       cat("  # ", expr$expression, "\n", file = test_file)
       cat("  in_df <- ", file = test_file)
       cat(constructive::construct(expr$data)$code, file = test_file, sep = "\n")
@@ -55,10 +56,12 @@ for (f in gen_files) {
       cat("      ))\n", file = test_file)
       cat("  )\n", file = test_file)
       cat("  out_df <- duckdb:::rel_to_altrep(out_rel)\n", file = test_file)
-      cat("  expect_snapshot(out_df)\n\n\n", file = test_file)
+      cat("  expect_snapshot(out_df)\n", file = test_file)
+
+      cat("})\n\n", file = test_file)
     }
 
-    cat("})\n\n", file = test_file)
+
 
   }
 
