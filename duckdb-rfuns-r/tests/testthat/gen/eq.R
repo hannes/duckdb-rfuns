@@ -1,9 +1,9 @@
 "<int> == <int>"
-0L == 0L
-1L == 0L
-1L == NA_integer_
-NA_integer_ == 2L
-NA_integer_ == NA_integer_
+expect_udf_eq(0L == 0L, TRUE)
+expect_udf_eq(1L == 0L, FALSE)
+expect_udf_na(1L == NA_integer_)
+expect_udf_na(NA_integer_ == 2L)
+expect_udf_na(NA_integer_ == NA_integer_)
 
 "<lgl> == <lgl>"
 TRUE  == TRUE

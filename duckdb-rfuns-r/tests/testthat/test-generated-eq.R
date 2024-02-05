@@ -14,7 +14,8 @@ test_that('<int> == <int> :: 0L == 0L', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
-    expect_snapshot(out_df)
+
+    expect_equal(out_df[, 1L], TRUE)
 })
 
 test_that('<int> == <int> :: 1L == 0L', {
@@ -32,7 +33,8 @@ test_that('<int> == <int> :: 1L == 0L', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
-    expect_snapshot(out_df)
+
+    expect_equal(out_df[, 1L], FALSE)
 })
 
 test_that('<int> == <int> :: 1L == NA_integer_', {
@@ -50,7 +52,8 @@ test_that('<int> == <int> :: 1L == NA_integer_', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
-    expect_snapshot(out_df)
+
+    expect_true(is.na(out_df[, 1L]))
 })
 
 test_that('<int> == <int> :: NA_integer_ == 2L', {
@@ -68,7 +71,8 @@ test_that('<int> == <int> :: NA_integer_ == 2L', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
-    expect_snapshot(out_df)
+
+    expect_true(is.na(out_df[, 1L]))
 })
 
 test_that('<int> == <int> :: NA_integer_ == NA_integer_', {
@@ -86,7 +90,8 @@ test_that('<int> == <int> :: NA_integer_ == NA_integer_', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
-    expect_snapshot(out_df)
+
+    expect_true(is.na(out_df[, 1L]))
 })
 
 test_that('<lgl> == <lgl> :: TRUE == TRUE', {
@@ -104,6 +109,7 @@ test_that('<lgl> == <lgl> :: TRUE == TRUE', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -122,6 +128,7 @@ test_that('<lgl> == <lgl> :: TRUE == FALSE', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -140,6 +147,7 @@ test_that('<lgl> == <lgl> :: FALSE == TRUE', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -158,6 +166,7 @@ test_that('<lgl> == <lgl> :: FALSE == FALSE', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -176,6 +185,7 @@ test_that('<lgl> == <lgl> :: NA == FALSE', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -194,6 +204,7 @@ test_that('<lgl> == <lgl> :: NA == TRUE', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -212,6 +223,7 @@ test_that('<lgl> == <lgl> :: TRUE == NA', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -230,6 +242,7 @@ test_that('<lgl> == <lgl> :: FALSE == NA', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -248,6 +261,7 @@ test_that('<int> == <lgl> :: 1 == TRUE', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -266,6 +280,7 @@ test_that('<int> == <lgl> :: 1 == FALSE', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -284,6 +299,7 @@ test_that('<int> == <lgl> :: 2 == TRUE', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -302,6 +318,7 @@ test_that('<int> == <lgl> :: 2 == FALSE', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -320,6 +337,7 @@ test_that('<int> == <lgl> :: 0 == TRUE', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -338,6 +356,7 @@ test_that('<int> == <lgl> :: 0 == FALSE', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -356,6 +375,7 @@ test_that('<int> == <lgl> :: NA_integer_ == TRUE', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -374,6 +394,7 @@ test_that('<int> == <lgl> :: NA_integer_ == NA', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -392,6 +413,7 @@ test_that('<int> == <lgl> :: 42 == NA_integer_', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -410,6 +432,7 @@ test_that('<lgl> == <int> :: TRUE == 1', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -428,6 +451,7 @@ test_that('<lgl> == <int> :: FALSE == 1', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -446,6 +470,7 @@ test_that('<lgl> == <int> :: TRUE == 2', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -464,6 +489,7 @@ test_that('<lgl> == <int> :: FALSE == 2', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -482,6 +508,7 @@ test_that('<lgl> == <int> :: TRUE == 0', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -500,6 +527,7 @@ test_that('<lgl> == <int> :: FALSE == 0', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -518,6 +546,7 @@ test_that('<lgl> == <int> :: TRUE == NA_integer_', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -536,6 +565,7 @@ test_that('<lgl> == <int> :: NA == NA_integer_', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -554,6 +584,7 @@ test_that('<lgl> == <int> :: NA == 42', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -572,6 +603,7 @@ test_that('<dbl> == <dbl> :: 1.5 == 2', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -590,6 +622,7 @@ test_that('<dbl> == <dbl> :: 1.5 == 1.5', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -608,6 +641,7 @@ test_that('<dbl> == <dbl> :: 1.5 == NA_real_', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -626,6 +660,7 @@ test_that('<dbl> == <dbl> :: NA_real_ == 2.5', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -644,6 +679,7 @@ test_that('<dbl> == <int | lgl> :: 2 == 2L', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -662,6 +698,7 @@ test_that('<dbl> == <int | lgl> :: 3.5 == 2L', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -680,6 +717,7 @@ test_that('<dbl> == <int | lgl> :: 3.5 == NA_integer_', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -698,6 +736,7 @@ test_that('<dbl> == <int | lgl> :: 1 == TRUE', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -716,6 +755,7 @@ test_that('<dbl> == <int | lgl> :: 1 == FALSE', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -734,6 +774,7 @@ test_that('<dbl> == <int | lgl> :: 0 == FALSE', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -752,6 +793,7 @@ test_that('<dbl> == <int | lgl> :: 0 == TRUE', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -770,6 +812,7 @@ test_that('<dbl> == <int | lgl> :: 2 == NA', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -788,6 +831,7 @@ test_that('<dbl> == <int | lgl> :: NA_real_ == 42L', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -806,6 +850,7 @@ test_that('<dbl> == <int | lgl> :: NA_real_ == TRUE', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -824,6 +869,7 @@ test_that('<dbl> == <int | lgl> :: NA_real_ == FALSE', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -842,6 +888,7 @@ test_that('<int | lgl> == <dbl> :: 2L == 2', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -860,6 +907,7 @@ test_that('<int | lgl> == <dbl> :: 2L == 3.5', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -878,6 +926,7 @@ test_that('<int | lgl> == <dbl> :: NA_integer_ == 3.5', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -896,6 +945,7 @@ test_that('<int | lgl> == <dbl> :: TRUE == 1', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -914,6 +964,7 @@ test_that('<int | lgl> == <dbl> :: FALSE == 1', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -932,6 +983,7 @@ test_that('<int | lgl> == <dbl> :: FALSE == 0', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -950,6 +1002,7 @@ test_that('<int | lgl> == <dbl> :: TRUE == 0', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -968,6 +1021,7 @@ test_that('<int | lgl> == <dbl> :: NA == 0', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -986,6 +1040,7 @@ test_that('<int | lgl> == <dbl> :: 42L == NA_real_', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -1004,6 +1059,7 @@ test_that('<int | lgl> == <dbl> :: TRUE == NA_real_', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -1022,6 +1078,7 @@ test_that('<int | lgl> == <dbl> :: FALSE == NA_real_', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -1040,6 +1097,7 @@ test_that('<str> == <str> :: "a" == "b"', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -1058,6 +1116,7 @@ test_that('<str> == <str> :: "a" == "a"', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -1076,6 +1135,7 @@ test_that('<str> == <str> :: "a" == NA_character_', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -1094,6 +1154,7 @@ test_that('<str> == <str> :: NA_character_ == "a"', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -1112,6 +1173,7 @@ test_that('<str>        == <lgl> :: "TRUE" == TRUE', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -1130,6 +1192,7 @@ test_that('<str>        == <lgl> :: "TRUE" == FALSE', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -1148,6 +1211,7 @@ test_that('<str>        == <lgl> :: "TRUE" == NA', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -1166,6 +1230,7 @@ test_that('<str>        == <lgl> :: NA_character_ == TRUE', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -1184,6 +1249,7 @@ test_that('<str>        == <lgl> :: NA_character_ == FALSE', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -1202,6 +1268,7 @@ test_that('<str>        == <lgl> :: "FALSE" == TRUE', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -1220,6 +1287,7 @@ test_that('<str>        == <lgl> :: "FALSE" == FALSE', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -1238,6 +1306,7 @@ test_that('<str>        == <lgl> :: "tRue" == TRUE', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -1256,6 +1325,7 @@ test_that('<str>        == <lgl> :: "fAlse" == FALSE', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -1274,6 +1344,7 @@ test_that('<lgl> == <str> :: TRUE == "TRUE"', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -1292,6 +1363,7 @@ test_that('<lgl> == <str> :: FALSE == "TRUE"', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -1310,6 +1382,7 @@ test_that('<lgl> == <str> :: NA == "TRUE"', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -1328,6 +1401,7 @@ test_that('<lgl> == <str> :: TRUE == NA_character_', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -1346,6 +1420,7 @@ test_that('<lgl> == <str> :: FALSE == NA_character_', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -1364,6 +1439,7 @@ test_that('<lgl> == <str> :: TRUE == "FALSE"', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -1382,6 +1458,7 @@ test_that('<lgl> == <str> :: FALSE == "FALSE"', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -1400,6 +1477,7 @@ test_that('<lgl> == <str> :: TRUE == "tRue"', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -1418,6 +1496,7 @@ test_that('<lgl> == <str> :: FALSE == "fAlse"', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -1436,6 +1515,7 @@ test_that('<str> == <dbl> :: "2" == 1', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -1454,6 +1534,7 @@ test_that('<str> == <dbl> :: "1" == 1', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -1472,6 +1553,7 @@ test_that('<str> == <dbl> :: "1" == NA_real_', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -1490,6 +1572,7 @@ test_that('<str> == <dbl> :: NA_character_ == 3', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -1508,6 +1591,7 @@ test_that('<str> == <dbl> :: 1 == "2"', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -1526,6 +1610,7 @@ test_that('<str> == <dbl> :: 1 == "1"', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -1544,6 +1629,7 @@ test_that('<str> == <dbl> :: NA_real_ == "2"', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -1562,6 +1648,7 @@ test_that('<str> == <dbl> :: 3 == NA_character_', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -1580,6 +1667,7 @@ test_that('<int> == <str> :: NA_integer_ == "string"', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -1598,6 +1686,7 @@ test_that('<int> == <str> :: 1L == "1"', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -1616,6 +1705,7 @@ test_that('<int> == <str> :: "string" == NA_integer_', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -1634,6 +1724,7 @@ test_that('<int> == <str> :: "1" == 1L', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -1652,6 +1743,7 @@ test_that('<int> == <dbl> :: 2L == 1', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -1670,6 +1762,7 @@ test_that('<int> == <dbl> :: 1L == 1', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -1688,6 +1781,7 @@ test_that('<int> == <dbl> :: NA_integer_ == 1', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -1706,6 +1800,7 @@ test_that('<int> == <dbl> :: 3L == NA_real_', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -1724,6 +1819,7 @@ test_that('<int> == <dbl> :: 1 == 2L', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -1742,6 +1838,7 @@ test_that('<int> == <dbl> :: 1 == 1L', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -1760,6 +1857,7 @@ test_that('<int> == <dbl> :: 1 == NA_integer_', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
@@ -1778,6 +1876,7 @@ test_that('<int> == <dbl> :: NA_real_ == 3L', {
         ))
     )
     out_df <- duckdb:::rel_to_altrep(out_rel)
+
     expect_snapshot(out_df)
 })
 
