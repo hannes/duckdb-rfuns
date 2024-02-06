@@ -10,25 +10,9 @@ namespace rfuns {
 
 namespace {
 
-struct EqChunk {
-	duckdb::Vector &lefts;
-	duckdb::Vector &rights;
-};
-
-template <LogicalTypeId LHS_LOGICAL_TYPE, LogicalTypeId RHS_LOGICAL_TYPE>
-EqChunk EqTypeAssert(DataChunk &args) {
-	auto &lefts = args.data[0];
-	D_ASSERT(lefts.GetType() == LHS_LOGICAL_TYPE);
-
-	auto &rights = args.data[1];
-	D_ASSERT(rights.GetType() == LHS_LOGICAL_TYPE);
-
-	return {lefts, rights};
-}
-
 template <LogicalTypeId LHS_LOGICAL, typename LHS, LogicalTypeId RHS_LOGICAL, typename RHS>
 void BaseREqFunctionSimple(DataChunk &args, ExpressionState &state, Vector &result) {
-	auto parts = EqTypeAssert<LHS_LOGICAL, RHS_LOGICAL>(args);
+	auto parts = BinaryTypeAssert<LHS_LOGICAL, RHS_LOGICAL>(args);
 
 	auto fun = [](LHS left, RHS right) {
 		return (left == right);
@@ -37,7 +21,7 @@ void BaseREqFunctionSimple(DataChunk &args, ExpressionState &state, Vector &resu
 }
 
 void BaseREqFunctionInteger(DataChunk &args, ExpressionState &state, Vector &result) {
-	auto parts = EqTypeAssert<LogicalType::INTEGER, LogicalType::INTEGER>(args);
+	auto parts = BinaryTypeAssert<LogicalType::INTEGER, LogicalType::INTEGER>(args);
 
 	auto fun = [](int32_t left, int32_t right) {
 		return (left == right);
@@ -46,7 +30,7 @@ void BaseREqFunctionInteger(DataChunk &args, ExpressionState &state, Vector &res
 }
 
 void BaseREqFunctionDouble(DataChunk &args, ExpressionState &state, Vector &result) {
-	auto parts = EqTypeAssert<LogicalType::DOUBLE, LogicalType::DOUBLE>(args);
+	auto parts = BinaryTypeAssert<LogicalType::DOUBLE, LogicalType::DOUBLE>(args);
 	auto fun = [&](double left, double right, ValidityMask &mask, idx_t idx) {
 		if (isnan(left) || isnan(right)) {
 			mask.SetInvalid(idx);
@@ -71,7 +55,7 @@ template <LogicalTypeId LOGICAL_TYPE>
 void BaseREqFunctionDoubleInteger(DataChunk &args, ExpressionState &state, Vector &result) {
 	using type = typename std::conditional<LOGICAL_TYPE == LogicalType::INTEGER, int32_t, bool>::type;
 
-	auto parts = EqTypeAssert<LogicalType::DOUBLE, LOGICAL_TYPE>(args);
+	auto parts = BinaryTypeAssert<LogicalType::DOUBLE, LOGICAL_TYPE>(args);
 	BinaryExecutor::ExecuteWithNulls<double, type, bool>(parts.lefts, parts.rights, result, args.size(),
 	                                                     ExecuteBaseREqFunctionDoubleInteger<type>);
 }
@@ -80,13 +64,13 @@ template <LogicalTypeId LOGICAL_TYPE>
 void BaseREqFunctionIntegerDouble(DataChunk &args, ExpressionState &state, Vector &result) {
 	using type = typename std::conditional<LOGICAL_TYPE == LogicalType::INTEGER, int32_t, bool>::type;
 
-	auto parts = EqTypeAssert<LOGICAL_TYPE, LogicalType::DOUBLE>(args);
+	auto parts = BinaryTypeAssert<LOGICAL_TYPE, LogicalType::DOUBLE>(args);
 	BinaryExecutor::ExecuteWithNulls<double, type, bool>(parts.rights, parts.lefts, result, args.size(),
 	                                                     ExecuteBaseREqFunctionDoubleInteger<type>);
 }
 
 static void BaseREqFunctionString(DataChunk &args, ExpressionState &state, Vector &result) {
-	auto parts = EqTypeAssert<LogicalType::VARCHAR, LogicalType::VARCHAR>(args);
+	auto parts = BinaryTypeAssert<LogicalType::VARCHAR, LogicalType::VARCHAR>(args);
 	BinaryExecutor::Execute<string_t, string_t, bool>(parts.lefts, parts.rights, result, args.size(),
 	                                                  [&](string_t left, string_t right) { return (left == right); });
 }
@@ -98,14 +82,14 @@ static bool ExecuteBaseREqFunctionStringInteger(string_t left, int32_t right) {
 }
 
 static void BaseREqFunctionStringInteger(DataChunk &args, ExpressionState &state, Vector &result) {
-	auto parts = EqTypeAssert<LogicalType::VARCHAR, LogicalType::INTEGER>(args);
+	auto parts = BinaryTypeAssert<LogicalType::VARCHAR, LogicalType::INTEGER>(args);
 
 	return BinaryExecutor::Execute<string_t, int32_t, bool>(parts.lefts, parts.rights, result, args.size(),
 	                                                        &ExecuteBaseREqFunctionStringInteger);
 }
 
 static void BaseREqFunctionIntegerString(DataChunk &args, ExpressionState &state, Vector &result) {
-	auto parts = EqTypeAssert<LogicalType::INTEGER, LogicalType::VARCHAR>(args);
+	auto parts = BinaryTypeAssert<LogicalType::INTEGER, LogicalType::VARCHAR>(args);
 
 	return BinaryExecutor::Execute<string_t, int32_t, bool>(parts.rights, parts.lefts, result, args.size(),
 	                                                        &ExecuteBaseREqFunctionStringInteger);
@@ -116,14 +100,14 @@ static bool ExecuteBaseREqFunctionStringBoolean(string_t left, bool right) {
 }
 
 static void BaseREqFunctionStringBoolean(DataChunk &args, ExpressionState &state, Vector &result) {
-	auto parts = EqTypeAssert<LogicalType::VARCHAR, LogicalType::BOOLEAN>(args);
+	auto parts = BinaryTypeAssert<LogicalType::VARCHAR, LogicalType::BOOLEAN>(args);
 
 	return BinaryExecutor::Execute<string_t, bool, bool>(parts.lefts, parts.rights, result, args.size(),
 	                                                     &ExecuteBaseREqFunctionStringBoolean);
 }
 
 static void BaseREqFunctionBooleanString(DataChunk &args, ExpressionState &state, Vector &result) {
-	auto parts = EqTypeAssert<LogicalType::BOOLEAN, LogicalType::VARCHAR>(args);
+	auto parts = BinaryTypeAssert<LogicalType::BOOLEAN, LogicalType::VARCHAR>(args);
 
 	return BinaryExecutor::Execute<string_t, bool, bool>(parts.rights, parts.lefts, result, args.size(),
 	                                                     &ExecuteBaseREqFunctionStringBoolean);
@@ -136,14 +120,14 @@ static bool ExecuteBaseREqFunctionStringDouble(string_t left, double right) {
 }
 
 static void BaseREqFunctionStringDouble(DataChunk &args, ExpressionState &state, Vector &result) {
-	auto parts = EqTypeAssert<LogicalType::VARCHAR, LogicalType::DOUBLE>(args);
+	auto parts = BinaryTypeAssert<LogicalType::VARCHAR, LogicalType::DOUBLE>(args);
 
 	return BinaryExecutor::Execute<string_t, double, bool>(parts.lefts, parts.rights, result, args.size(),
 	                                                       &ExecuteBaseREqFunctionStringDouble);
 }
 
 static void BaseREqFunctionDoubleString(DataChunk &args, ExpressionState &state, Vector &result) {
-	auto parts = EqTypeAssert<LogicalType::DOUBLE, LogicalType::VARCHAR>(args);
+	auto parts = BinaryTypeAssert<LogicalType::DOUBLE, LogicalType::VARCHAR>(args);
 
 	return BinaryExecutor::Execute<string_t, double, bool>(parts.rights, parts.lefts, result, args.size(),
 	                                                       &ExecuteBaseREqFunctionStringDouble);
