@@ -9,13 +9,11 @@ namespace duckdb {
 namespace rfuns {
 
 namespace {
-static void BaseRAddFunctionInteger(DataChunk &args, ExpressionState &state, Vector &result) {
-	auto &lefts = args.data[0];
-	D_ASSERT(lefts.GetType() == LogicalType::INTEGER);
-	auto &rights = args.data[1];
-	D_ASSERT(rights.GetType() == LogicalType::INTEGER);
+void BaseRAddFunctionInteger(DataChunk &args, ExpressionState &state, Vector &result) {
+	auto parts = BinaryTypeAssert<LogicalType::INTEGER, LogicalType::INTEGER>(args);
+
 	BinaryExecutor::ExecuteWithNulls<int32_t, int32_t, int32_t>(
-	    lefts, rights, result, args.size(), [&](int32_t left, int32_t right, ValidityMask &mask, idx_t idx) {
+	    parts.lefts, parts.rights, result, args.size(), [&](int32_t left, int32_t right, ValidityMask &mask, idx_t idx) {
 		    int64_t result = (int64_t)left + right;
 		    if (result > INT_MAX || result < (INT_MIN + 1)) {
 			    // FIXME: Need warning: NAs produced by integer overflow
@@ -26,13 +24,11 @@ static void BaseRAddFunctionInteger(DataChunk &args, ExpressionState &state, Vec
 	    });
 }
 
-static void BaseRAddFunctionDouble(DataChunk &args, ExpressionState &state, Vector &result) {
-	auto &lefts = args.data[0];
-	D_ASSERT(lefts.GetType() == LogicalType::DOUBLE);
-	auto &rights = args.data[1];
-	D_ASSERT(rights.GetType() == LogicalType::DOUBLE);
+void BaseRAddFunctionDouble(DataChunk &args, ExpressionState &state, Vector &result) {
+	auto parts = BinaryTypeAssert<LogicalType::DOUBLE, LogicalType::DOUBLE>(args);
+
 	BinaryExecutor::ExecuteWithNulls<double, double, double>(
-	    lefts, rights, result, args.size(), [&](double left, double right, ValidityMask &mask, idx_t idx) {
+	    parts.lefts, parts.rights, result, args.size(), [&](double left, double right, ValidityMask &mask, idx_t idx) {
 		    if (isnan(left) || isnan(right)) {
 			    mask.SetInvalid(idx);
 			    return 0.0;
@@ -40,6 +36,7 @@ static void BaseRAddFunctionDouble(DataChunk &args, ExpressionState &state, Vect
 		    return left + right;
 	    });
 }
+
 } // namespace
 
 ScalarFunctionSet base_r_add() {
@@ -48,6 +45,10 @@ ScalarFunctionSet base_r_add() {
 	    ScalarFunction({LogicalType::INTEGER, LogicalType::INTEGER}, LogicalType::INTEGER, BaseRAddFunctionInteger));
 	set.AddFunction(
 	    ScalarFunction({LogicalType::DOUBLE, LogicalType::DOUBLE}, LogicalType::DOUBLE, BaseRAddFunctionDouble));
+
+	// <int> + <double>
+	//set.AddFunction(
+	//    ScalarFunction({LogicalType::INTEGER, LogicalType::DOUBLE}, LogicalType::DOUBLE, BaseRAddFunctionIntDouble));
 
 	return set;
 }
