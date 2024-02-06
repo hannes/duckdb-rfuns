@@ -37,6 +37,28 @@ void BaseRAddFunctionDouble(DataChunk &args, ExpressionState &state, Vector &res
 	    });
 }
 
+double ExecuteBaseRPlusFunctionIntDouble(int32_t left, double right, ValidityMask &mask, idx_t idx) {
+	if (isnan(right)) {
+		mask.SetInvalid(idx);
+		return 0.0;
+	}
+	return left + right;
+}
+
+void BaseRAddFunctionIntDouble(DataChunk &args, ExpressionState &state, Vector &result) {
+	auto parts = BinaryTypeAssert<LogicalType::INTEGER, LogicalType::DOUBLE>(args);
+
+	BinaryExecutor::ExecuteWithNulls<int32_t, double, double>(
+	    parts.lefts, parts.rights, result, args.size(), ExecuteBaseRPlusFunctionIntDouble);
+}
+
+void BaseRAddFunctionDoubleInt(DataChunk &args, ExpressionState &state, Vector &result) {
+	auto parts = BinaryTypeAssert<LogicalType::DOUBLE, LogicalType::INTEGER>(args);
+
+	BinaryExecutor::ExecuteWithNulls<int32_t, double, double>(
+	    parts.rights, parts.lefts, result, args.size(), ExecuteBaseRPlusFunctionIntDouble);
+}
+
 } // namespace
 
 ScalarFunctionSet base_r_add() {
@@ -47,8 +69,10 @@ ScalarFunctionSet base_r_add() {
 	    ScalarFunction({LogicalType::DOUBLE, LogicalType::DOUBLE}, LogicalType::DOUBLE, BaseRAddFunctionDouble));
 
 	// <int> + <double>
-	//set.AddFunction(
-	//    ScalarFunction({LogicalType::INTEGER, LogicalType::DOUBLE}, LogicalType::DOUBLE, BaseRAddFunctionIntDouble));
+	set.AddFunction(
+	    ScalarFunction({LogicalType::INTEGER, LogicalType::DOUBLE}, LogicalType::DOUBLE, BaseRAddFunctionIntDouble));
+	set.AddFunction(
+	    ScalarFunction({LogicalType::DOUBLE, LogicalType::INTEGER}, LogicalType::DOUBLE, BaseRAddFunctionDoubleInt));
 
 	return set;
 }
