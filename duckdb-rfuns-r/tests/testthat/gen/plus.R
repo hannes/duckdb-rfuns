@@ -6,8 +6,6 @@
 NA_real_ + 2
 
 "<int> + <int>"
-1.0 + 2.0
-NaN + 2.0
-NA_real_ + 2.0
-1.0 + NA_real_
-1.0 + NaN
+1L + 2L
+NA_integer_ + 2L
+1L + NA_integer_
