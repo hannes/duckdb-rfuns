@@ -8,7 +8,7 @@ Authors@R: c(
       person("Romain", "François", role = "ctb", 
         comment = c(ORCID = "0000-0002-2444-4226"))
     )
-Description: User defined functions for duckdb
+Description: User defined functions for duckdb.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -16,9 +16,9 @@ RoxygenNote: 7.3.1
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
-Depends:
-    DBI
 Imports: 
     constructive,
-    DBI,
-    duckdb
+    duckdb,
+    tibble,
+    withr, 
+    DBI
