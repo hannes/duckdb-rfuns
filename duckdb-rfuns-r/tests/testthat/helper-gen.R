@@ -22,7 +22,8 @@ if (Sys.getenv("CI") == "" ) {
       fun = fun,
       udf = udfs[[fun]],
       data = tibble::as_tibble(args),
-      expression = deparse(expr, nlines = 1L)
+      expression = deparse(expr, nlines = 1L),
+      expected = constructive::construct(eval(expr))$code
     )
   }
 
@@ -65,7 +66,7 @@ test_that('{desc} :: {expr$expression}', {{
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_identical(out_df[, 1], {expr$expression})
+  expect_identical(out_df[, 1], {expr$expected})
 }})
 
 
