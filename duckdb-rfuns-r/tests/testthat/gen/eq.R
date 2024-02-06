@@ -102,6 +102,8 @@ FALSE == 'fAlse'
 '1' == 1.0
 '1' == NA_real_
 NA_character_ == 3.0
+
+"<dbl> == <str>"
 1.0 == '2'
 1.0 == '1'
 NA_real_ == "2"
@@ -110,15 +112,9 @@ NA_real_ == "2"
 "<int> == <str>"
 NA_integer_ == "string"
 1L == "1"
+1L == NA_character_
+
+"<str> == <int>"
 "string" == NA_integer_
 "1" == 1L
-
-"<int> == <dbl>"
-2L == 1.0
-1L == 1.0
-NA_integer_ == 1.0
-3L == NA_real_
-1.0 == 2L
-1.0 == 1L
-1.0 == NA_integer_
-NA_real_ == 3L
+NA_character_ == 2L
