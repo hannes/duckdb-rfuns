@@ -60,7 +60,8 @@ debug:
 release:
 	mkdir -p build/release && \
 	cmake $(GENERATOR) $(BUILD_FLAGS)  $(CLIENT_FLAGS)  -DCMAKE_BUILD_TYPE=Release -S ./duckdb/ -B build/release && \
-	cmake --build build/release --config Release
+	cmake --build build/release --config Release && \
+	cp build/release/extension/rfuns/rfuns.duckdb_extension duckdb-rfuns-r/inst/extension/
 
 ##### Client build
 JS_BUILD_FLAGS=-DBUILD_NODE=1 -DDUCKDB_EXTENSION_${EXTENSION_NAME}_SHOULD_LINK=0
