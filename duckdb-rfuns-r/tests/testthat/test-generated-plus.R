@@ -94,9 +94,9 @@ test_that('<dbl> + <dbl> :: NA_real_ + 2', {
   expect_identical(out_df[, 1], NA_real_ + 2)
 })
 
-test_that('<int> + <int> :: 1 + 2', {
+test_that('<int> + <int> :: 1L + 2L', {
   con <- local_con()
-  in_df <- tibble::tibble(x1 = 1, x2 = 2)
+  in_df <- tibble::tibble(x1 = 1L, x2 = 2L)
   in_rel <- duckdb:::rel_from_df(con, in_df)
   out_rel <- duckdb:::rel_project(
     in_rel,
@@ -110,12 +110,12 @@ test_that('<int> + <int> :: 1 + 2', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_identical(out_df[, 1], 1 + 2)
+  expect_identical(out_df[, 1], 1L + 2L)
 })
 
-test_that('<int> + <int> :: NaN + 2', {
+test_that('<int> + <int> :: NA_integer_ + 2L', {
   con <- local_con()
-  in_df <- tibble::tibble(x1 = NaN, x2 = 2)
+  in_df <- tibble::tibble(x1 = NA_integer_, x2 = 2L)
   in_rel <- duckdb:::rel_from_df(con, in_df)
   out_rel <- duckdb:::rel_project(
     in_rel,
@@ -129,12 +129,12 @@ test_that('<int> + <int> :: NaN + 2', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_identical(out_df[, 1], NaN + 2)
+  expect_identical(out_df[, 1], NA_integer_ + 2L)
 })
 
-test_that('<int> + <int> :: NA_real_ + 2', {
+test_that('<int> + <int> :: 1L + NA_integer_', {
   con <- local_con()
-  in_df <- tibble::tibble(x1 = NA_real_, x2 = 2)
+  in_df <- tibble::tibble(x1 = 1L, x2 = NA_integer_)
   in_rel <- duckdb:::rel_from_df(con, in_df)
   out_rel <- duckdb:::rel_project(
     in_rel,
@@ -148,44 +148,6 @@ test_that('<int> + <int> :: NA_real_ + 2', {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_identical(out_df[, 1], NA_real_ + 2)
-})
-
-test_that('<int> + <int> :: 1 + NA_real_', {
-  con <- local_con()
-  in_df <- tibble::tibble(x1 = 1, x2 = NA_real_)
-  in_rel <- duckdb:::rel_from_df(con, in_df)
-  out_rel <- duckdb:::rel_project(
-    in_rel,
-    list(duckdb:::expr_function(
-      'r_base::+',
-      list(
-        duckdb:::expr_reference('x1'), 
-        duckdb:::expr_reference('x2')
-      )
-    ))
-  )
-  out_df <- duckdb:::rel_to_altrep(out_rel)
-
-  expect_identical(out_df[, 1], 1 + NA_real_)
-})
-
-test_that('<int> + <int> :: 1 + NaN', {
-  con <- local_con()
-  in_df <- tibble::tibble(x1 = 1, x2 = NaN)
-  in_rel <- duckdb:::rel_from_df(con, in_df)
-  out_rel <- duckdb:::rel_project(
-    in_rel,
-    list(duckdb:::expr_function(
-      'r_base::+',
-      list(
-        duckdb:::expr_reference('x1'), 
-        duckdb:::expr_reference('x2')
-      )
-    ))
-  )
-  out_df <- duckdb:::rel_to_altrep(out_rel)
-
-  expect_identical(out_df[, 1], 1 + NaN)
+  expect_identical(out_df[, 1], 1L + NA_integer_)
 })
 
