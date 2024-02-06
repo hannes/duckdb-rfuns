@@ -48,17 +48,17 @@ if (Sys.getenv("CI") == "" ) {
 
       for (expr in exprs) {
         in_df <- paste(constructive::construct(expr$data)$code, collapse = "\n")
-        args_references <- paste(glue::glue("        duckdb:::expr_reference('{names(expr$data)}')"), collapse = ", \n")
+        args_references <- paste(glue::glue('        duckdb:::expr_reference("{names(expr$data)}")'), collapse = ", \n")
 
         test_expr <- glue::glue(r"[
-test_that('{desc} :: {expr$expression}', {{
+test_that(r"({desc} :: {expr$expression})", {{
   con <- local_con()
   in_df <- {in_df}
   in_rel <- duckdb:::rel_from_df(con, in_df)
   out_rel <- duckdb:::rel_project(
     in_rel,
     list(duckdb:::expr_function(
-      '{expr$udf}',
+      "{expr$udf}",
       list(
 {args_references}
       )
