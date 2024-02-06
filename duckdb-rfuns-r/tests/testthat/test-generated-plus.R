@@ -151,3 +151,136 @@ test_that('<int> + <int> :: 1L + NA_integer_', {
   expect_identical(out_df[, 1], 1L + NA_integer_)
 })
 
+test_that('<int> + <dbl> :: 1L + 3', {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = 1L, x2 = 3)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      'r_base::+',
+      list(
+        duckdb:::expr_reference('x1'), 
+        duckdb:::expr_reference('x2')
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], 1L + 3)
+})
+
+test_that('<int> + <dbl> :: 3 + 1L', {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = 3, x2 = 1L)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      'r_base::+',
+      list(
+        duckdb:::expr_reference('x1'), 
+        duckdb:::expr_reference('x2')
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], 3 + 1L)
+})
+
+test_that('<int> + <dbl> :: 1L + NA_real_', {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = 1L, x2 = NA_real_)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      'r_base::+',
+      list(
+        duckdb:::expr_reference('x1'), 
+        duckdb:::expr_reference('x2')
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], 1L + NA_real_)
+})
+
+test_that('<int> + <dbl> :: NA_real_ + 1L', {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = NA_real_, x2 = 1L)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      'r_base::+',
+      list(
+        duckdb:::expr_reference('x1'), 
+        duckdb:::expr_reference('x2')
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], NA_real_ + 1L)
+})
+
+test_that('<int> + <dbl> :: NA_integer_ + 4', {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = NA_integer_, x2 = 4)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      'r_base::+',
+      list(
+        duckdb:::expr_reference('x1'), 
+        duckdb:::expr_reference('x2')
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], NA_integer_ + 4)
+})
+
+test_that('<int> + <dbl> :: 4 + NA_integer_', {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = 4, x2 = NA_integer_)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      'r_base::+',
+      list(
+        duckdb:::expr_reference('x1'), 
+        duckdb:::expr_reference('x2')
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], 4 + NA_integer_)
+})
+
+test_that('<int> + <dbl> :: NA_integer_ + NA_real_', {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = NA_integer_, x2 = NA_real_)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      'r_base::+',
+      list(
+        duckdb:::expr_reference('x1'), 
+        duckdb:::expr_reference('x2')
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], NA_integer_ + NA_real_)
+})
+
