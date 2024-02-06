@@ -1,4 +1,5 @@
-^duckdbrfuns\.Rproj$
+^duckdb-rfuns-r\.Rproj$
 ^\.Rproj\.user$
 ^LICENSE\.md$
 helper-gen.R
+^\.github$
