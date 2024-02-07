@@ -1576,6 +1576,25 @@ test_that(r"(<str> == <dbl> :: NA_character_ == 3)", {
   expect_identical(out_df[, 1], NA)
 })
 
+test_that(r"(<str> == <dbl> :: "a" == 1)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = "a", x2 = 1)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::==",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], FALSE)
+})
+
 test_that(r"(<dbl> == <str> :: 1 == "2")", {
   con <- local_con()
   in_df <- tibble::tibble(x1 = 1, x2 = "2")
@@ -1652,6 +1671,25 @@ test_that(r"(<dbl> == <str> :: 3 == NA_character_)", {
   expect_identical(out_df[, 1], NA)
 })
 
+test_that(r"(<dbl> == <str> :: 1 == "a")", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = 1, x2 = "a")
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::==",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], FALSE)
+})
+
 test_that(r"(<int> == <str> :: NA_integer_ == "string")", {
   con <- local_con()
   in_df <- tibble::tibble(x1 = NA_integer_, x2 = "string")
@@ -1709,6 +1747,25 @@ test_that(r"(<int> == <str> :: 1L == NA_character_)", {
   expect_identical(out_df[, 1], NA)
 })
 
+test_that(r"(<int> == <str> :: 1L == "a")", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = 1L, x2 = "a")
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::==",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], FALSE)
+})
+
 test_that(r"(<str> == <int> :: "string" == NA_integer_)", {
   con <- local_con()
   in_df <- tibble::tibble(x1 = "string", x2 = NA_integer_)
@@ -1764,5 +1821,24 @@ test_that(r"(<str> == <int> :: NA_character_ == 2L)", {
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
   expect_identical(out_df[, 1], NA)
+})
+
+test_that(r"(<str> == <int> :: "a" == 1L)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = "a", x2 = 1L)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::==",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], FALSE)
 })
 
