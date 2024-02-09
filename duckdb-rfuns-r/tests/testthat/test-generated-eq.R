@@ -246,9 +246,9 @@ test_that(r"(<lgl> == <lgl> :: FALSE == NA)", {
   expect_identical(out_df[, 1], NA)
 })
 
-test_that(r"(<int> == <lgl> :: 1 == TRUE)", {
+test_that(r"(<int> == <lgl> :: 1L == TRUE)", {
   con <- local_con()
-  in_df <- tibble::tibble(x1 = 1, x2 = TRUE)
+  in_df <- tibble::tibble(x1 = 1L, x2 = TRUE)
   in_rel <- duckdb:::rel_from_df(con, in_df)
   out_rel <- duckdb:::rel_project(
     in_rel,
@@ -265,9 +265,9 @@ test_that(r"(<int> == <lgl> :: 1 == TRUE)", {
   expect_identical(out_df[, 1], TRUE)
 })
 
-test_that(r"(<int> == <lgl> :: 1 == FALSE)", {
+test_that(r"(<int> == <lgl> :: 1L == FALSE)", {
   con <- local_con()
-  in_df <- tibble::tibble(x1 = 1, x2 = FALSE)
+  in_df <- tibble::tibble(x1 = 1L, x2 = FALSE)
   in_rel <- duckdb:::rel_from_df(con, in_df)
   out_rel <- duckdb:::rel_project(
     in_rel,
@@ -284,9 +284,9 @@ test_that(r"(<int> == <lgl> :: 1 == FALSE)", {
   expect_identical(out_df[, 1], FALSE)
 })
 
-test_that(r"(<int> == <lgl> :: 2 == TRUE)", {
+test_that(r"(<int> == <lgl> :: 2L == TRUE)", {
   con <- local_con()
-  in_df <- tibble::tibble(x1 = 2, x2 = TRUE)
+  in_df <- tibble::tibble(x1 = 2L, x2 = TRUE)
   in_rel <- duckdb:::rel_from_df(con, in_df)
   out_rel <- duckdb:::rel_project(
     in_rel,
@@ -303,9 +303,9 @@ test_that(r"(<int> == <lgl> :: 2 == TRUE)", {
   expect_identical(out_df[, 1], FALSE)
 })
 
-test_that(r"(<int> == <lgl> :: 2 == FALSE)", {
+test_that(r"(<int> == <lgl> :: 2L == FALSE)", {
   con <- local_con()
-  in_df <- tibble::tibble(x1 = 2, x2 = FALSE)
+  in_df <- tibble::tibble(x1 = 2L, x2 = FALSE)
   in_rel <- duckdb:::rel_from_df(con, in_df)
   out_rel <- duckdb:::rel_project(
     in_rel,
@@ -322,9 +322,9 @@ test_that(r"(<int> == <lgl> :: 2 == FALSE)", {
   expect_identical(out_df[, 1], FALSE)
 })
 
-test_that(r"(<int> == <lgl> :: 0 == TRUE)", {
+test_that(r"(<int> == <lgl> :: 0L == TRUE)", {
   con <- local_con()
-  in_df <- tibble::tibble(x1 = 0, x2 = TRUE)
+  in_df <- tibble::tibble(x1 = 0L, x2 = TRUE)
   in_rel <- duckdb:::rel_from_df(con, in_df)
   out_rel <- duckdb:::rel_project(
     in_rel,
@@ -341,9 +341,9 @@ test_that(r"(<int> == <lgl> :: 0 == TRUE)", {
   expect_identical(out_df[, 1], FALSE)
 })
 
-test_that(r"(<int> == <lgl> :: 0 == FALSE)", {
+test_that(r"(<int> == <lgl> :: 0L == FALSE)", {
   con <- local_con()
-  in_df <- tibble::tibble(x1 = 0, x2 = FALSE)
+  in_df <- tibble::tibble(x1 = 0L, x2 = FALSE)
   in_rel <- duckdb:::rel_from_df(con, in_df)
   out_rel <- duckdb:::rel_project(
     in_rel,
@@ -398,9 +398,9 @@ test_that(r"(<int> == <lgl> :: NA_integer_ == NA)", {
   expect_identical(out_df[, 1], NA)
 })
 
-test_that(r"(<int> == <lgl> :: 42 == NA_integer_)", {
+test_that(r"(<int> == <lgl> :: 42L == NA_integer_)", {
   con <- local_con()
-  in_df <- tibble::tibble(x1 = 42, x2 = NA_integer_)
+  in_df <- tibble::tibble(x1 = 42L, x2 = NA_integer_)
   in_rel <- duckdb:::rel_from_df(con, in_df)
   out_rel <- duckdb:::rel_project(
     in_rel,
@@ -417,9 +417,9 @@ test_that(r"(<int> == <lgl> :: 42 == NA_integer_)", {
   expect_identical(out_df[, 1], NA)
 })
 
-test_that(r"(<lgl> == <int> :: TRUE == 1)", {
+test_that(r"(<lgl> == <int> :: TRUE == 1L)", {
   con <- local_con()
-  in_df <- tibble::tibble(x1 = TRUE, x2 = 1)
+  in_df <- tibble::tibble(x1 = TRUE, x2 = 1L)
   in_rel <- duckdb:::rel_from_df(con, in_df)
   out_rel <- duckdb:::rel_project(
     in_rel,
@@ -436,9 +436,9 @@ test_that(r"(<lgl> == <int> :: TRUE == 1)", {
   expect_identical(out_df[, 1], TRUE)
 })
 
-test_that(r"(<lgl> == <int> :: FALSE == 1)", {
+test_that(r"(<lgl> == <int> :: FALSE == 1L)", {
   con <- local_con()
-  in_df <- tibble::tibble(x1 = FALSE, x2 = 1)
+  in_df <- tibble::tibble(x1 = FALSE, x2 = 1L)
   in_rel <- duckdb:::rel_from_df(con, in_df)
   out_rel <- duckdb:::rel_project(
     in_rel,
@@ -455,9 +455,9 @@ test_that(r"(<lgl> == <int> :: FALSE == 1)", {
   expect_identical(out_df[, 1], FALSE)
 })
 
-test_that(r"(<lgl> == <int> :: TRUE == 2)", {
+test_that(r"(<lgl> == <int> :: TRUE == 2L)", {
   con <- local_con()
-  in_df <- tibble::tibble(x1 = TRUE, x2 = 2)
+  in_df <- tibble::tibble(x1 = TRUE, x2 = 2L)
   in_rel <- duckdb:::rel_from_df(con, in_df)
   out_rel <- duckdb:::rel_project(
     in_rel,
@@ -474,9 +474,9 @@ test_that(r"(<lgl> == <int> :: TRUE == 2)", {
   expect_identical(out_df[, 1], FALSE)
 })
 
-test_that(r"(<lgl> == <int> :: FALSE == 2)", {
+test_that(r"(<lgl> == <int> :: FALSE == 2L)", {
   con <- local_con()
-  in_df <- tibble::tibble(x1 = FALSE, x2 = 2)
+  in_df <- tibble::tibble(x1 = FALSE, x2 = 2L)
   in_rel <- duckdb:::rel_from_df(con, in_df)
   out_rel <- duckdb:::rel_project(
     in_rel,
@@ -493,9 +493,9 @@ test_that(r"(<lgl> == <int> :: FALSE == 2)", {
   expect_identical(out_df[, 1], FALSE)
 })
 
-test_that(r"(<lgl> == <int> :: TRUE == 0)", {
+test_that(r"(<lgl> == <int> :: TRUE == 0L)", {
   con <- local_con()
-  in_df <- tibble::tibble(x1 = TRUE, x2 = 0)
+  in_df <- tibble::tibble(x1 = TRUE, x2 = 0L)
   in_rel <- duckdb:::rel_from_df(con, in_df)
   out_rel <- duckdb:::rel_project(
     in_rel,
@@ -512,9 +512,9 @@ test_that(r"(<lgl> == <int> :: TRUE == 0)", {
   expect_identical(out_df[, 1], FALSE)
 })
 
-test_that(r"(<lgl> == <int> :: FALSE == 0)", {
+test_that(r"(<lgl> == <int> :: FALSE == 0L)", {
   con <- local_con()
-  in_df <- tibble::tibble(x1 = FALSE, x2 = 0)
+  in_df <- tibble::tibble(x1 = FALSE, x2 = 0L)
   in_rel <- duckdb:::rel_from_df(con, in_df)
   out_rel <- duckdb:::rel_project(
     in_rel,
@@ -569,9 +569,9 @@ test_that(r"(<lgl> == <int> :: NA == NA_integer_)", {
   expect_identical(out_df[, 1], NA)
 })
 
-test_that(r"(<lgl> == <int> :: NA == 42)", {
+test_that(r"(<lgl> == <int> :: NA == 42L)", {
   con <- local_con()
-  in_df <- tibble::tibble(x1 = NA, x2 = 42)
+  in_df <- tibble::tibble(x1 = NA, x2 = 42L)
   in_rel <- duckdb:::rel_from_df(con, in_df)
   out_rel <- duckdb:::rel_project(
     in_rel,
