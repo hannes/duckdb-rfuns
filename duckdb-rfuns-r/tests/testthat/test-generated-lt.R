@@ -1307,7 +1307,7 @@ test_that(r"(<str>        < <lgl> :: "tRue" < TRUE)", {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_identical(out_df[, 1], TRUE)
+  expect_identical(out_df[, 1], FALSE)
 })
 
 test_that(r"(<str>        < <lgl> :: "fAlse" < FALSE)", {
@@ -1326,7 +1326,7 @@ test_that(r"(<str>        < <lgl> :: "fAlse" < FALSE)", {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_identical(out_df[, 1], TRUE)
+  expect_identical(out_df[, 1], FALSE)
 })
 
 test_that(r"(<lgl> < <str> :: TRUE < "TRUE")", {
@@ -1478,7 +1478,7 @@ test_that(r"(<lgl> < <str> :: TRUE < "tRue")", {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_identical(out_df[, 1], FALSE)
+  expect_identical(out_df[, 1], TRUE)
 })
 
 test_that(r"(<lgl> < <str> :: FALSE < "fAlse")", {
@@ -1497,7 +1497,7 @@ test_that(r"(<lgl> < <str> :: FALSE < "fAlse")", {
   )
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
-  expect_identical(out_df[, 1], FALSE)
+  expect_identical(out_df[, 1], TRUE)
 })
 
 test_that(r"(<str> < <dbl> :: "2" < 1)", {

@@ -1,5 +1,7 @@
 if (Sys.getenv("CI") == "" ) {
 
+  Sys.setlocale("LC_COLLATE", "C")
+
   convert_arg <- function(arg) {
     if (is.call(arg)) stop("not supported yet, will deal with special cases later")
     arg
