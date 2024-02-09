@@ -14,8 +14,8 @@ enum Relop {
 	LT
 };
 
-template <typename LHS, typename RHS, Relop OP>
-bool relop(LHS lhs, RHS rhs) {
+template <typename T, Relop OP>
+bool relop(T lhs, T rhs) {
 	switch (OP)
 	{
 	case EQ: return lhs == rhs;
@@ -24,6 +24,7 @@ bool relop(LHS lhs, RHS rhs) {
 	default:
 		break;
 	}
+
 	return false;
 }
 
@@ -31,7 +32,7 @@ template <LogicalTypeId LHS_LOGICAL, typename LHS, LogicalTypeId RHS_LOGICAL, ty
 void BaseRRelopFunctionSimple(DataChunk &args, ExpressionState &state, Vector &result) {
 	auto parts = BinaryTypeAssert<LHS_LOGICAL, RHS_LOGICAL>(args);
 
-	BinaryExecutor::Execute<LHS, RHS, bool>(parts.lefts, parts.rights, result, args.size(), relop<LHS, RHS, OP>);
+	BinaryExecutor::Execute<LHS, RHS, bool>(parts.lefts, parts.rights, result, args.size(), relop<int32_t, OP>);
 }
 
 template <Relop OP>
@@ -42,19 +43,10 @@ void BaseRRelopFunctionDouble(DataChunk &args, ExpressionState &state, Vector &r
 			mask.SetInvalid(idx);
 			return false;
 		}
-		return relop<double, double, OP>(left, right);
+		return relop<double, OP>(left, right);
 	};
 
 	BinaryExecutor::ExecuteWithNulls<double, double, bool>(parts.lefts, parts.rights, result, args.size(), fun);
-}
-
-template <typename type, Relop OP>
-bool ExecuteBaseRRelopFunctionDoubleInteger(double left, type right, ValidityMask &mask, idx_t idx) {
-	if (isnan(left)) {
-		mask.SetInvalid(idx);
-		return false;
-	}
-	return relop<double, int32_t, OP>(left, right);
 }
 
 template <LogicalTypeId LOGICAL_TYPE, Relop OP>
@@ -62,8 +54,14 @@ void BaseRRelopFunctionDoubleInteger(DataChunk &args, ExpressionState &state, Ve
 	using type = typename std::conditional<LOGICAL_TYPE == LogicalType::INTEGER, int32_t, bool>::type;
 
 	auto parts = BinaryTypeAssert<LogicalType::DOUBLE, LOGICAL_TYPE>(args);
-	BinaryExecutor::ExecuteWithNulls<double, type, bool>(parts.lefts, parts.rights, result, args.size(),
-	                                                     ExecuteBaseRRelopFunctionDoubleInteger<type, OP>);
+	auto exec = [](double left, type right, ValidityMask &mask, idx_t idx) {
+		if (isnan(left)) {
+			mask.SetInvalid(idx);
+			return false;
+		}
+		return relop<double, OP>(left, right);
+	};
+	BinaryExecutor::ExecuteWithNulls<double, type, bool>(parts.lefts, parts.rights, result, args.size(), exec);
 }
 
 template <LogicalTypeId LOGICAL_TYPE, Relop OP>
@@ -71,81 +69,88 @@ void BaseRRelopFunctionIntegerDouble(DataChunk &args, ExpressionState &state, Ve
 	using type = typename std::conditional<LOGICAL_TYPE == LogicalType::INTEGER, int32_t, bool>::type;
 
 	auto parts = BinaryTypeAssert<LOGICAL_TYPE, LogicalType::DOUBLE>(args);
-	BinaryExecutor::ExecuteWithNulls<double, type, bool>(parts.rights, parts.lefts, result, args.size(),
-	                                                     ExecuteBaseRRelopFunctionDoubleInteger<type, OP>);
+	auto exec = [](type left, double right, ValidityMask &mask, idx_t idx) {
+		if (isnan(right)) {
+			mask.SetInvalid(idx);
+			return false;
+		}
+		return relop<double, OP>(left, right);
+	};
+	BinaryExecutor::ExecuteWithNulls<type, double, bool>(parts.lefts, parts.rights, result, args.size(), exec);
 }
 
 template <Relop OP>
 void BaseRRelopFunctionString(DataChunk &args, ExpressionState &state, Vector &result) {
 	auto parts = BinaryTypeAssert<LogicalType::VARCHAR, LogicalType::VARCHAR>(args);
-	BinaryExecutor::Execute<string_t, string_t, bool>(parts.lefts, parts.rights, result, args.size(), relop<string_t, string_t, OP>);
-}
-
-template <Relop OP>
-bool ExecuteBaseRRelopFunctionStringInteger(string_t left, int32_t right) {
-	char right_chr[100];
-	snprintf(right_chr, sizeof(right_chr), "%d", right);
-	return relop<string_t, string_t, OP>(left, right_chr);
+	BinaryExecutor::Execute<string_t, string_t, bool>(parts.lefts, parts.rights, result, args.size(), relop<string_t, OP>);
 }
 
 template <Relop OP>
 void BaseRRelopFunctionStringInteger(DataChunk &args, ExpressionState &state, Vector &result) {
 	auto parts = BinaryTypeAssert<LogicalType::VARCHAR, LogicalType::INTEGER>(args);
 
-	return BinaryExecutor::Execute<string_t, int32_t, bool>(parts.lefts, parts.rights, result, args.size(),
-	                                                        &ExecuteBaseRRelopFunctionStringInteger<OP>);
+	auto exec = [](string_t left, int32_t right) {
+		char right_chr[100];
+		snprintf(right_chr, sizeof(right_chr), "%d", right);
+		return relop<string_t, OP>(left, right_chr);
+	};
+	return BinaryExecutor::Execute<string_t, int32_t, bool>(parts.lefts, parts.rights, result, args.size(), exec);
 }
 
 template <Relop OP>
 void BaseRRelopFunctionIntegerString(DataChunk &args, ExpressionState &state, Vector &result) {
 	auto parts = BinaryTypeAssert<LogicalType::INTEGER, LogicalType::VARCHAR>(args);
 
-	return BinaryExecutor::Execute<string_t, int32_t, bool>(parts.rights, parts.lefts, result, args.size(),
-	                                                        &ExecuteBaseRRelopFunctionStringInteger<OP>);
-}
-
-template <Relop OP>
-bool ExecuteBaseRRelopFunctionStringBoolean(string_t left, bool right) {
-	return relop<string_t, string_t, OP>(left, right ? "TRUE" : "FALSE");
+	auto exec = [](int32_t left, string_t right) {
+		char left_chr[100];
+		snprintf(left_chr, sizeof(left_chr), "%d", left);
+		return relop<string_t, OP>(left_chr, right);
+	};
+	return BinaryExecutor::Execute<int32_t, string_t, bool>(parts.lefts, parts.rights, result, args.size(), exec);
 }
 
 template <Relop OP>
 void BaseRRelopFunctionStringBoolean(DataChunk &args, ExpressionState &state, Vector &result) {
 	auto parts = BinaryTypeAssert<LogicalType::VARCHAR, LogicalType::BOOLEAN>(args);
 
-	return BinaryExecutor::Execute<string_t, bool, bool>(parts.lefts, parts.rights, result, args.size(),
-	                                                     &ExecuteBaseRRelopFunctionStringBoolean<OP>);
+	auto exec = [](string_t left, bool right) {
+		return relop<string_t, OP>(left, right ? "TRUE" : "FALSE");
+	};
+	return BinaryExecutor::Execute<string_t, bool, bool>(parts.lefts, parts.rights, result, args.size(), exec);
 }
 
 template <Relop OP>
 void BaseRRelopFunctionBooleanString(DataChunk &args, ExpressionState &state, Vector &result) {
 	auto parts = BinaryTypeAssert<LogicalType::BOOLEAN, LogicalType::VARCHAR>(args);
 
-	return BinaryExecutor::Execute<string_t, bool, bool>(parts.rights, parts.lefts, result, args.size(),
-	                                                     &ExecuteBaseRRelopFunctionStringBoolean<OP>);
-}
-
-template <Relop OP>
-bool ExecuteBaseRRelopFunctionStringDouble(string_t left, double right) {
-	char right_chr[100];
-	snprintf(right_chr, sizeof(right_chr), "%.17g", right);
-	return relop<string_t, string_t, OP>(left, right_chr);
+	auto exec = [](bool left, string_t right) {
+		return relop<string_t, OP>(left ? "TRUE" : "FALSE", right);
+	};
+	return BinaryExecutor::Execute<bool, string_t, bool>(parts.lefts, parts.rights, result, args.size(), exec);
 }
 
 template <Relop OP>
 void BaseRRelopFunctionStringDouble(DataChunk &args, ExpressionState &state, Vector &result) {
 	auto parts = BinaryTypeAssert<LogicalType::VARCHAR, LogicalType::DOUBLE>(args);
 
-	return BinaryExecutor::Execute<string_t, double, bool>(parts.lefts, parts.rights, result, args.size(),
-	                                                       &ExecuteBaseRRelopFunctionStringDouble<OP>);
+	auto exec = [](string_t left, double right) {
+		char right_chr[100];
+		snprintf(right_chr, sizeof(right_chr), "%.17g", right);
+		return relop<string_t, OP>(left, right_chr);
+	};
+	return BinaryExecutor::Execute<string_t, double, bool>(parts.lefts, parts.rights, result, args.size(), exec);
 }
 
 template <Relop OP>
 void BaseRRelopFunctionDoubleString(DataChunk &args, ExpressionState &state, Vector &result) {
 	auto parts = BinaryTypeAssert<LogicalType::DOUBLE, LogicalType::VARCHAR>(args);
 
-	return BinaryExecutor::Execute<string_t, double, bool>(parts.rights, parts.lefts, result, args.size(),
-	                                                       &ExecuteBaseRRelopFunctionStringDouble<OP>);
+	auto exec = [](double left, string_t right) {
+		char left_chr[100];
+		snprintf(left_chr, sizeof(left_chr), "%.17g", left);
+		return relop<string_t, OP>(left_chr, right);
+	};
+	return BinaryExecutor::Execute<double, string_t, bool>(parts.lefts, parts.rights, result, args.size(), exec);
 }
 
 template <Relop OP>
