@@ -9,8 +9,13 @@ if (Sys.getenv("CI") == "" ) {
 
   # TODO: this should live in the package somewhere
   udfs <- c(
-    "<"  = "r_base::<",
     "==" = "r_base::==",
+    "!="  = "r_base::!=",
+    "<"  = "r_base::<",
+    "<="  = "r_base::<=",
+    ">"  = "r_base::>",
+    ">="  = "r_base::>=",
+
     "+"  = "r_base::+"
   )
 
@@ -38,7 +43,9 @@ if (Sys.getenv("CI") == "" ) {
     readLines(file.path(gen_dir, "relop.txt"))
   )
 
-  op <- c("eq" = "==", "lt" = "<")
+  op <- c("eq" = "==", "neq" = "!=",
+          "lt" = "<", "lte" = "<=",
+          "gt" = ">", "gte" = ">=")
   for (i in seq_along(op)) {
     txt <- gsub("<=>", op[i], relop_txt, fixed = TRUE)
     name <- names(op)[i]
