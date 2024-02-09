@@ -46,6 +46,13 @@ struct RelopDispatch<T, EQ> {
 template <typename T>
 struct RelopDispatch<T, NEQ> {
 	inline bool operator()(T lhs, T rhs) {
+		return lhs != rhs;
+	}
+};
+
+template <>
+struct RelopDispatch<string_t, NEQ> {
+	inline bool operator()(string_t lhs, string_t rhs) {
 		return !(lhs == rhs);
 	}
 };
