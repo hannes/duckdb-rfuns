@@ -19,16 +19,82 @@ enum Relop {
 };
 
 template <typename T, Relop OP>
-bool relop(T lhs, T rhs) {
-	switch (OP)
-	{
-	case EQ: return lhs == rhs;
-	case NEQ: return !(lhs == rhs);
-	case LT: return lhs < rhs;
-	case LTE: return lhs == rhs || lhs < rhs ;
-	case GT: return lhs > rhs;
-	case GTE: return lhs == rhs || lhs > rhs;
+struct RelopDispatch {
+
+	inline bool operator()(T lhs, T rhs) ;
+	/*{
+		switch (OP)
+		{
+		case EQ: return lhs == rhs;
+		case NEQ: return !(lhs == rhs);
+		case LT: return lhs < rhs;
+		case LTE: return lhs == rhs || lhs < rhs ;
+		case GT: return lhs > rhs;
+		case GTE: return lhs == rhs || lhs > rhs;
+		}
+	}*/
+
+};
+
+template <typename T>
+struct RelopDispatch<T, EQ> {
+	inline bool operator()(T lhs, T rhs) {
+		return lhs == rhs;
 	}
+};
+
+template <typename T>
+struct RelopDispatch<T, NEQ> {
+	inline bool operator()(T lhs, T rhs) {
+		return !(lhs == rhs);
+	}
+};
+
+template <typename T>
+struct RelopDispatch<T, LT> {
+	inline bool operator()(T lhs, T rhs) {
+		return lhs < rhs;
+	}
+};
+
+template <typename T>
+struct RelopDispatch<T, LTE> {
+	inline bool operator()(T lhs, T rhs) {
+		return lhs <= rhs;
+	}
+};
+
+template <>
+struct RelopDispatch<string_t, LTE> {
+	inline bool operator()(string_t lhs, string_t rhs) {
+		return lhs < rhs || lhs == rhs;
+	}
+};
+
+template <typename T>
+struct RelopDispatch<T, GT> {
+	inline bool operator()(T lhs, T rhs) {
+		return lhs > rhs;
+	}
+};
+
+template <typename T>
+struct RelopDispatch<T, GTE> {
+	inline bool operator()(T lhs, T rhs) {
+		return lhs >= rhs;
+	}
+};
+
+template <>
+struct RelopDispatch<string_t, GTE> {
+	inline bool operator()(string_t lhs, string_t rhs) {
+		return lhs > rhs || lhs == rhs;
+	}
+};
+
+template <typename T, Relop OP>
+inline bool relop(T lhs, T rhs) {
+	return RelopDispatch<T, OP>()(lhs, rhs);
 }
 
 template <LogicalTypeId LHS_LOGICAL, typename LHS, LogicalTypeId RHS_LOGICAL, typename RHS, Relop OP>
