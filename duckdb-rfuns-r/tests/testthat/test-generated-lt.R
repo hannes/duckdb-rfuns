@@ -94,3 +94,1751 @@ test_that(r"(<int> < <int> :: NA_integer_ < NA_integer_)", {
   expect_identical(out_df[, 1], NA)
 })
 
+test_that(r"(<lgl> < <lgl> :: TRUE < TRUE)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = TRUE, x2 = TRUE)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], FALSE)
+})
+
+test_that(r"(<lgl> < <lgl> :: TRUE < FALSE)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = TRUE, x2 = FALSE)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], FALSE)
+})
+
+test_that(r"(<lgl> < <lgl> :: FALSE < TRUE)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = FALSE, x2 = TRUE)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], TRUE)
+})
+
+test_that(r"(<lgl> < <lgl> :: FALSE < FALSE)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = FALSE, x2 = FALSE)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], FALSE)
+})
+
+test_that(r"(<lgl> < <lgl> :: NA < FALSE)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = NA, x2 = FALSE)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], NA)
+})
+
+test_that(r"(<lgl> < <lgl> :: NA < TRUE)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = NA, x2 = TRUE)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], NA)
+})
+
+test_that(r"(<lgl> < <lgl> :: TRUE < NA)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = TRUE, x2 = NA)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], NA)
+})
+
+test_that(r"(<lgl> < <lgl> :: FALSE < NA)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = FALSE, x2 = NA)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], NA)
+})
+
+test_that(r"(<int> < <lgl> :: 1 < TRUE)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = 1, x2 = TRUE)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], FALSE)
+})
+
+test_that(r"(<int> < <lgl> :: 1 < FALSE)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = 1, x2 = FALSE)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], FALSE)
+})
+
+test_that(r"(<int> < <lgl> :: 2 < TRUE)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = 2, x2 = TRUE)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], FALSE)
+})
+
+test_that(r"(<int> < <lgl> :: 2 < FALSE)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = 2, x2 = FALSE)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], FALSE)
+})
+
+test_that(r"(<int> < <lgl> :: 0 < TRUE)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = 0, x2 = TRUE)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], TRUE)
+})
+
+test_that(r"(<int> < <lgl> :: 0 < FALSE)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = 0, x2 = FALSE)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], FALSE)
+})
+
+test_that(r"(<int> < <lgl> :: NA_integer_ < TRUE)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = NA_integer_, x2 = TRUE)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], NA)
+})
+
+test_that(r"(<int> < <lgl> :: NA_integer_ < NA)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = NA_integer_, x2 = NA)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], NA)
+})
+
+test_that(r"(<int> < <lgl> :: 42 < NA_integer_)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = 42, x2 = NA_integer_)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], NA)
+})
+
+test_that(r"(<lgl> < <int> :: TRUE < 1)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = TRUE, x2 = 1)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], FALSE)
+})
+
+test_that(r"(<lgl> < <int> :: FALSE < 1)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = FALSE, x2 = 1)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], TRUE)
+})
+
+test_that(r"(<lgl> < <int> :: TRUE < 2)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = TRUE, x2 = 2)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], TRUE)
+})
+
+test_that(r"(<lgl> < <int> :: FALSE < 2)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = FALSE, x2 = 2)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], TRUE)
+})
+
+test_that(r"(<lgl> < <int> :: TRUE < 0)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = TRUE, x2 = 0)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], FALSE)
+})
+
+test_that(r"(<lgl> < <int> :: FALSE < 0)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = FALSE, x2 = 0)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], FALSE)
+})
+
+test_that(r"(<lgl> < <int> :: TRUE < NA_integer_)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = TRUE, x2 = NA_integer_)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], NA)
+})
+
+test_that(r"(<lgl> < <int> :: NA < NA_integer_)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = NA, x2 = NA_integer_)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], NA)
+})
+
+test_that(r"(<lgl> < <int> :: NA < 42)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = NA, x2 = 42)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], NA)
+})
+
+test_that(r"(<dbl> < <dbl> :: 1.5 < 2)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = 1.5, x2 = 2)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], TRUE)
+})
+
+test_that(r"(<dbl> < <dbl> :: 1.5 < 1.5)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = 1.5, x2 = 1.5)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], FALSE)
+})
+
+test_that(r"(<dbl> < <dbl> :: 1.5 < NA_real_)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = 1.5, x2 = NA_real_)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], NA)
+})
+
+test_that(r"(<dbl> < <dbl> :: NA_real_ < 2.5)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = NA_real_, x2 = 2.5)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], NA)
+})
+
+test_that(r"(<dbl> < <int | lgl> :: 2 < 2L)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = 2, x2 = 2L)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], FALSE)
+})
+
+test_that(r"(<dbl> < <int | lgl> :: 3.5 < 2L)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = 3.5, x2 = 2L)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], FALSE)
+})
+
+test_that(r"(<dbl> < <int | lgl> :: 3.5 < NA_integer_)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = 3.5, x2 = NA_integer_)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], NA)
+})
+
+test_that(r"(<dbl> < <int | lgl> :: 1 < TRUE)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = 1, x2 = TRUE)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], FALSE)
+})
+
+test_that(r"(<dbl> < <int | lgl> :: 1 < FALSE)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = 1, x2 = FALSE)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], FALSE)
+})
+
+test_that(r"(<dbl> < <int | lgl> :: 0 < FALSE)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = 0, x2 = FALSE)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], FALSE)
+})
+
+test_that(r"(<dbl> < <int | lgl> :: 0 < TRUE)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = 0, x2 = TRUE)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], TRUE)
+})
+
+test_that(r"(<dbl> < <int | lgl> :: 2 < NA)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = 2, x2 = NA)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], NA)
+})
+
+test_that(r"(<dbl> < <int | lgl> :: NA_real_ < 42L)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = NA_real_, x2 = 42L)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], NA)
+})
+
+test_that(r"(<dbl> < <int | lgl> :: NA_real_ < TRUE)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = NA_real_, x2 = TRUE)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], NA)
+})
+
+test_that(r"(<dbl> < <int | lgl> :: NA_real_ < FALSE)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = NA_real_, x2 = FALSE)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], NA)
+})
+
+test_that(r"(<int | lgl> < <dbl> :: 2L < 2)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = 2L, x2 = 2)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], FALSE)
+})
+
+test_that(r"(<int | lgl> < <dbl> :: 2L < 3.5)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = 2L, x2 = 3.5)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], TRUE)
+})
+
+test_that(r"(<int | lgl> < <dbl> :: NA_integer_ < 3.5)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = NA_integer_, x2 = 3.5)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], NA)
+})
+
+test_that(r"(<int | lgl> < <dbl> :: TRUE < 1)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = TRUE, x2 = 1)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], FALSE)
+})
+
+test_that(r"(<int | lgl> < <dbl> :: FALSE < 1)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = FALSE, x2 = 1)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], TRUE)
+})
+
+test_that(r"(<int | lgl> < <dbl> :: FALSE < 0)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = FALSE, x2 = 0)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], FALSE)
+})
+
+test_that(r"(<int | lgl> < <dbl> :: TRUE < 0)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = TRUE, x2 = 0)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], FALSE)
+})
+
+test_that(r"(<int | lgl> < <dbl> :: NA < 0)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = NA, x2 = 0)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], NA)
+})
+
+test_that(r"(<int | lgl> < <dbl> :: 42L < NA_real_)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = 42L, x2 = NA_real_)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], NA)
+})
+
+test_that(r"(<int | lgl> < <dbl> :: TRUE < NA_real_)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = TRUE, x2 = NA_real_)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], NA)
+})
+
+test_that(r"(<int | lgl> < <dbl> :: FALSE < NA_real_)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = FALSE, x2 = NA_real_)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], NA)
+})
+
+test_that(r"(<str> < <str> :: "a" < "b")", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = "a", x2 = "b")
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], TRUE)
+})
+
+test_that(r"(<str> < <str> :: "a" < "a")", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = "a", x2 = "a")
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], FALSE)
+})
+
+test_that(r"(<str> < <str> :: "a" < NA_character_)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = "a", x2 = NA_character_)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], NA)
+})
+
+test_that(r"(<str> < <str> :: NA_character_ < "a")", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = NA_character_, x2 = "a")
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], NA)
+})
+
+test_that(r"(<str>        < <lgl> :: "TRUE" < TRUE)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = "TRUE", x2 = TRUE)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], FALSE)
+})
+
+test_that(r"(<str>        < <lgl> :: "TRUE" < FALSE)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = "TRUE", x2 = FALSE)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], FALSE)
+})
+
+test_that(r"(<str>        < <lgl> :: "TRUE" < NA)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = "TRUE", x2 = NA)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], NA)
+})
+
+test_that(r"(<str>        < <lgl> :: NA_character_ < TRUE)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = NA_character_, x2 = TRUE)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], NA)
+})
+
+test_that(r"(<str>        < <lgl> :: NA_character_ < FALSE)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = NA_character_, x2 = FALSE)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], NA)
+})
+
+test_that(r"(<str>        < <lgl> :: "FALSE" < TRUE)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = "FALSE", x2 = TRUE)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], TRUE)
+})
+
+test_that(r"(<str>        < <lgl> :: "FALSE" < FALSE)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = "FALSE", x2 = FALSE)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], FALSE)
+})
+
+test_that(r"(<str>        < <lgl> :: "tRue" < TRUE)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = "tRue", x2 = TRUE)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], TRUE)
+})
+
+test_that(r"(<str>        < <lgl> :: "fAlse" < FALSE)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = "fAlse", x2 = FALSE)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], TRUE)
+})
+
+test_that(r"(<lgl> < <str> :: TRUE < "TRUE")", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = TRUE, x2 = "TRUE")
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], FALSE)
+})
+
+test_that(r"(<lgl> < <str> :: FALSE < "TRUE")", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = FALSE, x2 = "TRUE")
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], TRUE)
+})
+
+test_that(r"(<lgl> < <str> :: NA < "TRUE")", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = NA, x2 = "TRUE")
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], NA)
+})
+
+test_that(r"(<lgl> < <str> :: TRUE < NA_character_)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = TRUE, x2 = NA_character_)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], NA)
+})
+
+test_that(r"(<lgl> < <str> :: FALSE < NA_character_)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = FALSE, x2 = NA_character_)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], NA)
+})
+
+test_that(r"(<lgl> < <str> :: TRUE < "FALSE")", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = TRUE, x2 = "FALSE")
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], FALSE)
+})
+
+test_that(r"(<lgl> < <str> :: FALSE < "FALSE")", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = FALSE, x2 = "FALSE")
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], FALSE)
+})
+
+test_that(r"(<lgl> < <str> :: TRUE < "tRue")", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = TRUE, x2 = "tRue")
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], FALSE)
+})
+
+test_that(r"(<lgl> < <str> :: FALSE < "fAlse")", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = FALSE, x2 = "fAlse")
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], FALSE)
+})
+
+test_that(r"(<str> < <dbl> :: "2" < 1)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = "2", x2 = 1)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], FALSE)
+})
+
+test_that(r"(<str> < <dbl> :: "1" < 1)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = "1", x2 = 1)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], FALSE)
+})
+
+test_that(r"(<str> < <dbl> :: "1" < NA_real_)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = "1", x2 = NA_real_)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], NA)
+})
+
+test_that(r"(<str> < <dbl> :: NA_character_ < 3)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = NA_character_, x2 = 3)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], NA)
+})
+
+test_that(r"(<str> < <dbl> :: "a" < 1)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = "a", x2 = 1)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], FALSE)
+})
+
+test_that(r"(<dbl> < <str> :: 1 < "2")", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = 1, x2 = "2")
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], TRUE)
+})
+
+test_that(r"(<dbl> < <str> :: 1 < "1")", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = 1, x2 = "1")
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], FALSE)
+})
+
+test_that(r"(<dbl> < <str> :: NA_real_ < "2")", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = NA_real_, x2 = "2")
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], NA)
+})
+
+test_that(r"(<dbl> < <str> :: 3 < NA_character_)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = 3, x2 = NA_character_)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], NA)
+})
+
+test_that(r"(<dbl> < <str> :: 1 < "a")", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = 1, x2 = "a")
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], TRUE)
+})
+
+test_that(r"(<int> < <str> :: NA_integer_ < "string")", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = NA_integer_, x2 = "string")
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], NA)
+})
+
+test_that(r"(<int> < <str> :: 1L < "1")", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = 1L, x2 = "1")
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], FALSE)
+})
+
+test_that(r"(<int> < <str> :: 1L < NA_character_)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = 1L, x2 = NA_character_)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], NA)
+})
+
+test_that(r"(<int> < <str> :: 1L < "a")", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = 1L, x2 = "a")
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], TRUE)
+})
+
+test_that(r"(<str> < <int> :: "string" < NA_integer_)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = "string", x2 = NA_integer_)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], NA)
+})
+
+test_that(r"(<str> < <int> :: "1" < 1L)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = "1", x2 = 1L)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], FALSE)
+})
+
+test_that(r"(<str> < <int> :: NA_character_ < 2L)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = NA_character_, x2 = 2L)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], NA)
+})
+
+test_that(r"(<str> < <int> :: "a" < 1L)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = "a", x2 = 1L)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], FALSE)
+})
+
