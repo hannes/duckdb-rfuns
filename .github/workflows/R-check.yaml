@@ -5,6 +5,8 @@ on:
     branches: [main, master]
   pull_request:
     branches: [main, master]
+  schedule:
+    - cron: "20 0 * * *"
 
 name: R-CMD-check
 
@@ -25,12 +27,12 @@ jobs:
         with:
           fetch-depth: 0
           submodules: 'true'
-        
+
       - name: Checkout DuckDB to version
         run: |
           cd duckdb
           git checkout v0.9.2
-      
+
       - name: build duckdb extension
         run: make
 
@@ -43,8 +45,7 @@ jobs:
           extra-packages: any::rcmdcheck
           needs: check
           working-directory: duckdb-rfuns-r
-          
+
       - uses: r-lib/actions/check-r-package@v2
         with:
           working-directory: duckdb-rfuns-r
-
