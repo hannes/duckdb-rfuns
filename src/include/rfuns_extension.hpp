@@ -23,6 +23,7 @@ BinaryChunk BinaryTypeAssert(DataChunk &args) {
 
 ScalarFunctionSet base_r_add();
 ScalarFunctionSet base_r_eq();
+ScalarFunctionSet base_r_lt();
 
 } // namespace rfuns
 
