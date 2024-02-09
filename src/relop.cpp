@@ -11,7 +11,11 @@ namespace {
 
 enum Relop {
 	EQ,
-	LT
+	NEQ,
+	LT,
+	LTE,
+	GT,
+	GTE
 };
 
 template <typename T, Relop OP>
@@ -19,13 +23,12 @@ bool relop(T lhs, T rhs) {
 	switch (OP)
 	{
 	case EQ: return lhs == rhs;
-	case LT: return lhs <  rhs;
-
-	default:
-		break;
+	case NEQ: return !(lhs == rhs);
+	case LT: return lhs < rhs;
+	case LTE: return lhs == rhs || lhs < rhs ;
+	case GT: return lhs > rhs;
+	case GTE: return lhs == rhs || lhs > rhs;
 	}
-
-	return false;
 }
 
 template <LogicalTypeId LHS_LOGICAL, typename LHS, LogicalTypeId RHS_LOGICAL, typename RHS, Relop OP>
@@ -207,8 +210,20 @@ ScalarFunctionSet base_r_relop(string name) {
 ScalarFunctionSet base_r_eq() {
 	return base_r_relop<EQ>("r_base::==");
 }
+ScalarFunctionSet base_r_neq() {
+	return base_r_relop<NEQ>("r_base::!=");
+}
 ScalarFunctionSet base_r_lt() {
 	return base_r_relop<LT>("r_base::<");
+}
+ScalarFunctionSet base_r_lte() {
+	return base_r_relop<LTE>("r_base::<=");
+}
+ScalarFunctionSet base_r_gt() {
+	return base_r_relop<GT>("r_base::>");
+}
+ScalarFunctionSet base_r_gte() {
+	return base_r_relop<GTE>("r_base::>=");
 }
 
 } // namespace rfuns
