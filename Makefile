@@ -55,7 +55,8 @@ CLIENT_FLAGS=-DDUCKDB_EXTENSION_${EXTENSION_NAME}_SHOULD_LINK=1
 debug:
 	mkdir -p  build/debug && \
 	cmake $(GENERATOR) $(BUILD_FLAGS) $(CLIENT_FLAGS) -DCMAKE_BUILD_TYPE=Debug -S ./duckdb/ -B build/debug && \
-	cmake --build build/debug --config Debug
+	cmake --build build/debug --config Debug && \
+	cp build/debug/extension/rfuns/rfuns.duckdb_extension duckdb-rfuns-r/inst/extension/
 
 release:
 	mkdir -p build/release && \

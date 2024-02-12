@@ -22,8 +22,14 @@ inline void RfunsScalarFun(DataChunk &args, ExpressionState &state, Vector &resu
 
 static void LoadInternal(DatabaseInstance &instance) {
 	ExtensionUtil::RegisterFunction(instance, rfuns::base_r_add());
+
+	// relop
 	ExtensionUtil::RegisterFunction(instance, rfuns::base_r_eq());
+	ExtensionUtil::RegisterFunction(instance, rfuns::base_r_neq());
 	ExtensionUtil::RegisterFunction(instance, rfuns::base_r_lt());
+	ExtensionUtil::RegisterFunction(instance, rfuns::base_r_lte());
+	ExtensionUtil::RegisterFunction(instance, rfuns::base_r_gt());
+	ExtensionUtil::RegisterFunction(instance, rfuns::base_r_gte());
 
 	// Register a scalar function
 	auto rfuns_scalar_function = ScalarFunction("rfuns", {LogicalType::VARCHAR}, LogicalType::VARCHAR, RfunsScalarFun);
