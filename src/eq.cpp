@@ -3,7 +3,6 @@
 
 #include <math.h>
 #include <climits>
-#include <tuple>
 
 namespace duckdb {
 namespace rfuns {
