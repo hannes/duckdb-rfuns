@@ -32,7 +32,7 @@ jobs:
     needs: duckdb-stable-build
     uses: ./.github/workflows/_extension_deploy.yml
     secrets: inherit
-    if: github.event_name == 'push'
+    if: github.event_name != 'pull_request'
     with:
       duckdb_version: v0.9.2
       extension_name: rfuns
