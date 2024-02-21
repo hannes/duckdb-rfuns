@@ -20,6 +20,7 @@ if (Sys.getenv("CI") == "" ) {
     args <- as.list(expr[-1])
     env <- new.env()
     env$time <- as.POSIXct(strptime('2024-02-21 14:00:00', format = '%Y-%m-%d %H:%M:%S', tz = 'UTC'))
+    env$date <- as.Date("2024-02-21")
     args <- lapply(args, eval, envir = env)
     names(args) <- paste0("x", seq_along(args))
 
