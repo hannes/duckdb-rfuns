@@ -21,18 +21,7 @@ enum Relop {
 template <typename T, Relop OP>
 struct RelopDispatch {
 
-	inline bool operator()(T lhs, T rhs) ;
-	/*{
-		switch (OP)
-		{
-		case EQ: return lhs == rhs;
-		case NEQ: return !(lhs == rhs);
-		case LT: return lhs < rhs;
-		case LTE: return lhs == rhs || lhs < rhs ;
-		case GT: return lhs > rhs;
-		case GTE: return lhs == rhs || lhs > rhs;
-		}
-	}*/
+	inline bool operator()(T lhs, T rhs);
 
 };
 
