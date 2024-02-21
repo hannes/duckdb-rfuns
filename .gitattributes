@@ -1,2 +1,2 @@
 test-generated-*.R  linguist-generated=true
-gen/relop-*.R   linguist-generated=true
+relop-*.R   linguist-generated=true
