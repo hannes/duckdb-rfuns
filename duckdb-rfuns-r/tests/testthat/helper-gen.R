@@ -44,7 +44,7 @@ if (Sys.getenv("CI") == "" ) {
   for (i in seq_along(op)) {
     txt <- gsub("<=>", op[i], relop_txt, fixed = TRUE)
     name <- names(op)[i]
-    target <- file.path(gen_dir, paste0(name, ".R"))
+    target <- file.path(gen_dir, paste0("relop-", name, ".R"))
     writeLines(txt, target)
     message(paste("\U2705 generating:", basename(target), " from relop.txt"))
   }
