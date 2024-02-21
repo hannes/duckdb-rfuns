@@ -5,6 +5,12 @@ Sys.Date() >= Sys.Date() + 1
 NA_real_ >= Sys.Date()
 Sys.Date() >= NA_real_
 
+"<time> >= <time>"
+time >= time
+time >= time + 1
+time >= NA_real_
+NA_real_ >= time
+
 "<int> >= <int>"
 0L >= 0L
 1L >= 0L

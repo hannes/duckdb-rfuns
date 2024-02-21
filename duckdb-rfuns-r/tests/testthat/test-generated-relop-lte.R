@@ -75,6 +75,88 @@ test_that(r"(<date> <= <date> :: Sys.Date() <= NA_real_)", {
   expect_identical(out_df[, 1], NA)
 })
 
+test_that(r"(<time> <= <time> :: time <= time)", {
+  con <- local_con()
+  in_df <- tibble::tibble(
+  x1 = as.POSIXct("2024-02-21 14:00:00", tz = "UTC"),
+  x2 = as.POSIXct("2024-02-21 14:00:00", tz = "UTC"),
+)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<=",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], TRUE)
+})
+
+test_that(r"(<time> <= <time> :: time <= time + 1)", {
+  con <- local_con()
+  in_df <- tibble::tibble(
+  x1 = as.POSIXct("2024-02-21 14:00:00", tz = "UTC"),
+  x2 = as.POSIXct("2024-02-21 14:00:01", tz = "UTC"),
+)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<=",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], TRUE)
+})
+
+test_that(r"(<time> <= <time> :: time <= NA_real_)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = as.POSIXct("2024-02-21 14:00:00", tz = "UTC"), x2 = NA_real_)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<=",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], NA)
+})
+
+test_that(r"(<time> <= <time> :: NA_real_ <= time)", {
+  con <- local_con()
+  in_df <- tibble::tibble(x1 = NA_real_, x2 = as.POSIXct("2024-02-21 14:00:00", tz = "UTC"))
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<=",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], NA)
+})
+
 test_that(r"(<int> <= <int> :: 0L <= 0L)", {
   con <- local_con()
   in_df <- tibble::tibble(x1 = 0L, x2 = 0L)

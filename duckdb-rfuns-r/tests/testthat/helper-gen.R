@@ -18,7 +18,9 @@ if (Sys.getenv("CI") == "" ) {
     fun <- as.character(rlang::node_car(expr))
 
     args <- as.list(expr[-1])
-    args <- lapply(args, eval)
+    env <- new.env()
+    env$time <- as.POSIXct(strptime('2024-02-21 14:00:00', format = '%Y-%m-%d %H:%M:%S', tz = 'UTC'))
+    args <- lapply(args, eval, envir = env)
     names(args) <- paste0("x", seq_along(args))
 
     list(
@@ -26,7 +28,7 @@ if (Sys.getenv("CI") == "" ) {
       udf = udfs[[fun]],
       data = tibble::as_tibble(args),
       expression = deparse(expr, nlines = 1L),
-      expected = constructive::construct(eval(expr))$code
+      expected = constructive::construct(eval(expr, envir = env))$code
     )
   }
 
