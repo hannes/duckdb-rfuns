@@ -1,3 +1,9 @@
+"<date> <=> <date>"
+Sys.Date() <=> Sys.Date()
+Sys.Date() <=> Sys.Date() + 1
+NA_real_ <=> Sys.Date()
+Sys.Date() <=> NA_real_
+
 "<int> <=> <int>"
 0L <=> 0L
 1L <=> 0L

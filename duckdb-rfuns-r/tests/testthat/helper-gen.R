@@ -2,11 +2,6 @@ if (Sys.getenv("CI") == "" ) {
 
   Sys.setlocale("LC_COLLATE", "C")
 
-  convert_arg <- function(arg) {
-    if (is.call(arg)) stop("not supported yet, will deal with special cases later")
-    arg
-  }
-
   # TODO: this should live in the package somewhere
   udfs <- c(
     "==" = "r_base::==",
@@ -23,7 +18,7 @@ if (Sys.getenv("CI") == "" ) {
     fun <- as.character(rlang::node_car(expr))
 
     args <- as.list(expr[-1])
-    args <- lapply(args, convert_arg)
+    args <- lapply(args, eval)
     names(args) <- paste0("x", seq_along(args))
 
     list(
