@@ -20,5 +20,5 @@ Imports:
     constructive,
     duckdb,
     tibble,
-    withr, 
+    withr,
     DBI

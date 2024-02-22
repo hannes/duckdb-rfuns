@@ -2,11 +2,6 @@ if (Sys.getenv("CI") == "" ) {
 
   Sys.setlocale("LC_COLLATE", "C")
 
-  convert_arg <- function(arg) {
-    if (is.call(arg)) stop("not supported yet, will deal with special cases later")
-    arg
-  }
-
   # TODO: this should live in the package somewhere
   udfs <- c(
     "==" = "r_base::==",
@@ -23,7 +18,10 @@ if (Sys.getenv("CI") == "" ) {
     fun <- as.character(rlang::node_car(expr))
 
     args <- as.list(expr[-1])
-    args <- lapply(args, convert_arg)
+    env <- new.env()
+    env$time <- as.POSIXct(strptime('2024-02-21 14:00:00', format = '%Y-%m-%d %H:%M:%S', tz = 'UTC'))
+    env$date <- as.Date("2024-02-21")
+    args <- lapply(args, eval, envir = env)
     names(args) <- paste0("x", seq_along(args))
 
     list(
@@ -31,7 +29,7 @@ if (Sys.getenv("CI") == "" ) {
       udf = udfs[[fun]],
       data = tibble::as_tibble(args),
       expression = deparse(expr, nlines = 1L),
-      expected = constructive::construct(eval(expr))$code
+      expected = constructive::construct(eval(expr, envir = env))$code
     )
   }
 
@@ -49,7 +47,7 @@ if (Sys.getenv("CI") == "" ) {
   for (i in seq_along(op)) {
     txt <- gsub("<=>", op[i], relop_txt, fixed = TRUE)
     name <- names(op)[i]
-    target <- file.path(gen_dir, paste0(name, ".R"))
+    target <- file.path(gen_dir, paste0("relop-", name, ".R"))
     writeLines(txt, target)
     message(paste("\U2705 generating:", basename(target), " from relop.txt"))
   }
