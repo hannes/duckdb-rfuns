@@ -65,8 +65,8 @@ jobs:
 
   duckdb-stable-build:
     name: Build extension binaries
-    uses: duckdb/duckdb/.github/workflows/_extension_distribution.yml@2f2640a93f7631ccbf4d1e46927ae304f00365c0
     needs: matrix
+    uses: duckdb/duckdb/.github/workflows/_extension_distribution.yml@v0.10.0
 
     strategy:
       fail-fast: false
