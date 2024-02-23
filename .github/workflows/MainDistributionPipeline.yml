@@ -27,6 +27,8 @@ jobs:
       - uses: actions/checkout@v2
 
       - id: set-matrix
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           matrix=$(
             {
