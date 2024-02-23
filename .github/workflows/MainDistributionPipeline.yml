@@ -46,7 +46,7 @@ jobs:
           )
           echo $matrix
           echo $matrix | jq .
-          echo "matrix='$matrix'" >> $GITHUB_OUTPUT
+          echo 'matrix="$matrix"' >> $GITHUB_OUTPUT
 
   check-matrix:
     runs-on: ubuntu-latest
