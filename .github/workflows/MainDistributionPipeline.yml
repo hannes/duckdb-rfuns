@@ -42,7 +42,7 @@ jobs:
                 /repos/duckdb/duckdb-r/contents/src/duckdb/src/function/table/version/pragma_version.cpp \
                 -H "Accept: application/vnd.github+json" --jq '.content' | base64 -d | \
                 sed -nr '/^#define DUCKDB_VERSION "(.*)"/s//\1/p'
-            } | jq -R '{version: [inputs|scan(".+")]}'
+            } | uniq | jq -R '{version: [inputs|scan(".+")]}'
           )
           echo $matrix
           echo $matrix | jq .
