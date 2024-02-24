@@ -83,10 +83,17 @@ jobs:
 
   duckdb-stable-deploy:
     name: Deploy extension binaries
-    needs: duckdb-stable-build
+    needs: 
+      - duckdb-stable-build
+      - matrix
     uses: ./.github/workflows/_extension_deploy.yml
     secrets: inherit
     if: github.event_name != 'pull_request'
+
+    strategy:
+      fail-fast: false
+      matrix: ${{fromJson(needs.matrix.outputs.matrix)}}
+
     with:
       duckdb_version: ${{ matrix.version }}
       extension_name: rfuns
