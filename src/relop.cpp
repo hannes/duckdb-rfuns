@@ -3,6 +3,8 @@
 
 #include <math.h>
 #include <climits>
+#include <sstream>
+#include <iostream>
 
 namespace duckdb {
 namespace rfuns {
@@ -286,6 +288,67 @@ ScalarFunctionSet base_r_gt() {
 }
 ScalarFunctionSet base_r_gte() {
 	return base_r_relop<GTE>("r_base::>=");
+}
+
+namespace {
+
+template <LogicalTypeId LHS_LOGICAL, class LHS_TYPE, LogicalTypeId RHS_LOGICAL, class RHS_TYPE>
+void Dispatch(DataChunk &args, ExpressionState &state, Vector &result) {
+	auto parts = BinaryTypeAssert<LHS_LOGICAL, RHS_LOGICAL>(args);
+
+	auto exec = [](LHS_TYPE left, RHS_TYPE right) {
+		std::stringstream ss;
+		ss << string(EnumUtil::ToChars(LHS_LOGICAL)) << " + " << string(EnumUtil::ToChars(RHS_LOGICAL));
+		std::cout << ss.str() << std::endl;
+		return ss.str();
+	};
+
+	BinaryExecutor::Execute<LHS_TYPE, RHS_TYPE, string_t>(parts.lefts, parts.rights, result, args.size(), exec);
+}
+
+} // namespace
+
+ScalarFunctionSet base_r_relop_dispatch() {
+	ScalarFunctionSet set("r_base::<=>");
+
+	set.AddFunction(ScalarFunction({LogicalType::BOOLEAN, LogicalType::BOOLEAN}, LogicalType::VARCHAR,
+	                               Dispatch<LogicalType::BOOLEAN, bool, LogicalType::BOOLEAN, bool>));
+	set.AddFunction(ScalarFunction({LogicalType::BOOLEAN, LogicalType::INTEGER}, LogicalType::VARCHAR,
+	                               Dispatch<LogicalType::BOOLEAN, bool, LogicalType::INTEGER, int32_t>));
+	set.AddFunction(ScalarFunction({LogicalType::INTEGER, LogicalType::BOOLEAN}, LogicalType::VARCHAR,
+	                               Dispatch<LogicalType::INTEGER, int32_t, LogicalType::BOOLEAN, bool>));
+
+
+	set.AddFunction(ScalarFunction({LogicalType::DOUBLE, LogicalType::INTEGER}, LogicalType::VARCHAR,
+	                               Dispatch<LogicalType::DOUBLE, double, LogicalType::INTEGER, int32_t>));
+	set.AddFunction(ScalarFunction({LogicalType::INTEGER, LogicalType::DOUBLE}, LogicalType::VARCHAR,
+	                               Dispatch<LogicalType::INTEGER, int32_t, LogicalType::DOUBLE, double>));
+	set.AddFunction(ScalarFunction({LogicalType::DOUBLE, LogicalType::BOOLEAN}, LogicalType::VARCHAR,
+	                               Dispatch<LogicalType::DOUBLE, double, LogicalType::BOOLEAN, bool>));
+	set.AddFunction(ScalarFunction({LogicalType::BOOLEAN, LogicalType::DOUBLE}, LogicalType::VARCHAR,
+	                               Dispatch<LogicalType::BOOLEAN, bool, LogicalType::DOUBLE, double>));
+
+
+	set.AddFunction(ScalarFunction({LogicalType::VARCHAR, LogicalType::INTEGER}, LogicalType::VARCHAR,
+	                               Dispatch<LogicalType::VARCHAR, string_t, LogicalType::INTEGER, int32_t>));
+	set.AddFunction(ScalarFunction({LogicalType::INTEGER, LogicalType::VARCHAR}, LogicalType::VARCHAR,
+	                               Dispatch<LogicalType::INTEGER, int32_t, LogicalType::VARCHAR, string_t>));
+
+	set.AddFunction(ScalarFunction({LogicalType::VARCHAR, LogicalType::BOOLEAN}, LogicalType::VARCHAR,
+	                               Dispatch<LogicalType::VARCHAR, string_t, LogicalType::BOOLEAN, bool>));
+	set.AddFunction(ScalarFunction({LogicalType::BOOLEAN, LogicalType::VARCHAR}, LogicalType::VARCHAR,
+	                               Dispatch<LogicalType::BOOLEAN, bool, LogicalType::VARCHAR, string_t>));
+
+	set.AddFunction(ScalarFunction({LogicalType::DOUBLE, LogicalType::DOUBLE}, LogicalType::VARCHAR,
+	                               Dispatch<LogicalType::DOUBLE, double, LogicalType::DOUBLE, double>));
+	set.AddFunction(ScalarFunction({LogicalType::VARCHAR, LogicalType::VARCHAR}, LogicalType::VARCHAR,
+	                               Dispatch<LogicalType::VARCHAR, string_t, LogicalType::VARCHAR, string_t>));
+	set.AddFunction(ScalarFunction({LogicalType::VARCHAR, LogicalType::DOUBLE}, LogicalType::VARCHAR,
+	                               Dispatch<LogicalType::VARCHAR, string_t, LogicalType::DOUBLE, double>));
+	set.AddFunction(ScalarFunction({LogicalType::DOUBLE, LogicalType::VARCHAR}, LogicalType::VARCHAR,
+	                               Dispatch<LogicalType::DOUBLE, double, LogicalType::VARCHAR, string_t>));
+
+	return set;
 }
 
 } // namespace rfuns

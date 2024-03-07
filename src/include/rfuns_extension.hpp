@@ -30,6 +30,7 @@ ScalarFunctionSet base_r_lt();
 ScalarFunctionSet base_r_lte();
 ScalarFunctionSet base_r_gt();
 ScalarFunctionSet base_r_gte();
+ScalarFunctionSet base_r_relop_dispatch();
 
 } // namespace rfuns
 

@@ -31,6 +31,9 @@ static void LoadInternal(DatabaseInstance &instance) {
 	ExtensionUtil::RegisterFunction(instance, rfuns::base_r_gt());
 	ExtensionUtil::RegisterFunction(instance, rfuns::base_r_gte());
 
+	// relop_dispatch
+	ExtensionUtil::RegisterFunction(instance, rfuns::base_r_relop_dispatch());
+
 	// Register a scalar function
 	auto rfuns_scalar_function = ScalarFunction("rfuns", {LogicalType::VARCHAR}, LogicalType::VARCHAR, RfunsScalarFun);
 	ExtensionUtil::RegisterFunction(instance, rfuns_scalar_function);
