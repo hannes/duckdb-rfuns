@@ -4,6 +4,15 @@
 #' @importFrom constructive construct
 #' @importFrom withr defer_parent
 #' @importFrom DBI dbConnect dbDisconnect dbGetQuery
+#' @importFrom rlang run_on_load on_load
 NULL
 
-duckdb <- asNamespace("duckdb")
+.onLoad <- function(lib, pkg) {
+  run_on_load()
+}
+
+duckdb <- NULL
+on_load(
+  duckdb <- asNamespace("duckdb")
+)
+
