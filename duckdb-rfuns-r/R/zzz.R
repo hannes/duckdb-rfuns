@@ -5,3 +5,5 @@
 #' @importFrom withr defer_parent
 #' @importFrom DBI dbConnect dbDisconnect dbGetQuery
 NULL
+
+duckdb <- asNamespace("duckdb")
