@@ -30,7 +30,7 @@ relop_project <- function(x, y, op = c("<", "<=", ">", ">=", "==", "!="), error_
   )
 }
 
-relop_altrep <- function(x, y, op = c("<", "<=", ">", ">=", "==", "!="), error_call = current_env(), con = duckdb_con()) {
+relop_altrep <- function(x, y, op = c("<", "<=", ">", ">=", "==", "!="), error_call = current_env(), con = auto_duckdb_con()) {
   project <- relop_project(x, y, op, error_call = error_call, con = con)
   df <- duckdb$rel_to_altrep(project)
   attr(df, "con") <- con
