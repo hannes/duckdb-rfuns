@@ -1,5 +1,3 @@
-#' @importFrom rlang caller_env arg_match current_env
-#' @importFrom glue glue
 relop_project <- function(x, y, op = c("<", "<=", ">", ">=", "==", "!="), error_call = current_env(), con = local_duckdb_con()) {
   op <- arg_match(op, error_call = error_call)
   fun <- glue("r_base::{op}")

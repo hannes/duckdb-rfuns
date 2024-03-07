@@ -3,8 +3,9 @@
 #' @importFrom tibble tibble
 #' @importFrom constructive construct
 #' @importFrom withr defer_parent
-#' @importFrom DBI dbConnect dbDisconnect dbGetQuery
-#' @importFrom rlang run_on_load on_load
+#' @importFrom glue glue
+#' @import DBI
+#' @import rlang
 NULL
 
 .onLoad <- function(lib, pkg) {
