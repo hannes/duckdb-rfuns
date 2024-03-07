@@ -1,5 +1,6 @@
-relop_project <- function(x, y, op = c("<", "<=", ">", ">=", "==", "!="), error_call = caller_env(), con = local_duckdb_con()) {
-  op <- rlang::arg_match(op, error_call = error_call)
+#' @importFrom rlang caller_env arg_match current_env
+relop_project <- function(x, y, op = c("<", "<=", ">", ">=", "==", "!="), error_call = current_env(), con = local_duckdb_con()) {
+  op <- arg_match(op, error_call = error_call)
   fun <- glue::glue("r_base::{op}")
   alias <- glue::glue("a {op} b")
 
@@ -29,14 +30,14 @@ relop_project <- function(x, y, op = c("<", "<=", ">", ">=", "==", "!="), error_
   )
 }
 
-relop_altrep <- function(x, y, op = c("<", "<=", ">", ">=", "==", "!="), error_call = caller_env(), con = duckdb_con()) {
+relop_altrep <- function(x, y, op = c("<", "<=", ">", ">=", "==", "!="), error_call = current_env(), con = duckdb_con()) {
   project <- relop_project(x, y, op, error_call = error_call, con = con)
   df <- duckdb$rel_to_altrep(project)
   attr(df, "con") <- con
   df
 }
 
-relop_sql <- function(x, y, op = c("<", "<=", ">", ">=", "==", "!="), error_call = caller_env(), con = local_duckdb_con()) {
+relop_sql <- function(x, y, op = c("<", "<=", ">", ">=", "==", "!="), error_call = current_env(), con = local_duckdb_con()) {
   project <- relop_project(x, y, op, error_call = error_call, con = con)
   duckdb$rel_to_sql(project)
 }
