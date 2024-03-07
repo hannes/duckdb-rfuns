@@ -13,6 +13,7 @@ Imports:
     constructive,
     DBI,
     duckdb,
+    glue,
     rlang,
     tibble,
     withr

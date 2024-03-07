@@ -1,8 +1,9 @@
 #' @importFrom rlang caller_env arg_match current_env
+#' @importFrom glue glue
 relop_project <- function(x, y, op = c("<", "<=", ">", ">=", "==", "!="), error_call = current_env(), con = local_duckdb_con()) {
   op <- arg_match(op, error_call = error_call)
-  fun <- glue::glue("r_base::{op}")
-  alias <- glue::glue("a {op} b")
+  fun <- glue("r_base::{op}")
+  alias <- glue("a {op} b")
 
   experimental <- FALSE
   df1 <- data.frame(a = x, b = y)

@@ -16,6 +16,8 @@ local_duckdb_con <- function(envir = parent.frame()) {
 }
 
 auto_duckdb_con <- function() {
+  env <- new.env()
+
   con <- duckdb_con()
   env <- new.env()
   env$con <- con
