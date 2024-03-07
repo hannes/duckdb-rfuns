@@ -76,7 +76,7 @@ if (Sys.getenv("CI") == "" ) {
 
         test_expr <- glue::glue(r"[
 test_that(r"({desc} :: {expr$expression})", {{
-  con <- local_con()
+  con <- local_duckdb_con()
   in_df <- {in_df}
   in_rel <- duckdb:::rel_from_df(con, in_df)
   out_rel <- duckdb:::rel_project(

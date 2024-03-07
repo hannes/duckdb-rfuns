@@ -2,23 +2,24 @@ Package: duckdbrfuns
 Title: Collection of 'duckdb' user defined function
 Version: 0.0.0.9000
 Authors@R: c(
-      person("Kirill", family = "Müller", role = c("aut", "cre"), 
-        email = "kirill@cynkra.com", 
-        comment = c(ORCID = "0000-0002-1416-3412")), 
-      person("Romain", "François", role = "ctb", 
-        comment = c(ORCID = "0000-0002-2444-4226"))
-    )
+    person("Kirill", "Müller", , "kirill@cynkra.com", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-1416-3412")),
+    person("Romain", "François", role = "ctb",
+           comment = c(ORCID = "0000-0002-2444-4226"))
+  )
 Description: User defined functions for duckdb.
 License: MIT + file LICENSE
-Encoding: UTF-8
-Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.1
+Imports: 
+    constructive,
+    DBI,
+    duckdb,
+    glue,
+    rlang,
+    tibble,
+    withr
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
-Imports: 
-    constructive,
-    duckdb,
-    tibble,
-    withr,
-    DBI
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.1
