@@ -1,8 +1,4 @@
-relop_project <- function(x, y, op = c("<", "<=", ">", ">=", "==", "!="), error_call = current_env(), con = local_duckdb_con()) {
-  op <- arg_match(op, error_call = error_call)
-  fun <- glue("r_base::{op}")
-  alias <- glue("a {op} b")
-
+binary_project <- function(x, y, fun, con) {
   experimental <- FALSE
   df1 <- data.frame(a = x, b = y)
 
@@ -22,21 +18,20 @@ relop_project <- function(x, y, op = c("<", "<=", ">", ">=", "==", "!="), error_
       },
       {
         tmp_expr <- duckdb$expr_function(fun, list(duckdb$expr_reference("a"), duckdb$expr_reference("b")))
-        duckdb$expr_set_alias(tmp_expr, alias)
+        # duckdb$expr_set_alias(tmp_expr, alias)
         tmp_expr
       }
     )
   )
 }
 
-relop_altrep <- function(x, y, op = c("<", "<=", ">", ">=", "==", "!="), error_call = current_env(), con = auto_duckdb_con()) {
-  project <- relop_project(x, y, op, error_call = error_call, con = con)
+binary_altrep <- function(x, y, fun, con) {
+  project <- binary_project(x, y, fun, con = con)
   df <- duckdb$rel_to_altrep(project)
-  attr(df, "con") <- con
   df
 }
 
-relop_sql <- function(x, y, op = c("<", "<=", ">", ">=", "==", "!="), error_call = current_env(), con = local_duckdb_con()) {
-  project <- relop_project(x, y, op, error_call = error_call, con = con)
+binary_sql <- function(x, y, fun, con) {
+  project <- binary_project(x, y, op, con = con)
   duckdb$rel_to_sql(project)
 }

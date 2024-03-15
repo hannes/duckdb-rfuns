@@ -14,18 +14,3 @@ local_duckdb_con <- function(envir = parent.frame()) {
   withr::defer(dbDisconnect(con, shutdown=TRUE), envir = envir)
   con
 }
-
-auto_duckdb_con <- function() {
-  env <- new.env()
-
-  con <- duckdb_con()
-  env <- new.env()
-  env$con <- con
-  attr(con, ".env") <- env
-
-  reg.finalizer(env, function(e) {
-    dbDisconnect(e$con, shutdown=TRUE)
-  })
-
-  con
-}
