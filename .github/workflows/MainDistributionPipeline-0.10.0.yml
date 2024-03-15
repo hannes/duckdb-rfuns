@@ -26,8 +26,7 @@ jobs:
       vcpkg_commit: a42af01b72c28a8e1d7b48107b33e4f286a55ef6
       duckdb_version: v0.10.0
       extension_name: rfuns
-      patch: .github/0.10.0.patch
-
+      
   duckdb-stable-deploy:
     name: Deploy extension binaries
     needs: duckdb-stable-build
