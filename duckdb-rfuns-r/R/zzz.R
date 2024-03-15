@@ -3,5 +3,17 @@
 #' @importFrom tibble tibble
 #' @importFrom constructive construct
 #' @importFrom withr defer_parent
-#' @importFrom DBI dbConnect dbDisconnect dbGetQuery
+#' @importFrom glue glue
+#' @import DBI
+#' @import rlang
 NULL
+
+.onLoad <- function(lib, pkg) {
+  run_on_load()
+}
+
+duckdb <- NULL
+on_load(
+  duckdb <- asNamespace("duckdb")
+)
+
