@@ -20,16 +20,32 @@ inline void RfunsScalarFun(DataChunk &args, ExpressionState &state, Vector &resu
 	});
 }
 
-static void LoadInternal(DatabaseInstance &instance) {
-	ExtensionUtil::RegisterFunction(instance, rfuns::base_r_add());
+namespace rfuns {
+
+static void register_binary(DatabaseInstance &instance, ScalarFunctionSet fun) {
+	// fun()
+	ExtensionUtil::RegisterFunction(instance, fun);
+
+	// dispatch(fun())
+	ExtensionUtil::RegisterFunction(instance, binary_dispatch(fun));
+}
+
+static void register_rfuns(DatabaseInstance &instance) {
+	// +
+	register_binary(instance, base_r_add());
 
 	// relop
-	ExtensionUtil::RegisterFunction(instance, rfuns::base_r_eq());
-	ExtensionUtil::RegisterFunction(instance, rfuns::base_r_neq());
-	ExtensionUtil::RegisterFunction(instance, rfuns::base_r_lt());
-	ExtensionUtil::RegisterFunction(instance, rfuns::base_r_lte());
-	ExtensionUtil::RegisterFunction(instance, rfuns::base_r_gt());
-	ExtensionUtil::RegisterFunction(instance, rfuns::base_r_gte());
+	register_binary(instance, base_r_eq());
+	register_binary(instance, base_r_neq());
+	register_binary(instance, base_r_lt());
+	register_binary(instance, base_r_lte());
+	register_binary(instance, base_r_gt());
+	register_binary(instance, base_r_gte());
+}
+}  // namespace rfuns
+
+static void LoadInternal(DatabaseInstance &instance) {
+	rfuns::register_rfuns(instance);
 
 	// Register a scalar function
 	auto rfuns_scalar_function = ScalarFunction("rfuns", {LogicalType::VARCHAR}, LogicalType::VARCHAR, RfunsScalarFun);
