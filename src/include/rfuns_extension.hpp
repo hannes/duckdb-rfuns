@@ -31,7 +31,7 @@ ScalarFunctionSet base_r_lte();
 ScalarFunctionSet base_r_gt();
 ScalarFunctionSet base_r_gte();
 
-ScalarFunctionSet binary_dispatch(string name, ScalarFunctionSet fn) ;
+ScalarFunctionSet binary_dispatch(ScalarFunctionSet fn) ;
 
 } // namespace rfuns
 
