@@ -97,7 +97,7 @@ template <LogicalTypeId LHS_LOGICAL, typename LHS, LogicalTypeId RHS_LOGICAL, ty
 void BaseRRelopFunctionSimple(DataChunk &args, ExpressionState &state, Vector &result) {
 	auto parts = BinaryTypeAssert<LHS_LOGICAL, RHS_LOGICAL>(args);
 
-	BinaryExecutor::Execute<LHS, RHS, bool>(parts.lefts, parts.rights, result, args.size(), relop<int32_t, OP>);
+	BinaryExecutor::Execute<LHS, RHS, bool>(parts.lefts, parts.rights, result, args.size(), relop<LHS, OP>);
 }
 
 template <Relop OP>
@@ -233,7 +233,7 @@ ScalarFunctionSet base_r_relop(string name) {
 	    ScalarFunction({LogicalType::INTEGER, LogicalType::INTEGER}, LogicalType::BOOLEAN,
 	                   BaseRRelopFunctionSimple<LogicalType::INTEGER, int32_t, LogicalType::INTEGER, int32_t, OP>));
 
-	// double == (int | lgl)
+	// double <=> (int | lgl)
 	set.AddFunction(ScalarFunction({LogicalType::DOUBLE, LogicalType::INTEGER}, LogicalType::BOOLEAN,
 	                               BaseRRelopFunctionDoubleInteger<LogicalType::INTEGER, OP>));
 	set.AddFunction(ScalarFunction({LogicalType::INTEGER, LogicalType::DOUBLE}, LogicalType::BOOLEAN,
@@ -243,13 +243,13 @@ ScalarFunctionSet base_r_relop(string name) {
 	set.AddFunction(ScalarFunction({LogicalType::BOOLEAN, LogicalType::DOUBLE}, LogicalType::BOOLEAN,
 	                               BaseRRelopFunctionIntegerDouble<LogicalType::BOOLEAN, OP>));
 
-	// string == int
+	// string <=> int
 	set.AddFunction(ScalarFunction({LogicalType::VARCHAR, LogicalType::INTEGER}, LogicalType::BOOLEAN,
 	                               BaseRRelopFunctionStringInteger<OP>));
 	set.AddFunction(ScalarFunction({LogicalType::INTEGER, LogicalType::VARCHAR}, LogicalType::BOOLEAN,
 	                               BaseRRelopFunctionIntegerString<OP>));
 
-	// string == lgl
+	// string <=> lgl
 	set.AddFunction(ScalarFunction({LogicalType::VARCHAR, LogicalType::BOOLEAN}, LogicalType::BOOLEAN,
 	                               BaseRRelopFunctionStringBoolean<OP>));
 	set.AddFunction(ScalarFunction({LogicalType::BOOLEAN, LogicalType::VARCHAR}, LogicalType::BOOLEAN,
@@ -263,6 +263,11 @@ ScalarFunctionSet base_r_relop(string name) {
 	    ScalarFunction({LogicalType::VARCHAR, LogicalType::DOUBLE}, LogicalType::BOOLEAN, BaseRRelopFunctionStringDouble<OP>));
 	set.AddFunction(
 	    ScalarFunction({LogicalType::DOUBLE, LogicalType::VARCHAR}, LogicalType::BOOLEAN, BaseRRelopFunctionDoubleString<OP>));
+
+	// timestamp <=> timestamp
+	set.AddFunction(
+		ScalarFunction({LogicalType::TIMESTAMP, LogicalType::TIMESTAMP}, LogicalType::BOOLEAN,
+					BaseRRelopFunctionSimple<LogicalType::TIMESTAMP, timestamp_t, LogicalType::TIMESTAMP, timestamp_t, OP>));
 
 	return set;
 }
