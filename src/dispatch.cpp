@@ -7,17 +7,8 @@
 namespace duckdb {
 namespace rfuns {
 
-namespace {
-	std::string dispatch_name(const ScalarFunctionSet& fn) {
-		char name[100];
-		int n = snprintf(name, sizeof(name), "dispatch(%s)", fn.name.c_str());
-
-		return std::string(name);
-	}
-}
-
 ScalarFunctionSet binary_dispatch(ScalarFunctionSet fn) {
-	ScalarFunctionSet set(dispatch_name(fn));
+	ScalarFunctionSet set(StringUtil::Format("dispatch(%s)", fn.name));
 
 	set.AddFunction(ScalarFunction(
 		{LogicalType::ANY, LogicalType::ANY},
@@ -28,13 +19,13 @@ ScalarFunctionSet binary_dispatch(ScalarFunctionSet fn) {
 			types[1] = args.data[1].GetType();
 			auto variant = const_cast<ScalarFunctionSet&>(fn).GetFunctionByArguments(state.GetContext(), types);
 
-			char signature[200];
-			int n = snprintf(signature, sizeof(signature), "lhs = %s, rhs = %s, signature = %s",
+			auto info = StringUtil::Format(
+				"lhs = %s, rhs = %s, signature = %s",
 				EnumUtil::ToChars(types[0].id()),
 				EnumUtil::ToChars(types[1].id()),
-				variant.ToString().c_str());
-
-			result.SetValue(0, signature);
+				variant.ToString().c_str()
+			);
+			result.SetValue(0, info);
 		}
 	));
 	return set;
