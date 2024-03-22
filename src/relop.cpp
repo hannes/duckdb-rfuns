@@ -72,6 +72,18 @@ inline bool relop(LHS lhs, RHS rhs) {
 	return RelopDispatch<LHS, RHS, OP>()(lhs, rhs);
 }
 
+template <typename LHS, typename RHS>
+struct relop_adds_null : public std::integral_constant<bool, false>{};
+
+template <typename LHS>
+struct relop_adds_null<LHS, double> : public std::integral_constant<bool, true>{};
+
+template <typename RHS>
+struct relop_adds_null<double, RHS> : public std::integral_constant<bool, true>{};
+
+template <>
+struct relop_adds_null<double, double> : public std::integral_constant<bool, true>{};
+
 
 template <LogicalTypeId LHS_LOGICAL, typename LHS, LogicalTypeId RHS_LOGICAL, typename RHS, Relop OP>
 void BaseRRelopFunctionInt(DataChunk &args, ExpressionState &state, Vector &result) {
