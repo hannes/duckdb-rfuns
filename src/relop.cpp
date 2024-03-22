@@ -18,92 +18,72 @@ enum Relop {
 	GTE
 };
 
-template <typename T, Relop OP>
+template <typename LHS, typename RHS, Relop OP>
 struct RelopDispatch {
 
-	inline bool operator()(T lhs, T rhs);
+	inline bool operator()(LHS lhs, RHS rhs);
 
 };
 
-template <typename T>
-struct RelopDispatch<T, EQ> {
-	inline bool operator()(T lhs, T rhs) {
+template <typename LHS, typename RHS>
+struct RelopDispatch<LHS, RHS, EQ> {
+	inline bool operator()(LHS lhs, RHS rhs) {
 		return lhs == rhs;
 	}
 };
 
-template <typename T>
-struct RelopDispatch<T, NEQ> {
-	inline bool operator()(T lhs, T rhs) {
-		return lhs != rhs;
-	}
-};
-
-template <>
-struct RelopDispatch<string_t, NEQ> {
-	inline bool operator()(string_t lhs, string_t rhs) {
+template <typename LHS, typename RHS>
+struct RelopDispatch<LHS, RHS, NEQ> {
+	inline bool operator()(LHS lhs, RHS rhs) {
 		return !(lhs == rhs);
 	}
 };
 
-template <typename T>
-struct RelopDispatch<T, LT> {
-	inline bool operator()(T lhs, T rhs) {
+template <typename LHS, typename RHS>
+struct RelopDispatch<LHS, RHS, LT> {
+	inline bool operator()(LHS lhs, RHS rhs) {
 		return lhs < rhs;
 	}
 };
 
-template <typename T>
-struct RelopDispatch<T, LTE> {
-	inline bool operator()(T lhs, T rhs) {
-		return lhs <= rhs;
-	}
-};
-
-template <>
-struct RelopDispatch<string_t, LTE> {
-	inline bool operator()(string_t lhs, string_t rhs) {
+template <typename LHS, typename RHS>
+struct RelopDispatch<LHS, RHS, LTE> {
+	inline bool operator()(LHS lhs, RHS rhs) {
 		return lhs < rhs || lhs == rhs;
 	}
 };
 
-template <typename T>
-struct RelopDispatch<T, GT> {
-	inline bool operator()(T lhs, T rhs) {
+template <typename LHS, typename RHS>
+struct RelopDispatch<LHS, RHS, GT> {
+	inline bool operator()(LHS lhs, RHS rhs) {
 		return lhs > rhs;
 	}
 };
 
-template <typename T>
-struct RelopDispatch<T, GTE> {
-	inline bool operator()(T lhs, T rhs) {
-		return lhs >= rhs;
-	}
-};
-
-template <>
-struct RelopDispatch<string_t, GTE> {
-	inline bool operator()(string_t lhs, string_t rhs) {
+template <typename LHS, typename RHS>
+struct RelopDispatch<LHS, RHS, GTE> {
+	inline bool operator()(LHS lhs, RHS rhs) {
 		return lhs > rhs || lhs == rhs;
 	}
 };
 
-template <typename T, Relop OP>
-inline bool relop(T lhs, T rhs) {
-	return RelopDispatch<T, OP>()(lhs, rhs);
+template <typename LHS, typename RHS, Relop OP>
+inline bool relop(LHS lhs, RHS rhs) {
+	return RelopDispatch<LHS, RHS, OP>()(lhs, rhs);
 }
+
 
 template <LogicalTypeId LHS_LOGICAL, typename LHS, LogicalTypeId RHS_LOGICAL, typename RHS, Relop OP>
 void BaseRRelopFunctionInt(DataChunk &args, ExpressionState &state, Vector &result) {
 	auto parts = BinaryTypeAssert<LHS_LOGICAL, RHS_LOGICAL>(args);
 
-	BinaryExecutor::Execute<LHS, RHS, bool>(parts.lefts, parts.rights, result, args.size(), relop<int32_t, OP>);
+	BinaryExecutor::Execute<LHS, RHS, bool>(parts.lefts, parts.rights, result, args.size(), relop<int32_t, int32_t, OP>);
 }
 
 template <LogicalTypeId LOGICAL, typename T, Relop OP>
 void BaseRRelopFunctionSimple(DataChunk &args, ExpressionState &state, Vector &result) {
 	auto parts = BinaryTypeAssert<LOGICAL, LOGICAL>(args);
-	BinaryExecutor::Execute<T, T, bool>(parts.lefts, parts.rights, result, args.size(), relop<T, OP>);
+	BinaryExecutor::Execute<T, T, bool>(parts.lefts, parts.rights, result, args.size(), relop<T, T, OP>);
 }
 
 template <Relop OP>
@@ -114,7 +94,7 @@ void BaseRRelopFunctionDouble(DataChunk &args, ExpressionState &state, Vector &r
 			mask.SetInvalid(idx);
 			return false;
 		}
-		return relop<double, OP>(left, right);
+		return relop<double, double, OP>(left, right);
 	};
 
 	BinaryExecutor::ExecuteWithNulls<double, double, bool>(parts.lefts, parts.rights, result, args.size(), fun);
@@ -130,7 +110,7 @@ void BaseRRelopFunctionDoubleInteger(DataChunk &args, ExpressionState &state, Ve
 			mask.SetInvalid(idx);
 			return false;
 		}
-		return relop<double, OP>(left, right);
+		return relop<double, type, OP>(left, right);
 	};
 	BinaryExecutor::ExecuteWithNulls<double, type, bool>(parts.lefts, parts.rights, result, args.size(), exec);
 }
@@ -145,7 +125,7 @@ void BaseRRelopFunctionIntegerDouble(DataChunk &args, ExpressionState &state, Ve
 			mask.SetInvalid(idx);
 			return false;
 		}
-		return relop<double, OP>(left, right);
+		return relop<type, double, OP>(left, right);
 	};
 	BinaryExecutor::ExecuteWithNulls<type, double, bool>(parts.lefts, parts.rights, result, args.size(), exec);
 }
@@ -153,7 +133,7 @@ void BaseRRelopFunctionIntegerDouble(DataChunk &args, ExpressionState &state, Ve
 template <Relop OP>
 void BaseRRelopFunctionString(DataChunk &args, ExpressionState &state, Vector &result) {
 	auto parts = BinaryTypeAssert<LogicalType::VARCHAR, LogicalType::VARCHAR>(args);
-	BinaryExecutor::Execute<string_t, string_t, bool>(parts.lefts, parts.rights, result, args.size(), relop<string_t, OP>);
+	BinaryExecutor::Execute<string_t, string_t, bool>(parts.lefts, parts.rights, result, args.size(), relop<string_t, string_t, OP>);
 }
 
 template <Relop OP>
@@ -163,7 +143,7 @@ void BaseRRelopFunctionStringInteger(DataChunk &args, ExpressionState &state, Ve
 	auto exec = [](string_t left, int32_t right) {
 		char right_chr[100];
 		snprintf(right_chr, sizeof(right_chr), "%d", right);
-		return relop<string_t, OP>(left, right_chr);
+		return relop<string_t, string_t, OP>(left, right_chr);
 	};
 	return BinaryExecutor::Execute<string_t, int32_t, bool>(parts.lefts, parts.rights, result, args.size(), exec);
 }
@@ -175,7 +155,7 @@ void BaseRRelopFunctionIntegerString(DataChunk &args, ExpressionState &state, Ve
 	auto exec = [](int32_t left, string_t right) {
 		char left_chr[100];
 		snprintf(left_chr, sizeof(left_chr), "%d", left);
-		return relop<string_t, OP>(left_chr, right);
+		return relop<string_t, string_t, OP>(left_chr, right);
 	};
 	return BinaryExecutor::Execute<int32_t, string_t, bool>(parts.lefts, parts.rights, result, args.size(), exec);
 }
@@ -185,7 +165,7 @@ void BaseRRelopFunctionStringBoolean(DataChunk &args, ExpressionState &state, Ve
 	auto parts = BinaryTypeAssert<LogicalType::VARCHAR, LogicalType::BOOLEAN>(args);
 
 	auto exec = [](string_t left, bool right) {
-		return relop<string_t, OP>(left, right ? "TRUE" : "FALSE");
+		return relop<string_t, string_t, OP>(left, right ? "TRUE" : "FALSE");
 	};
 	return BinaryExecutor::Execute<string_t, bool, bool>(parts.lefts, parts.rights, result, args.size(), exec);
 }
@@ -195,7 +175,7 @@ void BaseRRelopFunctionBooleanString(DataChunk &args, ExpressionState &state, Ve
 	auto parts = BinaryTypeAssert<LogicalType::BOOLEAN, LogicalType::VARCHAR>(args);
 
 	auto exec = [](bool left, string_t right) {
-		return relop<string_t, OP>(left ? "TRUE" : "FALSE", right);
+		return relop<string_t, string_t, OP>(left ? "TRUE" : "FALSE", right);
 	};
 	return BinaryExecutor::Execute<bool, string_t, bool>(parts.lefts, parts.rights, result, args.size(), exec);
 }
@@ -207,7 +187,7 @@ void BaseRRelopFunctionStringDouble(DataChunk &args, ExpressionState &state, Vec
 	auto exec = [](string_t left, double right) {
 		char right_chr[100];
 		snprintf(right_chr, sizeof(right_chr), "%.17g", right);
-		return relop<string_t, OP>(left, right_chr);
+		return relop<string_t, string_t, OP>(left, right_chr);
 	};
 	return BinaryExecutor::Execute<string_t, double, bool>(parts.lefts, parts.rights, result, args.size(), exec);
 }
@@ -219,7 +199,7 @@ void BaseRRelopFunctionDoubleString(DataChunk &args, ExpressionState &state, Vec
 	auto exec = [](double left, string_t right) {
 		char left_chr[100];
 		snprintf(left_chr, sizeof(left_chr), "%.17g", left);
-		return relop<string_t, OP>(left_chr, right);
+		return relop<string_t, string_t, OP>(left_chr, right);
 	};
 	return BinaryExecutor::Execute<double, string_t, bool>(parts.lefts, parts.rights, result, args.size(), exec);
 }
