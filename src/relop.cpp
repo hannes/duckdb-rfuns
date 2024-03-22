@@ -19,51 +19,92 @@ enum Relop {
 };
 
 template <typename LHS, typename RHS, Relop OP>
-struct RelopDispatch {
-
+struct SimpleDispatch {
 	inline bool operator()(LHS lhs, RHS rhs);
-
 };
 
+
 template <typename LHS, typename RHS>
-struct RelopDispatch<LHS, RHS, EQ> {
+struct SimpleDispatch<LHS, RHS, EQ> {
 	inline bool operator()(LHS lhs, RHS rhs) {
 		return lhs == rhs;
 	}
 };
 
 template <typename LHS, typename RHS>
-struct RelopDispatch<LHS, RHS, NEQ> {
+struct SimpleDispatch<LHS, RHS, NEQ> {
 	inline bool operator()(LHS lhs, RHS rhs) {
 		return !(lhs == rhs);
 	}
 };
 
 template <typename LHS, typename RHS>
-struct RelopDispatch<LHS, RHS, LT> {
+struct SimpleDispatch<LHS, RHS, LT> {
 	inline bool operator()(LHS lhs, RHS rhs) {
 		return lhs < rhs;
 	}
 };
 
 template <typename LHS, typename RHS>
-struct RelopDispatch<LHS, RHS, LTE> {
+struct SimpleDispatch<LHS, RHS, LTE> {
 	inline bool operator()(LHS lhs, RHS rhs) {
 		return lhs < rhs || lhs == rhs;
 	}
 };
 
 template <typename LHS, typename RHS>
-struct RelopDispatch<LHS, RHS, GT> {
+struct SimpleDispatch<LHS, RHS, GT> {
 	inline bool operator()(LHS lhs, RHS rhs) {
 		return lhs > rhs;
 	}
 };
 
 template <typename LHS, typename RHS>
-struct RelopDispatch<LHS, RHS, GTE> {
+struct SimpleDispatch<LHS, RHS, GTE> {
 	inline bool operator()(LHS lhs, RHS rhs) {
 		return lhs > rhs || lhs == rhs;
+	}
+};
+
+template <typename LHS, typename RHS, Relop OP>
+struct RelopDispatch {
+	inline bool operator()(LHS lhs, RHS rhs) {
+		return SimpleDispatch<LHS, RHS, OP>()(lhs, rhs);
+	}
+};
+
+template <typename LHS, typename RHS, Relop OP>
+inline bool relop(LHS lhs, RHS rhs);
+
+// borrowed from EncodeInteger
+string_t to_string(int x) {
+	char s[100];
+	snprintf(s, sizeof(s), "%d", x);
+	return string_t(s);
+}
+
+string_t to_string(bool x) {
+	return string_t(x ? "TRUE" : "FALSE");
+}
+
+template <typename LHS, Relop OP>
+struct RelopDispatch<LHS, string_t, OP> {
+	inline bool operator()(LHS lhs, string_t rhs) {
+		return SimpleDispatch<string_t, string_t, OP>()(to_string(lhs), rhs);
+	}
+};
+
+template <typename RHS, Relop OP>
+struct RelopDispatch<string_t, RHS, OP> {
+	inline bool operator()(string_t lhs, RHS rhs) {
+		return SimpleDispatch<string_t, string_t, OP>()(lhs, to_string(rhs));
+	}
+};
+
+template <Relop OP>
+struct RelopDispatch<string_t, string_t, OP> {
+	inline bool operator()(string_t lhs, string_t rhs) {
+		return SimpleDispatch<string_t, string_t, OP>()(lhs, rhs);
 	}
 };
 
@@ -121,50 +162,6 @@ void RelopExecute(DataChunk &args, ExpressionState &state, Vector &result) {
 }
 
 template <Relop OP>
-void BaseRRelopFunctionStringInteger(DataChunk &args, ExpressionState &state, Vector &result) {
-	auto parts = BinaryTypeAssert<LogicalType::VARCHAR, LogicalType::INTEGER>(args);
-
-	auto exec = [](string_t left, int32_t right) {
-		char right_chr[100];
-		snprintf(right_chr, sizeof(right_chr), "%d", right);
-		return relop<string_t, string_t, OP>(left, right_chr);
-	};
-	return BinaryExecutor::Execute<string_t, int32_t, bool>(parts.lefts, parts.rights, result, args.size(), exec);
-}
-
-template <Relop OP>
-void BaseRRelopFunctionIntegerString(DataChunk &args, ExpressionState &state, Vector &result) {
-	auto parts = BinaryTypeAssert<LogicalType::INTEGER, LogicalType::VARCHAR>(args);
-
-	auto exec = [](int32_t left, string_t right) {
-		char left_chr[100];
-		snprintf(left_chr, sizeof(left_chr), "%d", left);
-		return relop<string_t, string_t, OP>(left_chr, right);
-	};
-	return BinaryExecutor::Execute<int32_t, string_t, bool>(parts.lefts, parts.rights, result, args.size(), exec);
-}
-
-template <Relop OP>
-void BaseRRelopFunctionStringBoolean(DataChunk &args, ExpressionState &state, Vector &result) {
-	auto parts = BinaryTypeAssert<LogicalType::VARCHAR, LogicalType::BOOLEAN>(args);
-
-	auto exec = [](string_t left, bool right) {
-		return relop<string_t, string_t, OP>(left, right ? "TRUE" : "FALSE");
-	};
-	return BinaryExecutor::Execute<string_t, bool, bool>(parts.lefts, parts.rights, result, args.size(), exec);
-}
-
-template <Relop OP>
-void BaseRRelopFunctionBooleanString(DataChunk &args, ExpressionState &state, Vector &result) {
-	auto parts = BinaryTypeAssert<LogicalType::BOOLEAN, LogicalType::VARCHAR>(args);
-
-	auto exec = [](bool left, string_t right) {
-		return relop<string_t, string_t, OP>(left ? "TRUE" : "FALSE", right);
-	};
-	return BinaryExecutor::Execute<bool, string_t, bool>(parts.lefts, parts.rights, result, args.size(), exec);
-}
-
-template <Relop OP>
 void BaseRRelopFunctionStringDouble(DataChunk &args, ExpressionState &state, Vector &result) {
 	auto parts = BinaryTypeAssert<LogicalType::VARCHAR, LogicalType::DOUBLE>(args);
 
@@ -214,28 +211,29 @@ ScalarFunctionSet base_r_relop(string name) {
 
 	// string <=> int
 	set.AddFunction(ScalarFunction({LogicalType::VARCHAR, LogicalType::INTEGER}, LogicalType::BOOLEAN,
-	                               BaseRRelopFunctionStringInteger<OP>));
+	                               RelopExecute<LogicalType::VARCHAR, string_t, LogicalType::INTEGER, int32_t, OP>));
 	set.AddFunction(ScalarFunction({LogicalType::INTEGER, LogicalType::VARCHAR}, LogicalType::BOOLEAN,
-	                               BaseRRelopFunctionIntegerString<OP>));
+	                               RelopExecute<LogicalType::INTEGER, int32_t, LogicalType::VARCHAR, string_t, OP>));
 
 	// string <=> lgl
 	set.AddFunction(ScalarFunction({LogicalType::VARCHAR, LogicalType::BOOLEAN}, LogicalType::BOOLEAN,
-	                               BaseRRelopFunctionStringBoolean<OP>));
+								   RelopExecute<LogicalType::VARCHAR, string_t, LogicalType::BOOLEAN, bool, OP>));
 	set.AddFunction(ScalarFunction({LogicalType::BOOLEAN, LogicalType::VARCHAR}, LogicalType::BOOLEAN,
-	                               BaseRRelopFunctionBooleanString<OP>));
+	                               RelopExecute<LogicalType::BOOLEAN, bool, LogicalType::VARCHAR, string_t, OP>));
 
-	set.AddFunction(
-	    ScalarFunction({LogicalType::DOUBLE, LogicalType::DOUBLE}, LogicalType::BOOLEAN, RelopExecute<LogicalType::DOUBLE, double, LogicalType::DOUBLE, double, OP>));
-	set.AddFunction(
-	    ScalarFunction({LogicalType::VARCHAR, LogicalType::VARCHAR}, LogicalType::BOOLEAN, RelopExecute<LogicalType::VARCHAR, string_t, LogicalType::VARCHAR, string_t, OP>));
+	set.AddFunction(ScalarFunction({LogicalType::DOUBLE, LogicalType::DOUBLE}, LogicalType::BOOLEAN,
+	                               RelopExecute<LogicalType::DOUBLE, double, LogicalType::DOUBLE, double, OP>));
+	set.AddFunction(ScalarFunction({LogicalType::VARCHAR, LogicalType::VARCHAR}, LogicalType::BOOLEAN,
+	                               RelopExecute<LogicalType::VARCHAR, string_t, LogicalType::VARCHAR, string_t, OP>));
+
 	set.AddFunction(
 	    ScalarFunction({LogicalType::VARCHAR, LogicalType::DOUBLE}, LogicalType::BOOLEAN, BaseRRelopFunctionStringDouble<OP>));
 	set.AddFunction(
 	    ScalarFunction({LogicalType::DOUBLE, LogicalType::VARCHAR}, LogicalType::BOOLEAN, BaseRRelopFunctionDoubleString<OP>));
 
 	// timestamp <=> timestamp
-	set.AddFunction(
-		ScalarFunction({LogicalType::TIMESTAMP, LogicalType::TIMESTAMP}, LogicalType::BOOLEAN, RelopExecute<LogicalType::TIMESTAMP, timestamp_t, LogicalType::TIMESTAMP, timestamp_t, OP>));
+	set.AddFunction(ScalarFunction({LogicalType::TIMESTAMP, LogicalType::TIMESTAMP}, LogicalType::BOOLEAN,
+	                               RelopExecute<LogicalType::TIMESTAMP, timestamp_t, LogicalType::TIMESTAMP, timestamp_t, OP>));
 
 	return set;
 }
