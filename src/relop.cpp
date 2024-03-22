@@ -101,14 +101,9 @@ void BaseRRelopFunctionInt(DataChunk &args, ExpressionState &state, Vector &resu
 }
 
 template <LogicalTypeId LOGICAL, typename T, Relop OP>
-void BaseRRelopFunctionSimpleWithNulls(DataChunk &args, ExpressionState &state, Vector &result) {
+void BaseRRelopFunctionSimple(DataChunk &args, ExpressionState &state, Vector &result) {
 	auto parts = BinaryTypeAssert<LOGICAL, LOGICAL>(args);
-
-	auto fun = [&](T left, T right, ValidityMask &mask, idx_t idx) {
-		return relop<T, OP>(left, right);
-	};
-
-	BinaryExecutor::ExecuteWithNulls<T, T, bool>(parts.lefts, parts.rights, result, args.size(), fun);
+	BinaryExecutor::Execute<T, T, bool>(parts.lefts, parts.rights, result, args.size(), relop<T, OP>);
 }
 
 template <Relop OP>
@@ -277,7 +272,7 @@ ScalarFunctionSet base_r_relop(string name) {
 
 	// timestamp <=> timestamp
 	set.AddFunction(
-		ScalarFunction({LogicalType::TIMESTAMP, LogicalType::TIMESTAMP}, LogicalType::BOOLEAN, BaseRRelopFunctionSimpleWithNulls<LogicalType::TIMESTAMP, timestamp_t, OP>));
+		ScalarFunction({LogicalType::TIMESTAMP, LogicalType::TIMESTAMP}, LogicalType::BOOLEAN, BaseRRelopFunctionSimple<LogicalType::TIMESTAMP, timestamp_t, OP>));
 
 	return set;
 }
