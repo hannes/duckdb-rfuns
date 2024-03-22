@@ -112,62 +112,12 @@ void RelopExecuteDispatch(DataChunk &args, ExpressionState &state, Vector &resul
 		if (set_null<RHS_TYPE>(right, mask, idx)) return false;
 		return relop<LHS_TYPE, RHS_TYPE, OP>(left, right);
 	};
-	BinaryExecutor::Execute<LHS_TYPE, RHS_TYPE, bool>(parts.lefts, parts.rights, result, args.size(), fun);
+	BinaryExecutor::ExecuteWithNulls<LHS_TYPE, RHS_TYPE, bool>(parts.lefts, parts.rights, result, args.size(), fun);
 }
 
 template <LogicalTypeId LHS_LOGICAL, typename LHS_TYPE, LogicalTypeId RHS_LOGICAL, typename RHS_TYPE, Relop OP>
 void RelopExecute(DataChunk &args, ExpressionState &state, Vector &result) {
 	RelopExecuteDispatch<LHS_LOGICAL, LHS_TYPE, RHS_LOGICAL, RHS_TYPE, OP>(args, state, result, typename relop_adds_null<LHS_TYPE, RHS_TYPE>::type());
-}
-
-template <Relop OP>
-void BaseRRelopFunctionDouble(DataChunk &args, ExpressionState &state, Vector &result) {
-	auto parts = BinaryTypeAssert<LogicalType::DOUBLE, LogicalType::DOUBLE>(args);
-	auto fun = [&](double left, double right, ValidityMask &mask, idx_t idx) {
-		if (isnan(left) || isnan(right)) {
-			mask.SetInvalid(idx);
-			return false;
-		}
-		return relop<double, double, OP>(left, right);
-	};
-
-	BinaryExecutor::ExecuteWithNulls<double, double, bool>(parts.lefts, parts.rights, result, args.size(), fun);
-}
-
-template <LogicalTypeId LOGICAL_TYPE, Relop OP>
-void BaseRRelopFunctionDoubleInteger(DataChunk &args, ExpressionState &state, Vector &result) {
-	using type = typename std::conditional<LOGICAL_TYPE == LogicalType::INTEGER, int32_t, bool>::type;
-
-	auto parts = BinaryTypeAssert<LogicalType::DOUBLE, LOGICAL_TYPE>(args);
-	auto exec = [](double left, type right, ValidityMask &mask, idx_t idx) {
-		if (isnan(left)) {
-			mask.SetInvalid(idx);
-			return false;
-		}
-		return relop<double, type, OP>(left, right);
-	};
-	BinaryExecutor::ExecuteWithNulls<double, type, bool>(parts.lefts, parts.rights, result, args.size(), exec);
-}
-
-template <LogicalTypeId LOGICAL_TYPE, Relop OP>
-void BaseRRelopFunctionIntegerDouble(DataChunk &args, ExpressionState &state, Vector &result) {
-	using type = typename std::conditional<LOGICAL_TYPE == LogicalType::INTEGER, int32_t, bool>::type;
-
-	auto parts = BinaryTypeAssert<LOGICAL_TYPE, LogicalType::DOUBLE>(args);
-	auto exec = [](type left, double right, ValidityMask &mask, idx_t idx) {
-		if (isnan(right)) {
-			mask.SetInvalid(idx);
-			return false;
-		}
-		return relop<type, double, OP>(left, right);
-	};
-	BinaryExecutor::ExecuteWithNulls<type, double, bool>(parts.lefts, parts.rights, result, args.size(), exec);
-}
-
-template <Relop OP>
-void BaseRRelopFunctionString(DataChunk &args, ExpressionState &state, Vector &result) {
-	auto parts = BinaryTypeAssert<LogicalType::VARCHAR, LogicalType::VARCHAR>(args);
-	BinaryExecutor::Execute<string_t, string_t, bool>(parts.lefts, parts.rights, result, args.size(), relop<string_t, string_t, OP>);
 }
 
 template <Relop OP>
@@ -249,19 +199,18 @@ ScalarFunctionSet base_r_relop(string name) {
 	                               RelopExecute<LogicalType::BOOLEAN, bool, LogicalType::INTEGER, int32_t, OP>));
 	set.AddFunction(ScalarFunction({LogicalType::INTEGER, LogicalType::BOOLEAN}, LogicalType::BOOLEAN,
 	                               RelopExecute<LogicalType::INTEGER, int32_t, LogicalType::BOOLEAN, bool, OP>));
-	set.AddFunction(
-	    ScalarFunction({LogicalType::INTEGER, LogicalType::INTEGER}, LogicalType::BOOLEAN,
-	                   RelopExecute<LogicalType::INTEGER, int32_t, LogicalType::INTEGER, int32_t, OP>));
+	set.AddFunction(ScalarFunction({LogicalType::INTEGER, LogicalType::INTEGER}, LogicalType::BOOLEAN,
+	                   			   RelopExecute<LogicalType::INTEGER, int32_t, LogicalType::INTEGER, int32_t, OP>));
 
 	// double <=> (int | lgl)
 	set.AddFunction(ScalarFunction({LogicalType::DOUBLE, LogicalType::INTEGER}, LogicalType::BOOLEAN,
-	                               BaseRRelopFunctionDoubleInteger<LogicalType::INTEGER, OP>));
+	                               RelopExecute<LogicalType::DOUBLE, double, LogicalType::INTEGER, int32_t, OP>));
 	set.AddFunction(ScalarFunction({LogicalType::INTEGER, LogicalType::DOUBLE}, LogicalType::BOOLEAN,
-	                               BaseRRelopFunctionIntegerDouble<LogicalType::INTEGER, OP>));
+	                               RelopExecute<LogicalType::INTEGER, int32_t, LogicalType::DOUBLE, double, OP>));
 	set.AddFunction(ScalarFunction({LogicalType::DOUBLE, LogicalType::BOOLEAN}, LogicalType::BOOLEAN,
-	                               BaseRRelopFunctionDoubleInteger<LogicalType::BOOLEAN, OP>));
+	                               RelopExecute<LogicalType::DOUBLE, double, LogicalType::BOOLEAN, bool, OP>));
 	set.AddFunction(ScalarFunction({LogicalType::BOOLEAN, LogicalType::DOUBLE}, LogicalType::BOOLEAN,
-	                               BaseRRelopFunctionIntegerDouble<LogicalType::BOOLEAN, OP>));
+	                               RelopExecute<LogicalType::BOOLEAN, bool, LogicalType::DOUBLE, double, OP>));
 
 	// string <=> int
 	set.AddFunction(ScalarFunction({LogicalType::VARCHAR, LogicalType::INTEGER}, LogicalType::BOOLEAN,
@@ -276,9 +225,9 @@ ScalarFunctionSet base_r_relop(string name) {
 	                               BaseRRelopFunctionBooleanString<OP>));
 
 	set.AddFunction(
-	    ScalarFunction({LogicalType::DOUBLE, LogicalType::DOUBLE}, LogicalType::BOOLEAN, BaseRRelopFunctionDouble<OP>));
+	    ScalarFunction({LogicalType::DOUBLE, LogicalType::DOUBLE}, LogicalType::BOOLEAN, RelopExecute<LogicalType::DOUBLE, double, LogicalType::DOUBLE, double, OP>));
 	set.AddFunction(
-	    ScalarFunction({LogicalType::VARCHAR, LogicalType::VARCHAR}, LogicalType::BOOLEAN, BaseRRelopFunctionString<OP>));
+	    ScalarFunction({LogicalType::VARCHAR, LogicalType::VARCHAR}, LogicalType::BOOLEAN, RelopExecute<LogicalType::VARCHAR, string_t, LogicalType::VARCHAR, string_t, OP>));
 	set.AddFunction(
 	    ScalarFunction({LogicalType::VARCHAR, LogicalType::DOUBLE}, LogicalType::BOOLEAN, BaseRRelopFunctionStringDouble<OP>));
 	set.AddFunction(
