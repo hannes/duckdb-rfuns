@@ -87,6 +87,12 @@ string_t to_string(bool x) {
 	return string_t(x ? "TRUE" : "FALSE");
 }
 
+string_t to_string(double x) {
+	char s[100];
+	snprintf(s, sizeof(s), "%.17g", x);
+	return string_t(s);
+}
+
 template <typename LHS, Relop OP>
 struct RelopDispatch<LHS, string_t, OP> {
 	inline bool operator()(LHS lhs, string_t rhs) {
@@ -162,30 +168,6 @@ void RelopExecute(DataChunk &args, ExpressionState &state, Vector &result) {
 }
 
 template <Relop OP>
-void BaseRRelopFunctionStringDouble(DataChunk &args, ExpressionState &state, Vector &result) {
-	auto parts = BinaryTypeAssert<LogicalType::VARCHAR, LogicalType::DOUBLE>(args);
-
-	auto exec = [](string_t left, double right) {
-		char right_chr[100];
-		snprintf(right_chr, sizeof(right_chr), "%.17g", right);
-		return relop<string_t, string_t, OP>(left, right_chr);
-	};
-	return BinaryExecutor::Execute<string_t, double, bool>(parts.lefts, parts.rights, result, args.size(), exec);
-}
-
-template <Relop OP>
-void BaseRRelopFunctionDoubleString(DataChunk &args, ExpressionState &state, Vector &result) {
-	auto parts = BinaryTypeAssert<LogicalType::DOUBLE, LogicalType::VARCHAR>(args);
-
-	auto exec = [](double left, string_t right) {
-		char left_chr[100];
-		snprintf(left_chr, sizeof(left_chr), "%.17g", left);
-		return relop<string_t, string_t, OP>(left_chr, right);
-	};
-	return BinaryExecutor::Execute<double, string_t, bool>(parts.lefts, parts.rights, result, args.size(), exec);
-}
-
-template <Relop OP>
 ScalarFunctionSet base_r_relop(string name) {
 	ScalarFunctionSet set(name);
 
@@ -226,10 +208,10 @@ ScalarFunctionSet base_r_relop(string name) {
 	set.AddFunction(ScalarFunction({LogicalType::VARCHAR, LogicalType::VARCHAR}, LogicalType::BOOLEAN,
 	                               RelopExecute<LogicalType::VARCHAR, string_t, LogicalType::VARCHAR, string_t, OP>));
 
-	set.AddFunction(
-	    ScalarFunction({LogicalType::VARCHAR, LogicalType::DOUBLE}, LogicalType::BOOLEAN, BaseRRelopFunctionStringDouble<OP>));
-	set.AddFunction(
-	    ScalarFunction({LogicalType::DOUBLE, LogicalType::VARCHAR}, LogicalType::BOOLEAN, BaseRRelopFunctionDoubleString<OP>));
+	set.AddFunction(ScalarFunction({LogicalType::VARCHAR, LogicalType::DOUBLE}, LogicalType::BOOLEAN,
+	                               RelopExecute<LogicalType::VARCHAR, string_t, LogicalType::DOUBLE, double, OP>));
+	set.AddFunction(ScalarFunction({LogicalType::DOUBLE, LogicalType::VARCHAR}, LogicalType::BOOLEAN,
+	                               RelopExecute<LogicalType::DOUBLE, double, LogicalType::VARCHAR, string_t, OP>));
 
 	// timestamp <=> timestamp
 	set.AddFunction(ScalarFunction({LogicalType::TIMESTAMP, LogicalType::TIMESTAMP}, LogicalType::BOOLEAN,
