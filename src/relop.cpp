@@ -84,6 +84,20 @@ struct relop_adds_null<double, RHS> : public std::integral_constant<bool, true>{
 template <>
 struct relop_adds_null<double, double> : public std::integral_constant<bool, true>{};
 
+template <typename T>
+bool set_null(T value, ValidityMask &mask, idx_t idx) {
+	return false;
+}
+
+template <>
+bool set_null<double>(double value, ValidityMask &mask, idx_t idx) {
+	if (isnan(value)) {
+		mask.SetInvalid(idx);
+		return true;
+	}
+	return false;
+}
+
 template <LogicalTypeId LHS_LOGICAL, typename LHS_TYPE, LogicalTypeId RHS_LOGICAL, typename RHS_TYPE, Relop OP>
 void RelopExecuteDispatch(DataChunk &args, ExpressionState &state, Vector &result, std::false_type) {
 	auto parts = BinaryTypeAssert<LHS_LOGICAL, RHS_LOGICAL>(args);
@@ -93,18 +107,17 @@ void RelopExecuteDispatch(DataChunk &args, ExpressionState &state, Vector &resul
 template <LogicalTypeId LHS_LOGICAL, typename LHS_TYPE, LogicalTypeId RHS_LOGICAL, typename RHS_TYPE, Relop OP>
 void RelopExecuteDispatch(DataChunk &args, ExpressionState &state, Vector &result, std::true_type) {
 	auto parts = BinaryTypeAssert<LHS_LOGICAL, RHS_LOGICAL>(args);
-	BinaryExecutor::Execute<LHS_TYPE, RHS_TYPE, bool>(parts.lefts, parts.rights, result, args.size(), relop<LHS_TYPE, RHS_TYPE, OP>);
+	auto fun = [&](LHS_TYPE left, RHS_TYPE right, ValidityMask &mask, idx_t idx) {
+		if (set_null<LHS_TYPE>(left, mask, idx)) return false;
+		if (set_null<RHS_TYPE>(right, mask, idx)) return false;
+		return relop<LHS_TYPE, RHS_TYPE, OP>(left, right);
+	};
+	BinaryExecutor::Execute<LHS_TYPE, RHS_TYPE, bool>(parts.lefts, parts.rights, result, args.size(), fun);
 }
 
 template <LogicalTypeId LHS_LOGICAL, typename LHS_TYPE, LogicalTypeId RHS_LOGICAL, typename RHS_TYPE, Relop OP>
 void RelopExecute(DataChunk &args, ExpressionState &state, Vector &result) {
 	RelopExecuteDispatch<LHS_LOGICAL, LHS_TYPE, RHS_LOGICAL, RHS_TYPE, OP>(args, state, result, typename relop_adds_null<LHS_TYPE, RHS_TYPE>::type());
-}
-
-template <LogicalTypeId LOGICAL, typename T, Relop OP>
-void BaseRRelopFunctionSimple(DataChunk &args, ExpressionState &state, Vector &result) {
-	auto parts = BinaryTypeAssert<LOGICAL, LOGICAL>(args);
-	BinaryExecutor::Execute<T, T, bool>(parts.lefts, parts.rights, result, args.size(), relop<T, T, OP>);
 }
 
 template <Relop OP>
@@ -273,7 +286,7 @@ ScalarFunctionSet base_r_relop(string name) {
 
 	// timestamp <=> timestamp
 	set.AddFunction(
-		ScalarFunction({LogicalType::TIMESTAMP, LogicalType::TIMESTAMP}, LogicalType::BOOLEAN, BaseRRelopFunctionSimple<LogicalType::TIMESTAMP, timestamp_t, OP>));
+		ScalarFunction({LogicalType::TIMESTAMP, LogicalType::TIMESTAMP}, LogicalType::BOOLEAN, RelopExecute<LogicalType::TIMESTAMP, timestamp_t, LogicalType::TIMESTAMP, timestamp_t, OP>));
 
 	return set;
 }
