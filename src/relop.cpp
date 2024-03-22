@@ -84,12 +84,21 @@ struct relop_adds_null<double, RHS> : public std::integral_constant<bool, true>{
 template <>
 struct relop_adds_null<double, double> : public std::integral_constant<bool, true>{};
 
-
-template <LogicalTypeId LHS_LOGICAL, typename LHS, LogicalTypeId RHS_LOGICAL, typename RHS, Relop OP>
-void BaseRRelopFunctionInt(DataChunk &args, ExpressionState &state, Vector &result) {
+template <LogicalTypeId LHS_LOGICAL, typename LHS_TYPE, LogicalTypeId RHS_LOGICAL, typename RHS_TYPE, Relop OP>
+void RelopExecuteDispatch(DataChunk &args, ExpressionState &state, Vector &result, std::false_type) {
 	auto parts = BinaryTypeAssert<LHS_LOGICAL, RHS_LOGICAL>(args);
+	BinaryExecutor::Execute<LHS_TYPE, RHS_TYPE, bool>(parts.lefts, parts.rights, result, args.size(), relop<LHS_TYPE, RHS_TYPE, OP>);
+}
 
-	BinaryExecutor::Execute<LHS, RHS, bool>(parts.lefts, parts.rights, result, args.size(), relop<int32_t, int32_t, OP>);
+template <LogicalTypeId LHS_LOGICAL, typename LHS_TYPE, LogicalTypeId RHS_LOGICAL, typename RHS_TYPE, Relop OP>
+void RelopExecuteDispatch(DataChunk &args, ExpressionState &state, Vector &result, std::true_type) {
+	auto parts = BinaryTypeAssert<LHS_LOGICAL, RHS_LOGICAL>(args);
+	BinaryExecutor::Execute<LHS_TYPE, RHS_TYPE, bool>(parts.lefts, parts.rights, result, args.size(), relop<LHS_TYPE, RHS_TYPE, OP>);
+}
+
+template <LogicalTypeId LHS_LOGICAL, typename LHS_TYPE, LogicalTypeId RHS_LOGICAL, typename RHS_TYPE, Relop OP>
+void RelopExecute(DataChunk &args, ExpressionState &state, Vector &result) {
+	RelopExecuteDispatch<LHS_LOGICAL, LHS_TYPE, RHS_LOGICAL, RHS_TYPE, OP>(args, state, result, typename relop_adds_null<LHS_TYPE, RHS_TYPE>::type());
 }
 
 template <LogicalTypeId LOGICAL, typename T, Relop OP>
@@ -222,14 +231,14 @@ ScalarFunctionSet base_r_relop(string name) {
 
 	// (int | lgl) <=> (int | lgl)
 	set.AddFunction(ScalarFunction({LogicalType::BOOLEAN, LogicalType::BOOLEAN}, LogicalType::BOOLEAN,
-	                               BaseRRelopFunctionInt<LogicalType::BOOLEAN, bool, LogicalType::BOOLEAN, bool, OP>));
+	                               RelopExecute<LogicalType::BOOLEAN, bool, LogicalType::BOOLEAN, bool, OP>));
 	set.AddFunction(ScalarFunction({LogicalType::BOOLEAN, LogicalType::INTEGER}, LogicalType::BOOLEAN,
-	                               BaseRRelopFunctionInt<LogicalType::BOOLEAN, bool, LogicalType::INTEGER, int32_t, OP>));
+	                               RelopExecute<LogicalType::BOOLEAN, bool, LogicalType::INTEGER, int32_t, OP>));
 	set.AddFunction(ScalarFunction({LogicalType::INTEGER, LogicalType::BOOLEAN}, LogicalType::BOOLEAN,
-	                               BaseRRelopFunctionInt<LogicalType::INTEGER, int32_t, LogicalType::BOOLEAN, bool, OP>));
+	                               RelopExecute<LogicalType::INTEGER, int32_t, LogicalType::BOOLEAN, bool, OP>));
 	set.AddFunction(
 	    ScalarFunction({LogicalType::INTEGER, LogicalType::INTEGER}, LogicalType::BOOLEAN,
-	                   BaseRRelopFunctionInt<LogicalType::INTEGER, int32_t, LogicalType::INTEGER, int32_t, OP>));
+	                   RelopExecute<LogicalType::INTEGER, int32_t, LogicalType::INTEGER, int32_t, OP>));
 
 	// double <=> (int | lgl)
 	set.AddFunction(ScalarFunction({LogicalType::DOUBLE, LogicalType::INTEGER}, LogicalType::BOOLEAN,
