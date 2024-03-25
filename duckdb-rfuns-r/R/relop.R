@@ -62,13 +62,13 @@ spaceship <- function(x, y) {
     map(duckdb$rel_to_altrep(proj), \(col) col[])
   )
 
-  r <- as_tibble(list2(
+  r <- suppressWarnings(as_tibble(list2(
     x = x,
     y = y,
     !!!map(set_names(ops), \(op) {
       rlang::expr(!!get(op)(x, y))
     })
-  ))
+  )))
 
   out <- as.data.frame(rbind(duck, r))
   row.names(out) <- c("rfuns", "r")
