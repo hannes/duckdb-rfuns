@@ -167,55 +167,63 @@ void RelopExecute(DataChunk &args, ExpressionState &state, Vector &result) {
 	RelopExecuteDispatch<LHS_LOGICAL, LHS_TYPE, RHS_LOGICAL, RHS_TYPE, OP>(args, state, result, typename relop_adds_null<LHS_TYPE, RHS_TYPE>::type());
 }
 
+template <LogicalTypeId LOGICAL_TYPE>
+struct physical ;
+
+template <>
+struct physical<LogicalType::BOOLEAN> {
+	using type = bool;
+};
+template <>
+struct physical<LogicalType::INTEGER> {
+	using type = int32_t;
+};
+template <>
+struct physical<LogicalType::DOUBLE> {
+	using type = double;
+};
+template <>
+struct physical<LogicalType::VARCHAR> {
+	using type = string_t;
+};
+template <>
+struct physical<LogicalType::TIMESTAMP> {
+	using type = timestamp_t;
+};
+
+#define RELOP_VARIANT(__LHS__, __RHS__)                                                 \
+  ScalarFunction({LogicalType::__LHS__, LogicalType::__RHS__}, LogicalType::BOOLEAN,    \
+                 RelopExecute<                                                          \
+                   LogicalType::__LHS__, typename physical<LogicalType::__LHS__>::type, \
+	               LogicalType::__RHS__, typename physical<LogicalType::__RHS__>::type, \
+	               OP                                                                   \
+				>)
+
 template <Relop OP>
 ScalarFunctionSet base_r_relop(string name) {
 	ScalarFunctionSet set(name);
 
-	// (int | lgl) <=> (int | lgl)
-	set.AddFunction(ScalarFunction({LogicalType::BOOLEAN, LogicalType::BOOLEAN}, LogicalType::BOOLEAN,
-	                               RelopExecute<LogicalType::BOOLEAN, bool, LogicalType::BOOLEAN, bool, OP>));
-	set.AddFunction(ScalarFunction({LogicalType::BOOLEAN, LogicalType::INTEGER}, LogicalType::BOOLEAN,
-	                               RelopExecute<LogicalType::BOOLEAN, bool, LogicalType::INTEGER, int32_t, OP>));
-	set.AddFunction(ScalarFunction({LogicalType::INTEGER, LogicalType::BOOLEAN}, LogicalType::BOOLEAN,
-	                               RelopExecute<LogicalType::INTEGER, int32_t, LogicalType::BOOLEAN, bool, OP>));
-	set.AddFunction(ScalarFunction({LogicalType::INTEGER, LogicalType::INTEGER}, LogicalType::BOOLEAN,
-	                   			   RelopExecute<LogicalType::INTEGER, int32_t, LogicalType::INTEGER, int32_t, OP>));
+	set.AddFunction(RELOP_VARIANT(BOOLEAN, BOOLEAN));
+	set.AddFunction(RELOP_VARIANT(BOOLEAN, INTEGER));
+	set.AddFunction(RELOP_VARIANT(INTEGER, BOOLEAN));
+	set.AddFunction(RELOP_VARIANT(INTEGER, INTEGER));
 
-	// double <=> (int | lgl)
-	set.AddFunction(ScalarFunction({LogicalType::DOUBLE, LogicalType::INTEGER}, LogicalType::BOOLEAN,
-	                               RelopExecute<LogicalType::DOUBLE, double, LogicalType::INTEGER, int32_t, OP>));
-	set.AddFunction(ScalarFunction({LogicalType::INTEGER, LogicalType::DOUBLE}, LogicalType::BOOLEAN,
-	                               RelopExecute<LogicalType::INTEGER, int32_t, LogicalType::DOUBLE, double, OP>));
-	set.AddFunction(ScalarFunction({LogicalType::DOUBLE, LogicalType::BOOLEAN}, LogicalType::BOOLEAN,
-	                               RelopExecute<LogicalType::DOUBLE, double, LogicalType::BOOLEAN, bool, OP>));
-	set.AddFunction(ScalarFunction({LogicalType::BOOLEAN, LogicalType::DOUBLE}, LogicalType::BOOLEAN,
-	                               RelopExecute<LogicalType::BOOLEAN, bool, LogicalType::DOUBLE, double, OP>));
+	set.AddFunction(RELOP_VARIANT(DOUBLE, INTEGER));
+	set.AddFunction(RELOP_VARIANT(INTEGER, DOUBLE));
+	set.AddFunction(RELOP_VARIANT(DOUBLE, BOOLEAN));
+	set.AddFunction(RELOP_VARIANT(BOOLEAN, DOUBLE));
 
-	// string <=> int
-	set.AddFunction(ScalarFunction({LogicalType::VARCHAR, LogicalType::INTEGER}, LogicalType::BOOLEAN,
-	                               RelopExecute<LogicalType::VARCHAR, string_t, LogicalType::INTEGER, int32_t, OP>));
-	set.AddFunction(ScalarFunction({LogicalType::INTEGER, LogicalType::VARCHAR}, LogicalType::BOOLEAN,
-	                               RelopExecute<LogicalType::INTEGER, int32_t, LogicalType::VARCHAR, string_t, OP>));
+	set.AddFunction(RELOP_VARIANT(VARCHAR, INTEGER));
+	set.AddFunction(RELOP_VARIANT(INTEGER, VARCHAR));
+	set.AddFunction(RELOP_VARIANT(VARCHAR, BOOLEAN));
+	set.AddFunction(RELOP_VARIANT(BOOLEAN, VARCHAR));
 
-	// string <=> lgl
-	set.AddFunction(ScalarFunction({LogicalType::VARCHAR, LogicalType::BOOLEAN}, LogicalType::BOOLEAN,
-								   RelopExecute<LogicalType::VARCHAR, string_t, LogicalType::BOOLEAN, bool, OP>));
-	set.AddFunction(ScalarFunction({LogicalType::BOOLEAN, LogicalType::VARCHAR}, LogicalType::BOOLEAN,
-	                               RelopExecute<LogicalType::BOOLEAN, bool, LogicalType::VARCHAR, string_t, OP>));
+	set.AddFunction(RELOP_VARIANT(DOUBLE, DOUBLE));
+	set.AddFunction(RELOP_VARIANT(VARCHAR, VARCHAR));
+	set.AddFunction(RELOP_VARIANT(VARCHAR, DOUBLE));
+	set.AddFunction(RELOP_VARIANT(DOUBLE, VARCHAR));
 
-	set.AddFunction(ScalarFunction({LogicalType::DOUBLE, LogicalType::DOUBLE}, LogicalType::BOOLEAN,
-	                               RelopExecute<LogicalType::DOUBLE, double, LogicalType::DOUBLE, double, OP>));
-	set.AddFunction(ScalarFunction({LogicalType::VARCHAR, LogicalType::VARCHAR}, LogicalType::BOOLEAN,
-	                               RelopExecute<LogicalType::VARCHAR, string_t, LogicalType::VARCHAR, string_t, OP>));
-
-	set.AddFunction(ScalarFunction({LogicalType::VARCHAR, LogicalType::DOUBLE}, LogicalType::BOOLEAN,
-	                               RelopExecute<LogicalType::VARCHAR, string_t, LogicalType::DOUBLE, double, OP>));
-	set.AddFunction(ScalarFunction({LogicalType::DOUBLE, LogicalType::VARCHAR}, LogicalType::BOOLEAN,
-	                               RelopExecute<LogicalType::DOUBLE, double, LogicalType::VARCHAR, string_t, OP>));
-
-	// timestamp <=> timestamp
-	set.AddFunction(ScalarFunction({LogicalType::TIMESTAMP, LogicalType::TIMESTAMP}, LogicalType::BOOLEAN,
-	                               RelopExecute<LogicalType::TIMESTAMP, timestamp_t, LogicalType::TIMESTAMP, timestamp_t, OP>));
+	set.AddFunction(RELOP_VARIANT(TIMESTAMP, TIMESTAMP));
 
 	return set;
 }
