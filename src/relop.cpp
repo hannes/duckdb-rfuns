@@ -190,6 +190,10 @@ template <>
 struct physical<LogicalType::TIMESTAMP> {
 	using type = timestamp_t;
 };
+template <>
+struct physical<LogicalType::DATE> {
+	using type = date_t;
+};
 
 #define RELOP_VARIANT(__LHS__, __RHS__)                                                 \
   ScalarFunction({LogicalType::__LHS__, LogicalType::__RHS__}, LogicalType::BOOLEAN,    \
@@ -224,6 +228,7 @@ ScalarFunctionSet base_r_relop(string name) {
 	set.AddFunction(RELOP_VARIANT(DOUBLE, VARCHAR));
 
 	set.AddFunction(RELOP_VARIANT(TIMESTAMP, TIMESTAMP));
+	set.AddFunction(RELOP_VARIANT(DATE, DATE));
 
 	return set;
 }
