@@ -1,8 +1,9 @@
 # silence R CMD check
 # TODO: some of these are testthat only dependencies
-#' @importFrom tibble tibble
+#' @importFrom tibble tibble as_tibble
 #' @importFrom constructive construct
 #' @importFrom withr defer_parent
+#' @importFrom purrr map
 #' @importFrom glue glue
 #' @import DBI
 #' @import rlang
