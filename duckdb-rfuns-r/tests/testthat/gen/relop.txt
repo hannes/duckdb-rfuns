@@ -1,3 +1,9 @@
+"<date> <=> <date>"
+date <=> date
+date <=> date + 1
+NA_date <=> date
+date <=> NA_date
+
 "<time> <=> <time>"
 time <=> time
 time <=> time + 1
