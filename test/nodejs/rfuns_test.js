@@ -13,11 +13,4 @@ describe(`rfuns extension`, () => {
         });
     });
 
-    it('rfuns function should return expected string', function (done) {
-        db.all("SELECT rfuns('Sam') as value;", function (err, res) {
-            if (err) throw err;
-            assert.deepEqual(res, [{value: "Rfuns Sam 🐥"}]);
-            done();
-        });
-    });
 });

@@ -11,8 +11,3 @@ def duckdb_conn():
     conn = duckdb.connect('', config={'allow_unsigned_extensions': 'true'})
     conn.execute(f"load '{extension_binary}'")
     return conn
-
-def test_rfuns(duckdb_conn):
-    duckdb_conn.execute("SELECT rfuns('Sam') as value;");
-    res = duckdb_conn.fetchall()
-    assert res[0][0] == "Rfuns Sam 🐥"
