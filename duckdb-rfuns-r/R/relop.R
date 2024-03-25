@@ -40,10 +40,8 @@ binary_sql <- function(x, y, fun, con) {
   duckdb$rel_to_sql(project)
 }
 
-spaceship <- function(x, y) {
+spaceship <- function(x, y, ops = c("==", "!=", "<", "<=", ">", ">=")) {
   con <- local_duckdb_con()
-
-  ops <- c("==", "!=", "<", "<=", ">", ">=")
 
   experimental <- FALSE
   df1 <- tibble(x, y)
