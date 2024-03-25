@@ -13,6 +13,6 @@ def duckdb_conn():
     return conn
 
 def test_rfuns(duckdb_conn):
-    duckdb_conn.execute("SELECT rfuns('Sam') as value;");
+    duckdb_conn.execute("SELECT \"r_base::+\"(1, 2) as value;");
     res = duckdb_conn.fetchall()
-    assert res[0][0] == "Rfuns Sam 🐥"
+    assert res[0][0] == 3

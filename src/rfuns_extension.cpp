@@ -11,15 +11,6 @@
 #include <climits>
 
 namespace duckdb {
-
-inline void RfunsScalarFun(DataChunk &args, ExpressionState &state, Vector &result) {
-	auto &name_vector = args.data[0];
-	UnaryExecutor::Execute<string_t, string_t>(name_vector, result, args.size(), [&](string_t name) {
-		return StringVector::AddString(result, "Rfuns " + name.GetString() + " 🐥");
-		;
-	});
-}
-
 namespace rfuns {
 
 static void register_binary(DatabaseInstance &instance, ScalarFunctionSet fun) {
@@ -46,10 +37,6 @@ static void register_rfuns(DatabaseInstance &instance) {
 
 static void LoadInternal(DatabaseInstance &instance) {
 	rfuns::register_rfuns(instance);
-
-	// Register a scalar function
-	auto rfuns_scalar_function = ScalarFunction("rfuns", {LogicalType::VARCHAR}, LogicalType::VARCHAR, RfunsScalarFun);
-	ExtensionUtil::RegisterFunction(instance, rfuns_scalar_function);
 }
 
 void RfunsExtension::Load(DuckDB &db) {
