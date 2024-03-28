@@ -167,6 +167,13 @@ void RelopExecute(DataChunk &args, ExpressionState &state, Vector &result) {
 	RelopExecuteDispatch<LHS_LOGICAL, LHS_TYPE, RHS_LOGICAL, RHS_TYPE, OP>(args, state, result, typename relop_adds_null<LHS_TYPE, RHS_TYPE>::type());
 }
 
+template <LogicalTypeId LHS_LOGICAL, LogicalTypeId RHS_LOGICAL>
+void RelopFails(DataChunk &args, ExpressionState &state, Vector &result) {
+	throw NotImplementedException(
+		StringUtil::Format("%s <=> %s", EnumUtil::ToChars(LHS_LOGICAL), EnumUtil::ToChars(RHS_LOGICAL))
+	);
+}
+
 template <LogicalTypeId LOGICAL_TYPE>
 struct physical ;
 
@@ -203,6 +210,9 @@ struct physical<LogicalType::DATE> {
 	               OP                                                                   \
 				>)
 
+#define RELOP_FAILS_VARIANT(__LHS__, __RHS__) ScalarFunction({LogicalType::__LHS__, LogicalType::__RHS__}, LogicalType::BOOLEAN, RelopFails<LogicalType::__LHS__, LogicalType::__RHS__ >)
+
+
 template <Relop OP>
 ScalarFunctionSet base_r_relop(string name) {
 	ScalarFunctionSet set(name);
@@ -229,6 +239,9 @@ ScalarFunctionSet base_r_relop(string name) {
 
 	set.AddFunction(RELOP_VARIANT(TIMESTAMP, TIMESTAMP));
 	set.AddFunction(RELOP_VARIANT(DATE, DATE));
+
+	set.AddFunction(RELOP_FAILS_VARIANT(TIMESTAMP, DATE));
+	set.AddFunction(RELOP_FAILS_VARIANT(DATE, TIMESTAMP));
 
 	return set;
 }
