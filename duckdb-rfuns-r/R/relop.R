@@ -40,19 +40,23 @@ binary_sql <- function(x, y, fun, con) {
   duckdb$rel_to_sql(project)
 }
 
-spaceship_r <- function(x, y, ops = c("==", "!=", "<", "<=", ">", ">=")) {
+spaceship_r <- function(x, y, ops = c("==", "!=", "<", "<=", ">", ">="), keep.data = FALSE) {
   df1 <- tibble(x, y)
 
-  suppressWarnings(as_tibble(list2(
-    x = x,
-    y = y,
+  spaceship <- suppressWarnings(as_tibble(list2(
     !!!map(set_names(ops), \(op) {
       rlang::expr(!!get(op)(x, y))
     })
   )))
+
+  if (keep.data) {
+    spaceship <- append(list(x = x, y = y), spaceship)
+  }
+
+  spaceship
 }
 
-spaceship_rfuns <- function(x, y, ops = c("==", "!=", "<", "<=", ">", ">=")) {
+spaceship_rfuns <- function(x, y, ops = c("==", "!=", "<", "<=", ">", ">="), keep.data = FALSE) {
   con <- local_duckdb_con()
 
   experimental <- FALSE
@@ -68,15 +72,19 @@ spaceship_rfuns <- function(x, y, ops = c("==", "!=", "<", "<=", ">", ">=")) {
       tmp_expr
     })
   ))
-  as_tibble(
+  spaceship <- as_tibble(
     map(duckdb$rel_to_altrep(proj), \(col) col[])
   )
+  if (!keep.data) {
+    spaceship <- spaceship[, -c(1, 2)]
+  }
+  spaceship
 }
 
 spaceship <- function(x, y, ops = c("==", "!=", "<", "<=", ">", ">=")) {
   df <- as.data.frame(rbind(
-    spaceship_r(x, y, ops),
-    spaceship_rfuns(x, y, ops)
+    spaceship_r(x, y, ops, keep.data = TRUE),
+    spaceship_rfuns(x, y, ops, keep.data = TRUE)
   ))
   row.names(df) <- c("r", "rfuns")
   df
