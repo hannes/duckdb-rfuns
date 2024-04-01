@@ -47,6 +47,48 @@ test_that("spaceship(<time> <=> <time>)", {
   expect_spaceship(NA_time, time)
 })
 
+test_that("spaceship(<time> <=> <string>)", {
+  withr::local_envvar(c("TZ" = "UTC"))
+
+  time_chr <- '2024-02-21 14:00:00'
+  time_chr_gibberish <- '2024-02-21 14:00:00 gibberish'
+  time <- as.POSIXct(strptime(time_chr, format = '%Y-%m-%d %H:%M:%S'))
+
+  expect_spaceship(time    , time_chr)
+  expect_spaceship(time + 1, time_chr)
+  expect_spaceship(time - 1, time_chr)
+
+  expect_spaceship(time_chr, time)
+  expect_spaceship(time_chr, time + 1)
+  expect_spaceship(time_chr, time - 1)
+
+  # r treats extra text with forgiveness
+  expect_equal(
+    spaceship_r(time, time_chr),
+    spaceship_r(time, time_chr_gibberish)
+  )
+
+  # but Timestamp::FromString() does not
+  expect_snapshot(error = TRUE,
+    spaceship_rfuns(time, time_chr_gibberish, "==")
+  )
+
+  skip("for now")
+
+
+  # ok because they fail in both cases
+  expect_spaceship(date, "not a date")
+  expect_spaceship("not a date", date)
+
+  expect_snapshot(error = TRUE,
+                  spaceship_rfuns(as.Date("2024-03-21"), "not a date", "==")
+  )
+  expect_snapshot(error = TRUE,
+                  spaceship_r(as.Date("2024-03-21"), "not a date", "==")
+  )
+})
+
+
 test_that("spaceship(<int> <=> <int>)", {
   expect_spaceship(0L , 0L)
   expect_spaceship(1L , 0L)

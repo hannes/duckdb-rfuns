@@ -3,6 +3,7 @@
 
 #include <math.h>
 #include <climits>
+#include <iostream>
 
 namespace duckdb {
 namespace rfuns {
@@ -104,6 +105,20 @@ template <Relop OP>
 struct RelopDispatch<date_t, string_t, OP> {
 	inline bool operator()(date_t lhs, string_t rhs) {
 		return SimpleDispatch<date_t, date_t, OP>()(lhs, Date::FromString(rhs.GetData(), false));
+	}
+};
+
+template <Relop OP>
+struct RelopDispatch<string_t, timestamp_t, OP> {
+	inline bool operator()(string_t lhs, timestamp_t rhs) {
+		return SimpleDispatch<timestamp_t, timestamp_t, OP>()(Timestamp::FromString(lhs.GetData()), rhs);
+	}
+};
+
+template <Relop OP>
+struct RelopDispatch<timestamp_t, string_t, OP> {
+	inline bool operator()(timestamp_t lhs, string_t rhs) {
+		return SimpleDispatch<timestamp_t, timestamp_t, OP>()(lhs, Timestamp::FromString(rhs.GetData()));
 	}
 };
 
@@ -257,6 +272,9 @@ ScalarFunctionSet base_r_relop(string name) {
 
 	set.AddFunction(RELOP_VARIANT(DATE, VARCHAR));
 	set.AddFunction(RELOP_VARIANT(VARCHAR, DATE));
+
+	set.AddFunction(RELOP_VARIANT(TIMESTAMP, VARCHAR));
+	set.AddFunction(RELOP_VARIANT(VARCHAR, TIMESTAMP));
 
 	SET_RELOP_FAILS_VARIANT(TIMESTAMP, DATE, "Comparing times and dates is not supported")
 	SET_RELOP_FAILS_VARIANT(DATE, TIMESTAMP, "Comparing dates and times is not supported")
