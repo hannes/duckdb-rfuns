@@ -73,18 +73,15 @@ test_that("spaceship(<time> <=> <string>)", {
     spaceship_rfuns(time, time_chr_gibberish, "==")
   )
 
-  skip("for now")
-
-
   # ok because they fail in both cases
-  expect_spaceship(date, "not a date")
-  expect_spaceship("not a date", date)
+  expect_spaceship(time, "not a time")
+  expect_spaceship("not a time", time)
 
   expect_snapshot(error = TRUE,
-                  spaceship_rfuns(as.Date("2024-03-21"), "not a date", "==")
+    spaceship_rfuns(as.POSIXct(strptime(time_chr, format = '%Y-%m-%d %H:%M:%S')), "not a time", "==")
   )
   expect_snapshot(error = TRUE,
-                  spaceship_r(as.Date("2024-03-21"), "not a date", "==")
+    spaceship_r(as.POSIXct(strptime(time_chr, format = '%Y-%m-%d %H:%M:%S')), "not a time", "==")
   )
 })
 
