@@ -203,13 +203,6 @@ struct physical<LogicalType::DATE> {
 	               OP                                                                   \
 				>)
 
-template <LogicalTypeId LHS_LOGICAL, LogicalTypeId RHS_LOGICAL, const char* WHY>
-void RelopFails(DataChunk &args, ExpressionState &state, Vector &result) {
-	throw NotImplementedException(
-		StringUtil::Format("%s : %s <=> %s", WHY, EnumUtil::ToChars(LHS_LOGICAL), EnumUtil::ToChars(RHS_LOGICAL))
-	);
-}
-
 #define SET_RELOP_FAILS_VARIANT(__LHS__, __RHS__, __WHY__) { \
 	ScalarFunction fun( \
 	  {LogicalType::__LHS__, LogicalType::__RHS__}, LogicalType::BOOLEAN, \
