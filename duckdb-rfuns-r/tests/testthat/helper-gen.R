@@ -30,7 +30,7 @@ if (Sys.getenv("CI") == "" ) {
       fun = fun,
       udf = udfs[[fun]],
       data = tibble::as_tibble(args),
-      expression = deparse(expr, nlines = 1L),
+      expression = constructive::deparse_call(expr),
       expected = constructive::construct(eval(expr, envir = env))$code
     )
   }
