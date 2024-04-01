@@ -1,4 +1,24 @@
 test_that("spaceship(<date> <=> <date>)", {
+  date <- as.Date("2024-03-21")
+  expect_spaceship(date, "2024-03-21")
+  expect_spaceship(date, "2024-03-20")
+  expect_spaceship(date, "2024-03-20")
+
+  expect_spaceship("2024-03-21", date)
+  expect_spaceship("2024-03-20", date)
+  expect_spaceship("2024-03-20", date)
+
+  skip("until we have a better internal implementation of DATE <=> VARCHAR")
+  expect_spaceship(date, "2024-03-21 and then some")
+  expect_spaceship(date, "2024-03-20 and then some")
+  expect_spaceship(date, "not a date")
+
+  expect_spaceship("2024-03-21 and then some", date)
+  expect_spaceship("2024-03-20 and then some", date)
+  expect_spaceship("not a date", date)
+})
+
+test_that("spaceship(<date> <=> <date>)", {
   date <- as.Date("2024-02-21")
   NA_date <- as.Date(NA)
 

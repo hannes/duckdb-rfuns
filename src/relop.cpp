@@ -93,6 +93,10 @@ string_t to_string(double x) {
 	return string_t(s);
 }
 
+string_t to_string(date_t x) {
+	return StringUtil::Format("%d-%02d-%02d", Date::ExtractYear(x), Date::ExtractMonth(x), Date::ExtractDay(x));
+}
+
 template <typename LHS, Relop OP>
 struct RelopDispatch<LHS, string_t, OP> {
 	inline bool operator()(LHS lhs, string_t rhs) {
@@ -240,6 +244,9 @@ ScalarFunctionSet base_r_relop(string name) {
 
 	set.AddFunction(RELOP_VARIANT(TIMESTAMP, TIMESTAMP));
 	set.AddFunction(RELOP_VARIANT(DATE, DATE));
+
+	set.AddFunction(RELOP_VARIANT(DATE, VARCHAR));
+	set.AddFunction(RELOP_VARIANT(VARCHAR, DATE));
 
 	SET_RELOP_FAILS_VARIANT(TIMESTAMP, DATE, "Comparing times and dates is not supported")
 	SET_RELOP_FAILS_VARIANT(DATE, TIMESTAMP, "Comparing dates and times is not supported")
