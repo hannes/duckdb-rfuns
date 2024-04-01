@@ -56,6 +56,25 @@ test_that(r"(<date> <= <string> :: date <= "2024-02-20")", {
   expect_identical(out_df[, 1], FALSE)
 })
 
+test_that(r"(<date> <= <string> :: date <= "2024-03-21 and then some")", {
+  con <- local_duckdb_con()
+  in_df <- tibble::tibble(x1 = as.Date("2024-02-21"), x2 = "2024-03-21 and then some")
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<=",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], TRUE)
+})
+
 test_that(r"(<date> <= <string> :: "2024-02-21" <= date)", {
   con <- local_duckdb_con()
   in_df <- tibble::tibble(x1 = "2024-02-21", x2 = as.Date("2024-02-21"))
@@ -111,6 +130,25 @@ test_that(r"(<date> <= <string> :: "2024-02-20" <= date)", {
   out_df <- duckdb:::rel_to_altrep(out_rel)
 
   expect_identical(out_df[, 1], TRUE)
+})
+
+test_that(r"(<date> <= <string> :: "2024-03-21 and then some" <= date)", {
+  con <- local_duckdb_con()
+  in_df <- tibble::tibble(x1 = "2024-03-21 and then some", x2 = as.Date("2024-02-21"))
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<=",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], FALSE)
 })
 
 test_that(r"(<date> <= <date> :: date <= date)", {

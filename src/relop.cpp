@@ -93,9 +93,19 @@ string_t to_string(double x) {
 	return string_t(s);
 }
 
-string_t to_string(date_t x) {
-	return StringUtil::Format("%d-%02d-%02d", Date::ExtractYear(x), Date::ExtractMonth(x), Date::ExtractDay(x));
-}
+template <Relop OP>
+struct RelopDispatch<string_t, date_t, OP> {
+	inline bool operator()(string_t lhs, date_t rhs) {
+		return SimpleDispatch<date_t, date_t, OP>()(Date::FromString(lhs.GetData(), false), rhs);
+	}
+};
+
+template <Relop OP>
+struct RelopDispatch<date_t, string_t, OP> {
+	inline bool operator()(date_t lhs, string_t rhs) {
+		return SimpleDispatch<date_t, date_t, OP>()(lhs, Date::FromString(rhs.GetData(), false));
+	}
+};
 
 template <typename LHS, Relop OP>
 struct RelopDispatch<LHS, string_t, OP> {

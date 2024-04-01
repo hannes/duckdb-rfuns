@@ -2,9 +2,11 @@
 date <=> "2024-02-21"
 date <=> "2024-02-22"
 date <=> "2024-02-20"
+date <=> "2024-03-21 and then some"
 "2024-02-21" <=> date
 "2024-02-22" <=> date
 "2024-02-20" <=> date
+"2024-03-21 and then some" <=> date
 
 "<date> <=> <date>"
 date <=> date
