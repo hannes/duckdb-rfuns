@@ -167,13 +167,6 @@ void RelopExecute(DataChunk &args, ExpressionState &state, Vector &result) {
 	RelopExecuteDispatch<LHS_LOGICAL, LHS_TYPE, RHS_LOGICAL, RHS_TYPE, OP>(args, state, result, typename relop_adds_null<LHS_TYPE, RHS_TYPE>::type());
 }
 
-template <LogicalTypeId LHS_LOGICAL, LogicalTypeId RHS_LOGICAL>
-void RelopFails(DataChunk &args, ExpressionState &state, Vector &result) {
-	throw NotImplementedException(
-		StringUtil::Format("%s <=> %s", EnumUtil::ToChars(LHS_LOGICAL), EnumUtil::ToChars(RHS_LOGICAL))
-	);
-}
-
 template <LogicalTypeId LOGICAL_TYPE>
 struct physical ;
 
@@ -210,8 +203,23 @@ struct physical<LogicalType::DATE> {
 	               OP                                                                   \
 				>)
 
-#define RELOP_FAILS_VARIANT(__LHS__, __RHS__) ScalarFunction({LogicalType::__LHS__, LogicalType::__RHS__}, LogicalType::BOOLEAN, RelopFails<LogicalType::__LHS__, LogicalType::__RHS__ >)
+template <LogicalTypeId LHS_LOGICAL, LogicalTypeId RHS_LOGICAL, const char* WHY>
+void RelopFails(DataChunk &args, ExpressionState &state, Vector &result) {
+	throw NotImplementedException(
+		StringUtil::Format("%s : %s <=> %s", WHY, EnumUtil::ToChars(LHS_LOGICAL), EnumUtil::ToChars(RHS_LOGICAL))
+	);
+}
 
+#define SET_RELOP_FAILS_VARIANT(__LHS__, __RHS__, __WHY__) { \
+	ScalarFunction fun( \
+	  {LogicalType::__LHS__, LogicalType::__RHS__}, LogicalType::BOOLEAN, \
+	  [](DataChunk &args, ExpressionState &state, Vector &result) { \
+		throw NotImplementedException( \
+			StringUtil::Format("%s : %s <=> %s", __WHY__, EnumUtil::ToChars(LogicalType::__LHS__), EnumUtil::ToChars(LogicalType::__RHS__)) \
+		); \
+	  }); \
+	set.AddFunction(fun); \
+}
 
 template <Relop OP>
 ScalarFunctionSet base_r_relop(string name) {
@@ -240,8 +248,8 @@ ScalarFunctionSet base_r_relop(string name) {
 	set.AddFunction(RELOP_VARIANT(TIMESTAMP, TIMESTAMP));
 	set.AddFunction(RELOP_VARIANT(DATE, DATE));
 
-	set.AddFunction(RELOP_FAILS_VARIANT(TIMESTAMP, DATE));
-	set.AddFunction(RELOP_FAILS_VARIANT(DATE, TIMESTAMP));
+	SET_RELOP_FAILS_VARIANT(TIMESTAMP, DATE, "Comparing times and dates is not supported")
+	SET_RELOP_FAILS_VARIANT(DATE, TIMESTAMP, "Comparing dates and times is not supported")
 
 	return set;
 }
