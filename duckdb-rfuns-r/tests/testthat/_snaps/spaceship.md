@@ -35,7 +35,7 @@
 ---
 
     Code
-      spaceship_rfuns(as.POSIXct(strptime(time_chr, format = "%Y-%m-%d %H:%M:%S")),
+      spaceship_rfuns(as.POSIXct(strptime("2024-02-21 14:00:00", format = "%Y-%m-%d %H:%M:%S")),
       "not a time", "==")
     Condition
       Error in `map()`:
@@ -47,7 +47,7 @@
 ---
 
     Code
-      spaceship_r(as.POSIXct(strptime(time_chr, format = "%Y-%m-%d %H:%M:%S")),
+      spaceship_r(as.POSIXct(strptime("2024-02-21 14:00:00", format = "%Y-%m-%d %H:%M:%S")),
       "not a time", "==")
     Condition
       Error in `map()`:

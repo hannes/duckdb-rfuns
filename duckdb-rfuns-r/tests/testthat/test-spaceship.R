@@ -78,10 +78,10 @@ test_that("spaceship(<time> <=> <string>)", {
   expect_spaceship("not a time", time)
 
   expect_snapshot(error = TRUE,
-    spaceship_rfuns(as.POSIXct(strptime(time_chr, format = '%Y-%m-%d %H:%M:%S')), "not a time", "==")
+    spaceship_rfuns(as.POSIXct(strptime("2024-02-21 14:00:00", format = '%Y-%m-%d %H:%M:%S')), "not a time", "==")
   )
   expect_snapshot(error = TRUE,
-    spaceship_r(as.POSIXct(strptime(time_chr, format = '%Y-%m-%d %H:%M:%S')), "not a time", "==")
+    spaceship_r(as.POSIXct(strptime("2024-02-21 14:00:00", format = '%Y-%m-%d %H:%M:%S')), "not a time", "==")
   )
 })
 
