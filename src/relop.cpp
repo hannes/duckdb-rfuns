@@ -203,6 +203,17 @@ struct physical<LogicalType::DATE> {
 	               OP                                                                   \
 				>)
 
+#define SET_RELOP_FAILS_VARIANT(__LHS__, __RHS__, __WHY__) { \
+	ScalarFunction fun( \
+	  {LogicalType::__LHS__, LogicalType::__RHS__}, LogicalType::BOOLEAN, \
+	  [](DataChunk &args, ExpressionState &state, Vector &result) { \
+		throw NotImplementedException( \
+			StringUtil::Format("%s : %s <=> %s", __WHY__, EnumUtil::ToChars(LogicalType::__LHS__), EnumUtil::ToChars(LogicalType::__RHS__)) \
+		); \
+	  }); \
+	set.AddFunction(fun); \
+}
+
 template <Relop OP>
 ScalarFunctionSet base_r_relop(string name) {
 	ScalarFunctionSet set(name);
@@ -229,6 +240,9 @@ ScalarFunctionSet base_r_relop(string name) {
 
 	set.AddFunction(RELOP_VARIANT(TIMESTAMP, TIMESTAMP));
 	set.AddFunction(RELOP_VARIANT(DATE, DATE));
+
+	SET_RELOP_FAILS_VARIANT(TIMESTAMP, DATE, "Comparing times and dates is not supported")
+	SET_RELOP_FAILS_VARIANT(DATE, TIMESTAMP, "Comparing dates and times is not supported")
 
 	return set;
 }
