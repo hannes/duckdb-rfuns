@@ -1,4 +1,4 @@
-test_that("spaceship(<date> <=> <date>)", {
+test_that("spaceship(<date> <=> <string>)", {
   date <- as.Date("2024-03-21")
   expect_spaceship(date, "2024-03-21")
   expect_spaceship(date, "2024-03-20")
@@ -18,6 +18,13 @@ test_that("spaceship(<date> <=> <date>)", {
   # ok because they fail in both cases
   expect_spaceship(date, "not a date")
   expect_spaceship("not a date", date)
+
+  expect_snapshot(error = TRUE,
+    spaceship_rfuns(as.Date("2024-03-21"), "not a date", "==")
+  )
+  expect_snapshot(error = TRUE,
+    spaceship_r(as.Date("2024-03-21"), "not a date", "==")
+  )
 })
 
 test_that("spaceship(<date> <=> <date>)", {
