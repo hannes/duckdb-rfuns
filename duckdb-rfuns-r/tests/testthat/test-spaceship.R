@@ -1,3 +1,32 @@
+test_that("spaceship(<date> <=> <string>)", {
+  date <- as.Date("2024-03-21")
+  expect_spaceship(date, "2024-03-21")
+  expect_spaceship(date, "2024-03-20")
+  expect_spaceship(date, "2024-03-20")
+
+  expect_spaceship("2024-03-21", date)
+  expect_spaceship("2024-03-20", date)
+  expect_spaceship("2024-03-20", date)
+
+  # ok because both R and Date::FromString(strict = false)
+  # are forgiving about extra stuff after YYYY-MM-DD format
+  expect_spaceship(date, "2024-03-21 and then some")
+  expect_spaceship(date, "2024-03-20 and then some")
+  expect_spaceship("2024-03-21 and then some", date)
+  expect_spaceship("2024-03-20 and then some", date)
+
+  # ok because they fail in both cases
+  expect_spaceship(date, "not a date")
+  expect_spaceship("not a date", date)
+
+  expect_snapshot(error = TRUE,
+    spaceship_rfuns(as.Date("2024-03-21"), "not a date", "==")
+  )
+  expect_snapshot(error = TRUE,
+    spaceship_r(as.Date("2024-03-21"), "not a date", "==")
+  )
+})
+
 test_that("spaceship(<date> <=> <date>)", {
   date <- as.Date("2024-02-21")
   NA_date <- as.Date(NA)
@@ -17,6 +46,45 @@ test_that("spaceship(<time> <=> <time>)", {
   expect_spaceship(time, NA_time)
   expect_spaceship(NA_time, time)
 })
+
+test_that("spaceship(<time> <=> <string>)", {
+  withr::local_envvar(c("TZ" = "UTC"))
+
+  time_chr <- '2024-02-21 14:00:00'
+  time_chr_gibberish <- '2024-02-21 14:00:00 gibberish'
+  time <- as.POSIXct(strptime(time_chr, format = '%Y-%m-%d %H:%M:%S'))
+
+  expect_spaceship(time    , time_chr)
+  expect_spaceship(time + 1, time_chr)
+  expect_spaceship(time - 1, time_chr)
+
+  expect_spaceship(time_chr, time)
+  expect_spaceship(time_chr, time + 1)
+  expect_spaceship(time_chr, time - 1)
+
+  # r treats extra text with forgiveness
+  expect_equal(
+    spaceship_r(time, time_chr),
+    spaceship_r(time, time_chr_gibberish)
+  )
+
+  # but Timestamp::FromString() does not
+  expect_snapshot(error = TRUE,
+    spaceship_rfuns(time, time_chr_gibberish, "==")
+  )
+
+  # ok because they fail in both cases
+  expect_spaceship(time, "not a time")
+  expect_spaceship("not a time", time)
+
+  expect_snapshot(error = TRUE,
+    spaceship_rfuns(as.POSIXct(strptime("2024-02-21 14:00:00", format = '%Y-%m-%d %H:%M:%S')), "not a time", "==")
+  )
+  expect_snapshot(error = TRUE,
+    spaceship_r(as.POSIXct(strptime("2024-02-21 14:00:00", format = '%Y-%m-%d %H:%M:%S')), "not a time", "==")
+  )
+})
+
 
 test_that("spaceship(<int> <=> <int>)", {
   expect_spaceship(0L , 0L)
