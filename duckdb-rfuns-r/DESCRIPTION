@@ -10,6 +10,7 @@ Authors@R: c(
 Description: User defined functions for duckdb.
 License: MIT + file LICENSE
 Imports: 
+    cli,
     constructive,
     DBI,
     duckdb,

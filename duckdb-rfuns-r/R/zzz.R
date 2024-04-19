@@ -7,6 +7,7 @@
 #' @importFrom glue glue
 #' @import DBI
 #' @import rlang
+#' @import cli
 NULL
 
 .onLoad <- function(lib, pkg) {
