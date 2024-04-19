@@ -35,11 +35,6 @@ binary_dispatch <- function(x, y, fun = "", con = local_duckdb_con()) {
   binary_altrep(x, y, glue("dispatch(r_base::{fun})"), con = con)[, 3][]
 }
 
-binary_sql <- function(x, y, fun, con) {
-  project <- binary_project(x, y, op, con = con)
-  duckdb$rel_to_sql(project)
-}
-
 spaceship_r <- function(x, y, ops = c("==", "!=", "<", "<=", ">", ">="), keep.data = FALSE) {
   df1 <- tibble(x, y)
 
