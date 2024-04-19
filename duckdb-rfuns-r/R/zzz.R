@@ -8,6 +8,7 @@
 #' @import DBI
 #' @import rlang
 #' @import cli
+#' @import slap
 NULL
 
 .onLoad <- function(lib, pkg) {

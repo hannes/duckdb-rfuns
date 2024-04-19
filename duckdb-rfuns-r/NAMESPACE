@@ -3,6 +3,7 @@
 import(DBI)
 import(cli)
 import(rlang)
+import(slap)
 importFrom(constructive,construct)
 importFrom(glue,glue)
 importFrom(purrr,map)

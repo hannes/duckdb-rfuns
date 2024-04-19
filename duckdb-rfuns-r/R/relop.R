@@ -73,21 +73,9 @@ spaceship_rfuns <- function(x, y, ops = c("==", "!=", "<", "<=", ">", ">="), kee
     })
   )
 
-  proj <- withCallingHandlers(
-    duckdb$rel_project(rel1, exprs),
-    error = function(err) {
-      cli_abort("binding error", call = error_call, parent = err)
-    }
-  )
+  proj <- duckdb$rel_project(rel1, exprs) %!% "binding error"
 
-  spaceship <- withCallingHandlers(
-    as_tibble(
-      map(duckdb$rel_to_altrep(proj), \(col) col[])
-    ),
-    error = function(err) {
-      cli_abort("runtime error", call = error_call, parent = err)
-    }
-  )
+  spaceship <- as_tibble(map(duckdb$rel_to_altrep(proj), \(col) col[])) %!% "runtime error"
 
   if (!keep.data) {
     spaceship <- spaceship[, -c(1, 2)]
