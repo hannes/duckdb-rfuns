@@ -1,3 +1,11 @@
+test_that("time <=> date", {
+  time <- as.POSIXct(Sys.Date(), tz = "UTC")
+  date <- Sys.Date()
+
+  expect_snapshot(error = TRUE, spaceship_rfuns(time, date))
+  expect_snapshot(error = TRUE, spaceship_rfuns(date, time))
+})
+
 test_that("spaceship(<date> <=> <string>)", {
   date <- as.Date("2024-03-21")
   expect_spaceship(date, "2024-03-21")

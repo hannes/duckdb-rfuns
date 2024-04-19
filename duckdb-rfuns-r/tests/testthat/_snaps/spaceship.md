@@ -1,3 +1,19 @@
+# time <=> date
+
+    Code
+      spaceship_rfuns(time, date)
+    Condition
+      Error:
+      ! {"exception_type":"Invalid Input","exception_message":"Comparing times and dates is not supported : TIMESTAMP <=> DATE"}
+
+---
+
+    Code
+      spaceship_rfuns(date, time)
+    Condition
+      Error:
+      ! {"exception_type":"Invalid Input","exception_message":"Comparing dates and times is not supported : DATE <=> TIMESTAMP"}
+
 # spaceship(<date> <=> <string>)
 
     Code
