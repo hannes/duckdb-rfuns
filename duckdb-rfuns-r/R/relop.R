@@ -63,16 +63,18 @@ spaceship_rfuns <- function(x, y, ops = c("==", "!=", "<", "<=", ">", ">="), kee
   df1 <- tibble(x, y)
   rel1 <- duckdb$rel_from_df(con, df1, experimental = experimental)
 
+  exprs <- list2(
+    duckdb$expr_reference("x"),
+    duckdb$expr_reference("y"),
+    !!!map(ops, \(op) {
+      tmp_expr <- duckdb$expr_function(glue("r_base::{op}"), list(duckdb$expr_reference("x"), duckdb$expr_reference("y")))
+      duckdb$expr_set_alias(tmp_expr, op)
+      tmp_expr
+    })
+  )
+
   proj <- withCallingHandlers(
-    duckdb$rel_project(rel1, list2(
-      duckdb$expr_reference("x"),
-      duckdb$expr_reference("y"),
-      !!!map(ops, \(op) {
-        tmp_expr <- duckdb$expr_function(glue("r_base::{op}"), list(duckdb$expr_reference("x"), duckdb$expr_reference("y")))
-        duckdb$expr_set_alias(tmp_expr, op)
-        tmp_expr
-      })
-    )),
+    duckdb$rel_project(rel1, exprs),
     error = function(err) {
       cli_abort("binding error", call = error_call, parent = err)
     }
