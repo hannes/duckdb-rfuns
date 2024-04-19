@@ -224,24 +224,22 @@ struct physical<LogicalType::DATE> {
 	using type = date_t;
 };
 
-#define RELOP_VARIANT(__LHS__, __RHS__)                                                 \
-  ScalarFunction({LogicalType::__LHS__, LogicalType::__RHS__}, LogicalType::BOOLEAN,    \
-                 RelopExecute<                                                          \
-                   LogicalType::__LHS__, typename physical<LogicalType::__LHS__>::type, \
-	               LogicalType::__RHS__, typename physical<LogicalType::__RHS__>::type, \
-	               OP                                                                   \
-				>)
+#define RELOP_VARIANT(__LHS__, __RHS__) ScalarFunction(                      \
+	/* arguments   = */ {LogicalType::__LHS__, LogicalType::__RHS__},        \
+	/* return_type = */ LogicalType::BOOLEAN,                                \
+	/* function    = */ RelopExecute<                                        \
+		LogicalType::__LHS__, typename physical<LogicalType::__LHS__>::type, \
+	    LogicalType::__RHS__, typename physical<LogicalType::__RHS__>::type, \
+	    OP                                                                   \
+	>)
 
-#define SET_RELOP_FAILS_VARIANT(__LHS__, __RHS__, __WHY__) { \
-	ScalarFunction fun( \
-	  {LogicalType::__LHS__, LogicalType::__RHS__}, LogicalType::BOOLEAN, \
-	  [](DataChunk &args, ExpressionState &state, Vector &result) { \
-		throw NotImplementedException( \
-			StringUtil::Format("%s : %s <=> %s", __WHY__, EnumUtil::ToChars(LogicalType::__LHS__), EnumUtil::ToChars(LogicalType::__RHS__)) \
-		); \
-	  }); \
-	set.AddFunction(fun); \
-}
+#define RELOP_VARIANT_BIND_FAIL(__LHS__, __RHS__, __WHY__) ScalarFunction(                \
+	  /* arguments   = */ {LogicalType::__LHS__, LogicalType::__RHS__},                   \
+	  /* return_type = */ LogicalType::BOOLEAN,                                           \
+	  /* function    = */ [](DataChunk &args, ExpressionState &state, Vector &result) {}, \
+	  /* bind        = */ [](ClientContext &context, ScalarFunction &bound_function, vector<duckdb::unique_ptr<Expression>> &arguments) -> unique_ptr<FunctionData> { \
+		throw InvalidInputException("%s : %s <=> %s", __WHY__, EnumUtil::ToChars(LogicalType::__LHS__), EnumUtil::ToChars(LogicalType::__RHS__)); \
+		})
 
 template <Relop OP>
 ScalarFunctionSet base_r_relop(string name) {
@@ -276,8 +274,8 @@ ScalarFunctionSet base_r_relop(string name) {
 	set.AddFunction(RELOP_VARIANT(TIMESTAMP, VARCHAR));
 	set.AddFunction(RELOP_VARIANT(VARCHAR, TIMESTAMP));
 
-	SET_RELOP_FAILS_VARIANT(TIMESTAMP, DATE, "Comparing times and dates is not supported")
-	SET_RELOP_FAILS_VARIANT(DATE, TIMESTAMP, "Comparing dates and times is not supported")
+	set.AddFunction(RELOP_VARIANT_BIND_FAIL(TIMESTAMP, DATE, "Comparing times and dates is not supported"));
+	set.AddFunction(RELOP_VARIANT_BIND_FAIL(DATE, TIMESTAMP, "Comparing dates and times is not supported"));
 
 	return set;
 }

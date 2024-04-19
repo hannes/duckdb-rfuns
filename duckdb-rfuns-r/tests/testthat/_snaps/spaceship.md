@@ -1,9 +1,31 @@
+# time <=> date
+
+    Code
+      spaceship_rfuns(time, date)
+    Condition
+      Error in `spaceship_rfuns()`:
+      ! binding error
+      Caused by error:
+      ! {"exception_type":"Invalid Input","exception_message":"Comparing times and dates is not supported : TIMESTAMP <=> DATE"}
+
+---
+
+    Code
+      spaceship_rfuns(date, time)
+    Condition
+      Error in `spaceship_rfuns()`:
+      ! binding error
+      Caused by error:
+      ! {"exception_type":"Invalid Input","exception_message":"Comparing dates and times is not supported : DATE <=> TIMESTAMP"}
+
 # spaceship(<date> <=> <string>)
 
     Code
       spaceship_rfuns(as.Date("2024-03-21"), "not a date", "==")
     Condition
-      Error in `map()`:
+      Error in `spaceship_rfuns()`:
+      ! runtime error
+      Caused by error in `map()`:
       i In index: 1.
       i With name: x.
       Caused by error:
@@ -25,7 +47,9 @@
     Code
       spaceship_rfuns(time, time_chr_gibberish, "==")
     Condition
-      Error in `map()`:
+      Error in `spaceship_rfuns()`:
+      ! runtime error
+      Caused by error in `map()`:
       i In index: 1.
       i With name: x.
       Caused by error:
@@ -38,7 +62,9 @@
       spaceship_rfuns(as.POSIXct(strptime("2024-02-21 14:00:00", format = "%Y-%m-%d %H:%M:%S")),
       "not a time", "==")
     Condition
-      Error in `map()`:
+      Error in `spaceship_rfuns()`:
+      ! runtime error
+      Caused by error in `map()`:
       i In index: 1.
       i With name: x.
       Caused by error:

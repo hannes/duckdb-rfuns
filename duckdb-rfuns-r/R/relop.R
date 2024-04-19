@@ -51,14 +51,14 @@ spaceship_r <- function(x, y, ops = c("==", "!=", "<", "<=", ">", ">="), keep.da
   spaceship
 }
 
-spaceship_rfuns <- function(x, y, ops = c("==", "!=", "<", "<=", ">", ">="), keep.data = FALSE) {
+spaceship_rfuns <- function(x, y, ops = c("==", "!=", "<", "<=", ">", ">="), keep.data = FALSE, error_call = current_env()) {
   con <- local_duckdb_con()
 
   experimental <- FALSE
   df1 <- tibble(x, y)
   rel1 <- duckdb$rel_from_df(con, df1, experimental = experimental)
 
-  proj <- duckdb$rel_project(rel1, list2(
+  exprs <- list2(
     duckdb$expr_reference("x"),
     duckdb$expr_reference("y"),
     !!!map(ops, \(op) {
@@ -66,10 +66,24 @@ spaceship_rfuns <- function(x, y, ops = c("==", "!=", "<", "<=", ">", ">="), kee
       duckdb$expr_set_alias(tmp_expr, op)
       tmp_expr
     })
-  ))
-  spaceship <- as_tibble(
-    map(duckdb$rel_to_altrep(proj), \(col) col[])
   )
+
+  proj <- withCallingHandlers(
+    duckdb$rel_project(rel1, exprs),
+    error = function(err) {
+      cli_abort("binding error", call = error_call, parent = err)
+    }
+  )
+
+  spaceship <- withCallingHandlers(
+    as_tibble(
+      map(duckdb$rel_to_altrep(proj), \(col) col[])
+    ),
+    error = function(err) {
+      cli_abort("runtime error", call = error_call, parent = err)
+    }
+  )
+
   if (!keep.data) {
     spaceship <- spaceship[, -c(1, 2)]
   }
