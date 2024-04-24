@@ -73,6 +73,8 @@ ScalarFunctionSet base_r_is_na() {
 	ScalarFunctionSet set("r_base::is.na");
 
 	set.AddFunction(ScalarFunction({LogicalType::DOUBLE}, LogicalType::BOOLEAN, isna<true>));
+	set.AddFunction(ScalarFunction({LogicalType::ANY}, LogicalType::BOOLEAN, isna<false>));
+
 	return set;
 }
 
