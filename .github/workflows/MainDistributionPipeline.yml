@@ -85,7 +85,7 @@ jobs:
     needs:
       - duckdb-stable-build
       - matrix
-    uses: duckdb/extension-ci-tools/.github/workflows/_extension_deploy.yml@main
+    uses: krlmlr/extension-ci-tools/.github/workflows/_extension_deploy.yml@b-13-python
     secrets: inherit
     if: github.event_name != 'pull_request'
 
