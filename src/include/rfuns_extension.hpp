@@ -33,6 +33,9 @@ ScalarFunctionSet base_r_gte();
 
 ScalarFunctionSet binary_dispatch(ScalarFunctionSet fn) ;
 
+// is_na
+ScalarFunctionSet base_r_is_na();
+
 } // namespace rfuns
 
 class RfunsExtension : public Extension {
