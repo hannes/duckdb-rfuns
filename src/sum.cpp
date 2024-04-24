@@ -17,8 +17,8 @@ struct RSumKeepNaState {
 	bool is_null;
 };
 
-template <class ADDOP>
-struct RSumKeepNaOperation {
+template <class ADDOP, bool NA_RM>
+struct RSumOperation {
 
 	template <class STATE>
 	static void Initialize(STATE &state) {
@@ -28,14 +28,14 @@ struct RSumKeepNaOperation {
 	}
 
 	static bool IgnoreNull() {
-		return false;
+		return NA_RM;
 	}
 
 	template <class INPUT_TYPE, class STATE, class OP>
 	static void Operation(STATE &state, const INPUT_TYPE &input, AggregateUnaryInput &unary_input) {
 		if (state.is_null) return;
 		state.is_set = true;
-		if (!unary_input.RowIsValid()) {
+		if (!NA_RM && !unary_input.RowIsValid()) {
 			state.is_null = true;
 		} else {
 			ADDOP::template AddNumber<STATE, INPUT_TYPE>(state, input);
@@ -44,7 +44,7 @@ struct RSumKeepNaOperation {
 
 	template <class INPUT_TYPE, class STATE, class OP>
 	static void ConstantOperation(STATE &state, const INPUT_TYPE &input, AggregateUnaryInput &unary_input, idx_t count) {
-		if (!unary_input.RowIsValid()) {
+		if (!NA_RM && !unary_input.RowIsValid()) {
 			state.is_null = true;
 		} else {
 			ADDOP::template AddConstant<STATE, INPUT_TYPE>(state, input, count);
@@ -60,7 +60,7 @@ struct RSumKeepNaOperation {
 
 	template <class T, class STATE>
 	static void Finalize(STATE &state, T &target, AggregateFinalizeData &finalize_data) {
-		if (!state.is_set || state.is_null) {
+		if (state.is_null) {
 			finalize_data.ReturnNull();
 		} else {
 			target = state.value;
@@ -69,20 +69,30 @@ struct RSumKeepNaOperation {
 };
 
 unique_ptr<FunctionData> BindRSum(ClientContext &context, AggregateFunction &function, vector<unique_ptr<Expression>> &arguments) {
+	auto type = arguments[0]->return_type;
 	auto na_rm = arguments[1]->ToString() == "true";
 	if (na_rm) {
 		// na.rm = TRUE, just use the regular duckdb function
-		function = SumFun::GetFunctions().GetFunctionByArguments(context, {arguments[0]->return_type});
+		switch (type.id()) {
+		case LogicalTypeId::DOUBLE:
+			function = AggregateFunction::UnaryAggregate<RSumKeepNaState<double>, double, double, RSumOperation<RegularAdd, true>>(type, type);
+			break;
+		case LogicalTypeId::INTEGER:
+			function = AggregateFunction::UnaryAggregate<RSumKeepNaState<hugeint_t>, int32_t, hugeint_t, RSumOperation<HugeintAdd, true>>(type, type);
+			break;
+		default:
+			break;
+		}
+
 	} else {
 		// na.rm = FALSE
 		// use a custom function that does not ignore nulls and returns null if there are any
-		auto type = arguments[0]->return_type;
 		switch (type.id()) {
 		case LogicalTypeId::DOUBLE:
-			function = AggregateFunction::UnaryAggregate<RSumKeepNaState<double>, double, double, RSumKeepNaOperation<RegularAdd>>(type, type);
+			function = AggregateFunction::UnaryAggregate<RSumKeepNaState<double>, double, double, RSumOperation<RegularAdd, false>>(type, type);
 			break;
 		case LogicalTypeId::INTEGER:
-			function = AggregateFunction::UnaryAggregate<RSumKeepNaState<hugeint_t>, int32_t, hugeint_t, RSumKeepNaOperation<HugeintAdd>>(type, type);
+			function = AggregateFunction::UnaryAggregate<RSumKeepNaState<hugeint_t>, int32_t, hugeint_t, RSumOperation<HugeintAdd, false>>(type, type);
 			break;
 		default:
 			break;
