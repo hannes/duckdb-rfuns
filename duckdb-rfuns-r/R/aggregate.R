@@ -1,16 +1,30 @@
+#' sum
+#'
+#' @param x vector
+#' @param na.rm should the missing values be removed
+#'
+#' @examples
+#' rfuns_sum(1:10)
+#'
+#' @export
 rfuns_sum <- function(x, na.rm = TRUE) {
+  rfuns_aggregate("sum", tibble(x = x), na.rm = na.rm)
+}
+
+rfuns_aggregate <- function(fun, data, ...) {
   con <- local_duckdb_con()
 
-  in_df <- tibble::tibble(x = x)
+  names(data) <- paste("x", seq_len(ncol(data)), sep = "")
+  in_df <- as_tibble(data)
   in_rel <- duckdb:::rel_from_df(con, in_df)
+
+  refs <- map(names(data), duckdb:::expr_reference)
+  constants <- map(list2(...), duckdb:::expr_constant)
 
   exprs <- list(
     duckdb:::expr_function(
-      "r_base::sum",
-      list(
-        duckdb:::expr_reference("x"),
-        duckdb:::expr_constant(TRUE)
-      )
+      paste0("r_base::", fun),
+      list2(!!!refs, !!!constants)
     )
   )
 
@@ -20,3 +34,4 @@ rfuns_sum <- function(x, na.rm = TRUE) {
     duckdb:::rel_to_altrep(agg)[, 1][]
   })
 }
+
