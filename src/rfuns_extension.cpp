@@ -35,6 +35,8 @@ static void register_rfuns(DatabaseInstance &instance) {
 
 	// sum
 	ExtensionUtil::RegisterFunction(instance, base_r_sum());
+	ExtensionUtil::RegisterFunction(instance, base_r_min());
+	ExtensionUtil::RegisterFunction(instance, base_r_max());
 }
 }  // namespace rfuns
 

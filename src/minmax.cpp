@@ -23,7 +23,6 @@ struct RMinMaxOperation {
 	static void Initialize(STATE &state) {
 		state.is_set = false;
 		state.is_null = false;
-		state.value = 0;
 	}
 
 	static bool IgnoreNull() {
@@ -34,7 +33,6 @@ struct RMinMaxOperation {
 	static void Operation(STATE &state, const INPUT_TYPE &input, AggregateUnaryInput &unary_input) {
 		if (state.is_null) return;
 
-		state.is_set = true;
 		if (!NA_RM && !unary_input.RowIsValid()) {
 			state.is_null = true;
 		} else if (!state.is_set ){
@@ -61,6 +59,10 @@ struct RMinMaxOperation {
 
 	template <class STATE, class OP>
 	static void Combine(const STATE &source, STATE &target, AggregateInputData &) {
+		if (!source.is_set) {
+			return;
+		}
+
 		if (!target.is_set) {
 			target = source;
 		}
@@ -68,7 +70,7 @@ struct RMinMaxOperation {
 
 	template <class T, class STATE>
 	static void Finalize(STATE &state, T &target, AggregateFinalizeData &finalize_data) {
-		if (state.is_null) {
+		if (state.is_null || !state.is_set) {
 			finalize_data.ReturnNull();
 		} else {
 			target = state.value;
@@ -83,6 +85,7 @@ struct RMinOperation {
 			state.value = input;
 		}
 	}
+
 };
 
 struct RMaxOperation {
@@ -142,11 +145,11 @@ AggregateFunctionSet base_r_minmax(std::string name) {
 }
 
 AggregateFunctionSet base_r_min() {
-	return base_r_minmax<RMinOperation>("base_r::min");
+	return base_r_minmax<RMinOperation>("r_base::min");
 }
 
 AggregateFunctionSet base_r_max() {
-	return base_r_minmax<RMaxOperation>("base_r::max");
+	return base_r_minmax<RMaxOperation>("r_base::max");
 }
 
 

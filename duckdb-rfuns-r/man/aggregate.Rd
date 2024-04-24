@@ -2,9 +2,15 @@
 % Please edit documentation in R/aggregate.R
 \name{rfuns_sum}
 \alias{rfuns_sum}
-\title{sum}
+\alias{rfuns_min}
+\alias{rfuns_max}
+\title{aggregate function}
 \usage{
 rfuns_sum(x, na.rm = TRUE)
+
+rfuns_min(x, na.rm = TRUE)
+
+rfuns_max(x, na.rm = TRUE)
 }
 \arguments{
 \item{x}{vector}
@@ -12,9 +18,11 @@ rfuns_sum(x, na.rm = TRUE)
 \item{na.rm}{should the missing values be removed}
 }
 \description{
-sum
+aggregate function
 }
 \examples{
 rfuns_sum(1:10)
+rfuns_min(1:10)
+rfuns_max(1:10)
 
 }

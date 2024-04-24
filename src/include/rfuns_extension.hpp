@@ -33,6 +33,8 @@ ScalarFunctionSet base_r_gte();
 
 // sum
 AggregateFunctionSet base_r_sum();
+AggregateFunctionSet base_r_min();
+AggregateFunctionSet base_r_max();
 
 ScalarFunctionSet binary_dispatch(ScalarFunctionSet fn) ;
 
