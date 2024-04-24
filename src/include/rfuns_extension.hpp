@@ -31,6 +31,9 @@ ScalarFunctionSet base_r_lte();
 ScalarFunctionSet base_r_gt();
 ScalarFunctionSet base_r_gte();
 
+// sum
+AggregateFunctionSet base_r_sum();
+
 ScalarFunctionSet binary_dispatch(ScalarFunctionSet fn) ;
 
 // is_na
