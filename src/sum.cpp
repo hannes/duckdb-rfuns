@@ -68,35 +68,28 @@ struct RSumOperation {
 	}
 };
 
-unique_ptr<FunctionData> BindRSum(ClientContext &context, AggregateFunction &function, vector<unique_ptr<Expression>> &arguments) {
+template <bool NA_RM>
+void BindRSum_dispatch(ClientContext &context, AggregateFunction &function, vector<unique_ptr<Expression>> &arguments) {
 	auto type = arguments[0]->return_type;
+
+	switch (type.id()) {
+	case LogicalTypeId::DOUBLE:
+		function = AggregateFunction::UnaryAggregate<RSumKeepNaState<double>, double, double, RSumOperation<RegularAdd, NA_RM>>(type, type);
+		break;
+	case LogicalTypeId::INTEGER:
+		function = AggregateFunction::UnaryAggregate<RSumKeepNaState<hugeint_t>, int32_t, hugeint_t, RSumOperation<HugeintAdd, NA_RM>>(type, type);
+		break;
+	default:
+		break;
+	}
+}
+
+unique_ptr<FunctionData> BindRSum(ClientContext &context, AggregateFunction &function, vector<unique_ptr<Expression>> &arguments) {
 	auto na_rm = arguments[1]->ToString() == "true";
 	if (na_rm) {
-		// na.rm = TRUE, just use the regular duckdb function
-		switch (type.id()) {
-		case LogicalTypeId::DOUBLE:
-			function = AggregateFunction::UnaryAggregate<RSumKeepNaState<double>, double, double, RSumOperation<RegularAdd, true>>(type, type);
-			break;
-		case LogicalTypeId::INTEGER:
-			function = AggregateFunction::UnaryAggregate<RSumKeepNaState<hugeint_t>, int32_t, hugeint_t, RSumOperation<HugeintAdd, true>>(type, type);
-			break;
-		default:
-			break;
-		}
-
+		BindRSum_dispatch<true>(context, function, arguments);
 	} else {
-		// na.rm = FALSE
-		// use a custom function that does not ignore nulls and returns null if there are any
-		switch (type.id()) {
-		case LogicalTypeId::DOUBLE:
-			function = AggregateFunction::UnaryAggregate<RSumKeepNaState<double>, double, double, RSumOperation<RegularAdd, false>>(type, type);
-			break;
-		case LogicalTypeId::INTEGER:
-			function = AggregateFunction::UnaryAggregate<RSumKeepNaState<hugeint_t>, int32_t, hugeint_t, RSumOperation<HugeintAdd, false>>(type, type);
-			break;
-		default:
-			break;
-		}
+		BindRSum_dispatch<false>(context, function, arguments);
 	}
 
 	return nullptr;
