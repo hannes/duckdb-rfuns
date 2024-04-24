@@ -26,6 +26,11 @@ test_that("r_base::sum(<DOUBLE>)", {
   expect_equal(rfuns_sum(NA_real_, na.rm = FALSE), NA_real_)
 })
 
+test_that("r_base::sum(<?>, na.rm = <VARCHAR>)", {
+  expect_snapshot(error = TRUE, rfuns_sum(1:10, na.rm = "hello"))
+  expect_snapshot(error = TRUE, rfuns_sum(c(1, 2, 3), na.rm = "hello"))
+})
+
 test_that("r_base::sum(<VARCHAR>", {
   expect_snapshot(error = TRUE, rfuns_sum("HufflePuff"))
 })
