@@ -79,6 +79,9 @@ void BindRSum_dispatch(ClientContext &context, AggregateFunction &function, vect
 	case LogicalTypeId::INTEGER:
 		function = AggregateFunction::UnaryAggregate<RSumKeepNaState<hugeint_t>, int32_t, hugeint_t, RSumOperation<HugeintAdd, NA_RM>>(type, type);
 		break;
+	case LogicalTypeId::BOOLEAN:
+		function = AggregateFunction::UnaryAggregate<RSumKeepNaState<int32_t>, bool, int32_t, RSumOperation<RegularAdd, NA_RM>>(LogicalType::BOOLEAN, LogicalType::INTEGER);
+		break;
 	default:
 		break;
 	}
@@ -96,8 +99,9 @@ unique_ptr<FunctionData> BindRSum(ClientContext &context, AggregateFunction &fun
 }
 
 AggregateFunction RSum(const LogicalType& type) {
+	auto return_type = type == LogicalType::BOOLEAN ? LogicalType::INTEGER : type;
 	return AggregateFunction(
-		{type, LogicalType::BOOLEAN}, type,
+		{type, LogicalType::BOOLEAN}, return_type,
 		nullptr, nullptr, nullptr, nullptr, nullptr, FunctionNullHandling::DEFAULT_NULL_HANDLING, nullptr,
 		BindRSum
 	);
@@ -106,6 +110,7 @@ AggregateFunction RSum(const LogicalType& type) {
 AggregateFunctionSet base_r_sum() {
 	AggregateFunctionSet set("r_base::sum");
 
+	set.AddFunction(RSum(LogicalType::BOOLEAN));
 	set.AddFunction(RSum(LogicalType::INTEGER));
 	set.AddFunction(RSum(LogicalType::DOUBLE));
 
