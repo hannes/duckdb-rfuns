@@ -69,10 +69,13 @@ struct RSumKeepNaOperation {
 };
 
 unique_ptr<FunctionData> BindRSum(ClientContext &context, AggregateFunction &function, vector<unique_ptr<Expression>> &arguments) {
-	auto& na_rm = arguments[1];
-
-	auto na_keep = na_rm->ToString() != "true";
-	if (na_keep) {
+	auto na_rm = arguments[1]->ToString() == "true";
+	if (na_rm) {
+		// na.rm = TRUE, just use the regular duckdb function
+		function = SumFun::GetFunctions().GetFunctionByArguments(context, {arguments[0]->return_type});
+	} else {
+		// na.rm = FALSE
+		// use a custom function that does not ignore nulls and returns null if there are any
 		auto type = arguments[0]->return_type;
 		switch (type.id()) {
 		case LogicalTypeId::DOUBLE:
@@ -84,8 +87,6 @@ unique_ptr<FunctionData> BindRSum(ClientContext &context, AggregateFunction &fun
 		default:
 			break;
 		}
-	} else {
-		function = SumFun::GetFunctions().GetFunctionByArguments(context, {arguments[0]->return_type});
 	}
 
 	return nullptr;
