@@ -106,7 +106,10 @@ void BindRMinMax_dispatch(ClientContext &context, AggregateFunction &function, v
 		function = AggregateFunction::UnaryAggregate<RMinMaxState<double>, double, double, RMinMaxOperation<OP, NA_RM>>(type, type);
 		break;
 	case LogicalTypeId::INTEGER:
-		function = AggregateFunction::UnaryAggregate<RMinMaxState<int32_t>, int32_t, hugeint_t, RMinMaxOperation<OP, NA_RM>>(type, type);
+		function = AggregateFunction::UnaryAggregate<RMinMaxState<int32_t>, int32_t, int32_t, RMinMaxOperation<OP, NA_RM>>(type, type);
+		break;
+	case LogicalTypeId::BOOLEAN:
+		function = AggregateFunction::UnaryAggregate<RMinMaxState<bool>, bool, bool, RMinMaxOperation<OP, NA_RM>>(type, type);
 		break;
 	default:
 		break;
@@ -138,6 +141,7 @@ template <typename OP>
 AggregateFunctionSet base_r_minmax(std::string name) {
 	AggregateFunctionSet set(name);
 
+	set.AddFunction(RMinMax<OP>(LogicalType::BOOLEAN));
 	set.AddFunction(RMinMax<OP>(LogicalType::INTEGER));
 	set.AddFunction(RMinMax<OP>(LogicalType::DOUBLE));
 

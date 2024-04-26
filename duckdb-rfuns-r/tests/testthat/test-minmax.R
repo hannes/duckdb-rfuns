@@ -1,4 +1,30 @@
 
+test_that("r_base::min+max(<BOOLEAN>)", {
+  expect_equal(rfuns_min(c(TRUE, FALSE)), FALSE)
+  expect_equal(rfuns_min(c(TRUE, FALSE, NA)), FALSE)
+
+  expect_equal(rfuns_min(c(TRUE, FALSE, NA), na.rm = TRUE), FALSE)
+  expect_equal(rfuns_min(c(TRUE, FALSE, NA), na.rm = FALSE), NA)
+
+  expect_equal(rfuns_min(logical(), na.rm = FALSE), NA)
+  expect_equal(rfuns_min(logical(), na.rm = TRUE), NA)
+
+  expect_equal(rfuns_min(NA, na.rm = TRUE), NA)
+  expect_equal(rfuns_min(NA, na.rm = FALSE), NA)
+
+  expect_equal(rfuns_max(c(TRUE, FALSE)), TRUE)
+  expect_equal(rfuns_max(c(TRUE, FALSE, NA)), TRUE)
+
+  expect_equal(rfuns_max(c(TRUE, FALSE, NA), na.rm = TRUE), TRUE)
+  expect_equal(rfuns_max(c(TRUE, FALSE, NA), na.rm = FALSE), NA)
+
+  expect_equal(rfuns_max(logical(), na.rm = FALSE), NA)
+  expect_equal(rfuns_max(logical(), na.rm = TRUE), NA)
+
+  expect_equal(rfuns_max(NA, na.rm = TRUE), NA)
+  expect_equal(rfuns_max(NA, na.rm = FALSE), NA)
+})
+
 test_that("r_base::min+max(<INTEGER>)", {
   expect_equal(rfuns_min(1:10), 1)
   expect_equal(rfuns_min(c(1:10, NA)), 1)
@@ -54,5 +80,6 @@ test_that("r_base::min+max(<DOUBLE>)", {
 })
 
 test_that("r_base::min+max(<VARCHAR>", {
-  expect_snapshot(error = TRUE, rfuns_sum("HufflePuff"))
+  expect_snapshot(error = TRUE, rfuns_min("HufflePuff"))
+  expect_snapshot(error = TRUE, rfuns_max("HufflePuff"))
 })
