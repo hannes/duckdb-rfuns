@@ -5,6 +5,34 @@
 namespace duckdb {
 namespace rfuns {
 
+template <LogicalTypeId LOGICAL_TYPE>
+struct physical ;
+
+template <>
+struct physical<LogicalType::BOOLEAN> {
+	using type = bool;
+};
+template <>
+struct physical<LogicalType::INTEGER> {
+	using type = int32_t;
+};
+template <>
+struct physical<LogicalType::DOUBLE> {
+	using type = double;
+};
+template <>
+struct physical<LogicalType::VARCHAR> {
+	using type = string_t;
+};
+template <>
+struct physical<LogicalType::TIMESTAMP> {
+	using type = timestamp_t;
+};
+template <>
+struct physical<LogicalType::DATE> {
+	using type = date_t;
+};
+
 struct BinaryChunk {
 	duckdb::Vector &lefts;
 	duckdb::Vector &rights;
@@ -33,6 +61,8 @@ ScalarFunctionSet base_r_gte();
 
 // sum
 AggregateFunctionSet base_r_sum();
+AggregateFunctionSet base_r_min();
+AggregateFunctionSet base_r_max();
 
 ScalarFunctionSet binary_dispatch(ScalarFunctionSet fn) ;
 

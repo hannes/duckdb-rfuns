@@ -1,14 +1,29 @@
-#' sum
+#' aggregate functions
 #'
 #' @param x vector
-#' @param na.rm should the missing values be removed
+#' @param ... passed down, e.g. na.rm
 #'
 #' @examples
-#' rfuns_sum(1:10)
+#' rfuns_sum(1:10, na.rm = FALSE)
+#' rfuns_min(1:10, na.rm = FALSE)
+#' rfuns_max(1:10, na.rm = FALSE)
 #'
+#' @rdname aggregate
 #' @export
-rfuns_sum <- function(x, na.rm = TRUE) {
-  rfuns_aggregate("sum", tibble(x = x), na.rm = na.rm)
+rfuns_sum <- function(x, ...) {
+  rfuns_aggregate("sum", tibble(x = x), ...)
+}
+
+#' @rdname aggregate
+#' @export
+rfuns_min <- function(x, ...) {
+  rfuns_aggregate("min", tibble(x = x), ...)
+}
+
+#' @rdname aggregate
+#' @export
+rfuns_max <- function(x, ...) {
+  rfuns_aggregate("max", tibble(x = x), ...)
 }
 
 rfuns_aggregate <- function(fun, data, ...) {
