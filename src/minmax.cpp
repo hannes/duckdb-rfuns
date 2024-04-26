@@ -97,43 +97,25 @@ struct RMaxOperation {
 	}
 };
 
-template <typename OP, bool NA_RM>
-void BindRMinMax_dispatch(ClientContext &context, AggregateFunction &function, vector<unique_ptr<Expression>> &arguments) {
-	auto type = arguments[0]->return_type;
-
-	switch (type.id()) {
-	case LogicalTypeId::DOUBLE:
-		function = AggregateFunction::UnaryAggregate<RMinMaxState<double>, double, double, RMinMaxOperation<OP, NA_RM>>(type, type);
-		break;
-	case LogicalTypeId::INTEGER:
-		function = AggregateFunction::UnaryAggregate<RMinMaxState<int32_t>, int32_t, int32_t, RMinMaxOperation<OP, NA_RM>>(type, type);
-		break;
-	case LogicalTypeId::BOOLEAN:
-		function = AggregateFunction::UnaryAggregate<RMinMaxState<bool>, bool, bool, RMinMaxOperation<OP, NA_RM>>(type, type);
-		break;
-	default:
-		break;
-	}
-}
-
-template <typename OP>
+template <typename OP, typename T>
 unique_ptr<FunctionData> BindRMinMax(ClientContext &context, AggregateFunction &function, vector<unique_ptr<Expression>> &arguments) {
 	auto na_rm = arguments[1]->ToString() == "true";
+	auto type = arguments[0]->return_type;
 	if (na_rm) {
-		BindRMinMax_dispatch<OP, true>(context, function, arguments);
+		function = AggregateFunction::UnaryAggregate<RMinMaxState<T>, T, T, RMinMaxOperation<OP, true>>(type, type) ;
 	} else {
-		BindRMinMax_dispatch<OP, false>(context, function, arguments);
+		function = AggregateFunction::UnaryAggregate<RMinMaxState<T>, T, T, RMinMaxOperation<OP, false>>(type, type) ;
 	}
 
 	return nullptr;
 }
 
-template <typename OP>
-AggregateFunction RMinMax(const LogicalType& type) {
+template <typename OP, LogicalTypeId TYPE>
+AggregateFunction RMinMax() {
 	return AggregateFunction(
-		{type, LogicalType::BOOLEAN}, type,
+		{TYPE, LogicalType::BOOLEAN}, TYPE,
 		nullptr, nullptr, nullptr, nullptr, nullptr, FunctionNullHandling::DEFAULT_NULL_HANDLING, nullptr,
-		BindRMinMax<OP>
+		BindRMinMax<OP, typename physical<TYPE>::type>
 	);
 }
 
@@ -141,9 +123,10 @@ template <typename OP>
 AggregateFunctionSet base_r_minmax(std::string name) {
 	AggregateFunctionSet set(name);
 
-	set.AddFunction(RMinMax<OP>(LogicalType::BOOLEAN));
-	set.AddFunction(RMinMax<OP>(LogicalType::INTEGER));
-	set.AddFunction(RMinMax<OP>(LogicalType::DOUBLE));
+	set.AddFunction(RMinMax<OP, LogicalType::BOOLEAN>());
+	set.AddFunction(RMinMax<OP, LogicalType::INTEGER>());
+	set.AddFunction(RMinMax<OP, LogicalType::DOUBLE>());
+	set.AddFunction(RMinMax<OP, LogicalType::TIMESTAMP>());
 
 	return set;
 }
