@@ -4,20 +4,28 @@ test_that("r_base::sum(<BOOLEAN>)", {
 
   expect_equal(rfuns_sum(x, na.rm = TRUE) , sum(x, na.rm = TRUE))
   expect_equal(rfuns_sum(x, na.rm = FALSE), sum(x, na.rm = FALSE))
-
   expect_equal(rfuns_sum(empty, na.rm = FALSE), sum(empty, na.rm = TRUE))
   expect_equal(rfuns_sum(empty, na.rm = TRUE) , sum(empty, na.rm = FALSE))
+
+  expect_equal(rfuns_sum(x) , sum(x))
+  expect_equal(rfuns_sum(x), sum(x))
+  expect_equal(rfuns_sum(empty), sum(empty))
+  expect_equal(rfuns_sum(empty), sum(empty))
 })
 
 test_that("r_base::sum(<INTEGER>)", {
-  x <- c(1L, 2L, 3L, NA)
+  x <- c(1L, 2L, 4L, NA)
   empty <- integer()
 
   expect_equal(rfuns_sum(x, na.rm = TRUE) , sum(x, na.rm = TRUE))
   expect_equal(rfuns_sum(x, na.rm = FALSE), sum(x, na.rm = FALSE))
-
   expect_equal(rfuns_sum(empty, na.rm = FALSE), sum(empty, na.rm = TRUE))
   expect_equal(rfuns_sum(empty, na.rm = TRUE) , sum(empty, na.rm = FALSE))
+
+  expect_equal(rfuns_sum(x) , sum(x))
+  expect_equal(rfuns_sum(x), sum(x))
+  expect_equal(rfuns_sum(empty), sum(empty))
+  expect_equal(rfuns_sum(empty), sum(empty))
 })
 
 test_that("r_base::sum(<DOUBLE>)", {
@@ -26,10 +34,13 @@ test_that("r_base::sum(<DOUBLE>)", {
 
   expect_equal(rfuns_sum(x, na.rm = TRUE) , sum(x, na.rm = TRUE))
   expect_equal(rfuns_sum(x, na.rm = FALSE), sum(x, na.rm = FALSE))
-
   expect_equal(rfuns_sum(empty, na.rm = FALSE), sum(empty, na.rm = TRUE))
   expect_equal(rfuns_sum(empty, na.rm = TRUE) , sum(empty, na.rm = FALSE))
 
+  expect_equal(rfuns_sum(x) , sum(x))
+  expect_equal(rfuns_sum(x), sum(x))
+  expect_equal(rfuns_sum(empty), sum(empty))
+  expect_equal(rfuns_sum(empty), sum(empty))
 })
 
 test_that("r_base::sum(<?>, na.rm = <VARCHAR>)", {
@@ -40,4 +51,6 @@ test_that("r_base::sum(<?>, na.rm = <VARCHAR>)", {
 
 test_that("r_base::sum(<VARCHAR>", {
   expect_snapshot(error = TRUE, rfuns_sum("HufflePuff"))
+  expect_snapshot(error = TRUE, rfuns_sum("HufflePuff", na.rm = TRUE))
+  expect_snapshot(error = TRUE, rfuns_sum("HufflePuff", na.rm = FALSE))
 })

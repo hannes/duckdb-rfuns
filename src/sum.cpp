@@ -24,7 +24,6 @@ struct RSumOperation {
 	static void Initialize(STATE &state) {
 		state.is_set = false;
 		state.is_null = false;
-		state.value = 0;
 	}
 
 	static bool IgnoreNull() {
@@ -34,10 +33,12 @@ struct RSumOperation {
 	template <class INPUT_TYPE, class STATE, class OP>
 	static void Operation(STATE &state, const INPUT_TYPE &input, AggregateUnaryInput &unary_input) {
 		if (state.is_null) return;
-		state.is_set = true;
 		if (!NA_RM && !unary_input.RowIsValid()) {
 			state.is_null = true;
 		} else {
+			if (!state.is_set) {
+				state.is_set = true;
+			}
 			ADDOP::template AddNumber<STATE, INPUT_TYPE>(state, input);
 		}
 	}
@@ -47,6 +48,9 @@ struct RSumOperation {
 		if (!NA_RM && !unary_input.RowIsValid()) {
 			state.is_null = true;
 		} else {
+			if (!state.is_set) {
+				state.is_set = true;
+			}
 			ADDOP::template AddConstant<STATE, INPUT_TYPE>(state, input, count);
 		}
 	}
@@ -69,7 +73,7 @@ struct RSumOperation {
 };
 
 template <bool NA_RM>
-void BindRSum_dispatch(ClientContext &context, AggregateFunction &function, vector<unique_ptr<Expression>> &arguments) {
+unique_ptr<FunctionData> BindRSum_dispatch(ClientContext &context, AggregateFunction &function, vector<unique_ptr<Expression>> &arguments) {
 	auto type = arguments[0]->return_type;
 
 	switch (type.id()) {
@@ -85,34 +89,40 @@ void BindRSum_dispatch(ClientContext &context, AggregateFunction &function, vect
 	default:
 		break;
 	}
+
+	return nullptr;
 }
 
 unique_ptr<FunctionData> BindRSum(ClientContext &context, AggregateFunction &function, vector<unique_ptr<Expression>> &arguments) {
 	auto na_rm = arguments[1]->ToString() == "true";
 	if (na_rm) {
-		BindRSum_dispatch<true>(context, function, arguments);
+		return BindRSum_dispatch<true>(context, function, arguments);
 	} else {
-		BindRSum_dispatch<false>(context, function, arguments);
+		return BindRSum_dispatch<false>(context, function, arguments);
 	}
-
-	return nullptr;
 }
 
-AggregateFunction RSum(const LogicalType& type) {
+void add_RSum(AggregateFunctionSet& set, const LogicalType& type) {
 	auto return_type = type == LogicalType::BOOLEAN ? LogicalType::INTEGER : type;
-	return AggregateFunction(
+	set.AddFunction(AggregateFunction(
 		{type, LogicalType::BOOLEAN}, return_type,
 		nullptr, nullptr, nullptr, nullptr, nullptr, FunctionNullHandling::DEFAULT_NULL_HANDLING, nullptr,
 		BindRSum
-	);
+	));
+
+	set.AddFunction(AggregateFunction(
+		{type}, return_type,
+		nullptr, nullptr, nullptr, nullptr, nullptr, FunctionNullHandling::DEFAULT_NULL_HANDLING, nullptr,
+		BindRSum_dispatch<false>
+	));
 }
 
 AggregateFunctionSet base_r_sum() {
 	AggregateFunctionSet set("r_base::sum");
 
-	set.AddFunction(RSum(LogicalType::BOOLEAN));
-	set.AddFunction(RSum(LogicalType::INTEGER));
-	set.AddFunction(RSum(LogicalType::DOUBLE));
+	add_RSum(set, LogicalType::BOOLEAN);
+	add_RSum(set, LogicalType::INTEGER);
+	add_RSum(set, LogicalType::DOUBLE);
 
 	return set;
 }
