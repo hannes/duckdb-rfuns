@@ -1,3 +1,14 @@
+test_that("r_base::min+max(<DATE>)", {
+  x <- c(Sys.Date(), Sys.Date(), NA)
+
+  expect_equal(rfuns_min(x, na.rm = FALSE), min(x, na.rm = FALSE), ignore_attr = TRUE)
+  expect_equal(rfuns_min(x, na.rm = TRUE) , min(x, na.rm = TRUE) , ignore_attr = TRUE)
+  expect_equal(rfuns_min(x) , min(x) , ignore_attr = TRUE)
+  expect_equal(rfuns_max(x, na.rm = FALSE), max(x, na.rm = FALSE), ignore_attr = TRUE)
+  expect_equal(rfuns_max(x, na.rm = TRUE) , max(x, na.rm = TRUE) , ignore_attr = TRUE)
+  expect_equal(rfuns_max(x) , max(x) , ignore_attr = TRUE)
+})
+
 test_that("r_base::min+max(<TIMESTAMP>)", {
   x <- c(Sys.time(), Sys.time() + 1, NA)
 

@@ -137,6 +137,7 @@ AggregateFunctionSet base_r_minmax(std::string name) {
 	add_RMinMax<OP, LogicalType::INTEGER>(set);
 	add_RMinMax<OP, LogicalType::DOUBLE>(set);
 	add_RMinMax<OP, LogicalType::TIMESTAMP>(set);
+	add_RMinMax<OP, LogicalType::DATE>(set);
 
 	return set;
 }
