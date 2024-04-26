@@ -196,34 +196,6 @@ void RelopExecute(DataChunk &args, ExpressionState &state, Vector &result) {
 	RelopExecuteDispatch<LHS_LOGICAL, LHS_TYPE, RHS_LOGICAL, RHS_TYPE, OP>(args, state, result, typename relop_adds_null<LHS_TYPE, RHS_TYPE>::type());
 }
 
-template <LogicalTypeId LOGICAL_TYPE>
-struct physical ;
-
-template <>
-struct physical<LogicalType::BOOLEAN> {
-	using type = bool;
-};
-template <>
-struct physical<LogicalType::INTEGER> {
-	using type = int32_t;
-};
-template <>
-struct physical<LogicalType::DOUBLE> {
-	using type = double;
-};
-template <>
-struct physical<LogicalType::VARCHAR> {
-	using type = string_t;
-};
-template <>
-struct physical<LogicalType::TIMESTAMP> {
-	using type = timestamp_t;
-};
-template <>
-struct physical<LogicalType::DATE> {
-	using type = date_t;
-};
-
 #define RELOP_VARIANT(__LHS__, __RHS__) ScalarFunction(                      \
 	/* arguments   = */ {LogicalType::__LHS__, LogicalType::__RHS__},        \
 	/* return_type = */ LogicalType::BOOLEAN,                                \

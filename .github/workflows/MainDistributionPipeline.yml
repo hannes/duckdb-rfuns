@@ -34,19 +34,18 @@ jobs:
             {
               echo
 
-              # Enable after CRAN 0.10 release
-              #gh api \
-              #  /repos/cran/duckdb/contents/src/duckdb/src/function/table/version/pragma_version.cpp \
-              #  -H "Accept: application/vnd.github+json" --jq '.content' | base64 -d | \
-              #  sed -nr '/^#define DUCKDB_SOURCE_ID "(.*)"/s//\1/p'
+              gh api \
+                /repos/cran/duckdb/contents/src/duckdb/src/function/table/version/pragma_version.cpp \
+                -H "Accept: application/vnd.github+json" --jq '.content' | base64 -d | \
+                sed -nr '/^#define DUCKDB_SOURCE_ID "(.*)"/s//\1/p'
 
               gh api \
                 /repos/duckdb/duckdb-r/contents/src/duckdb/src/function/table/version/pragma_version.cpp \
                 -H "Accept: application/vnd.github+json" --jq '.content' | base64 -d | \
                 sed -nr '/^#define DUCKDB_SOURCE_ID "(.*)"/s//\1/p'
 
-              gh api /repos/duckdb/duckdb/tags --jq '.[0].commit.sha'
-            } | uniq | jq -c -R '{version: [inputs|scan(".+")]}'
+              gh api /repos/duckdb/duckdb/tags --jq '.[].commit.sha' | head -n 2
+            } | cut -c-10 | sort | uniq | jq -c -R '{version: [inputs|scan(".+")]}'
           )
           echo $matrix
           echo $matrix | jq .
@@ -70,7 +69,7 @@ jobs:
   duckdb-stable-build:
     name: Build extension binaries
     needs: matrix
-    uses: duckdb/duckdb/.github/workflows/_extension_distribution.yml@v0.10.1
+    uses: krlmlr/extension-ci-tools/.github/workflows/_extension_distribution.yml@b-13-python
 
     strategy:
       fail-fast: false
@@ -83,7 +82,7 @@ jobs:
 
   duckdb-stable-deploy:
     name: Deploy extension binaries
-    needs: 
+    needs:
       - duckdb-stable-build
       - matrix
     uses: ./.github/workflows/_extension_deploy.yml
