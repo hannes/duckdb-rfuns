@@ -10,20 +10,20 @@
 #'
 #' @rdname aggregate
 #' @export
-rfuns_sum <- function(x, na.rm = TRUE) {
-  rfuns_aggregate("sum", tibble(x = x), na.rm = na.rm)
+rfuns_sum <- function(x, ...) {
+  rfuns_aggregate("sum", tibble(x = x), ...)
 }
 
 #' @rdname aggregate
 #' @export
-rfuns_min <- function(x, na.rm = TRUE) {
-  rfuns_aggregate("min", tibble(x = x), na.rm = na.rm)
+rfuns_min <- function(x, ...) {
+  rfuns_aggregate("min", tibble(x = x), ...)
 }
 
 #' @rdname aggregate
 #' @export
-rfuns_max <- function(x, na.rm = TRUE) {
-  rfuns_aggregate("max", tibble(x = x), na.rm = na.rm)
+rfuns_max <- function(x, ...) {
+  rfuns_aggregate("max", tibble(x = x), ...)
 }
 
 rfuns_aggregate <- function(fun, data, ...) {
