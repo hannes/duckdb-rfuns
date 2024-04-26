@@ -1,3 +1,7 @@
+#' is.na()
+#'
+#' @param x vector
+#'
 #' @export
 rfuns_is.na <- function(x) {
   rfuns_project("is.na", tibble(x = x))
