@@ -33,7 +33,7 @@ static void register_rfuns(DatabaseInstance &instance) {
 	register_binary(instance, base_r_gt());
 	register_binary(instance, base_r_gte());
 
-	// sum
+	ExtensionUtil::RegisterFunction(instance, base_r_is_na());
 	ExtensionUtil::RegisterFunction(instance, base_r_sum());
 	ExtensionUtil::RegisterFunction(instance, base_r_min());
 	ExtensionUtil::RegisterFunction(instance, base_r_max());

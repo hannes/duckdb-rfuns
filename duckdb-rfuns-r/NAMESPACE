@@ -2,6 +2,7 @@
 
 export(rfuns_max)
 export(rfuns_min)
+export(rfuns_is.na)
 export(rfuns_sum)
 import(DBI)
 import(cli)

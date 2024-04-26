@@ -12,6 +12,7 @@ include_directories(src/include)
 set(EXTENSION_SOURCES src/rfuns_extension.cpp 
                       src/add.cpp
                       src/relop.cpp
+                      src/is_na.cpp
                       src/dispatch.cpp
                       src/sum.cpp
                       src/minmax.cpp)
