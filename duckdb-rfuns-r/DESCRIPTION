@@ -17,6 +17,7 @@ Imports:
     glue,
     purrr,
     rlang,
+    slap,
     tibble,
     withr
 Suggests: 
