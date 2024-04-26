@@ -45,7 +45,7 @@ jobs:
                 sed -nr '/^#define DUCKDB_SOURCE_ID "(.*)"/s//\1/p'
 
               gh api /repos/duckdb/duckdb/tags --jq '.[].commit.sha' | head -n 2
-            } | cut -c-10 | uniq | jq -c -R '{version: [inputs|scan(".+")]}'
+            } | cut -c-10 | sort | uniq | jq -c -R '{version: [inputs|scan(".+")]}'
           )
           echo $matrix
           echo $matrix | jq .
@@ -69,7 +69,7 @@ jobs:
   duckdb-stable-build:
     name: Build extension binaries
     needs: matrix
-    uses: duckdb/duckdb/.github/workflows/_extension_distribution.yml@v0.10.2
+    uses: krlmlr/extension-ci-tools/.github/workflows/_extension_distribution.yml@b-13-python
 
     strategy:
       fail-fast: false
