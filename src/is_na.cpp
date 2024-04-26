@@ -56,6 +56,13 @@ void isna_any(DataChunk &args, ExpressionState &state, Vector &result) {
 	result.SetVectorType(VectorType::FLAT_VECTOR);
 	auto result_data = FlatVector::GetData<bool>(result);
 
+	if (mask.AllValid()) {
+		for (idx_t i = 0; i < count; i++) {
+			result_data[i] = false;
+		}
+		return;
+	}
+
 	idx_t base_idx = 0;
 	auto entry_count = ValidityMask::EntryCount(count);
 	for (idx_t entry_idx = 0; entry_idx < entry_count; entry_idx++) {
