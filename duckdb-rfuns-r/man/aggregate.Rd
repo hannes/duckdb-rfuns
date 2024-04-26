@@ -4,25 +4,25 @@
 \alias{rfuns_sum}
 \alias{rfuns_min}
 \alias{rfuns_max}
-\title{aggregate function}
+\title{aggregate functions}
 \usage{
-rfuns_sum(x, na.rm = TRUE)
+rfuns_sum(x, ...)
 
-rfuns_min(x, na.rm = TRUE)
+rfuns_min(x, ...)
 
-rfuns_max(x, na.rm = TRUE)
+rfuns_max(x, ...)
 }
 \arguments{
 \item{x}{vector}
 
-\item{na.rm}{should the missing values be removed}
+\item{...}{passed down, e.g. na.rm}
 }
 \description{
-aggregate function
+aggregate functions
 }
 \examples{
-rfuns_sum(1:10)
-rfuns_min(1:10)
-rfuns_max(1:10)
+rfuns_sum(1:10, na.rm = FALSE)
+rfuns_min(1:10, na.rm = FALSE)
+rfuns_max(1:10, na.rm = FALSE)
 
 }

@@ -1,12 +1,12 @@
 #' aggregate functions
 #'
 #' @param x vector
-#' @param na.rm should the missing values be removed
+#' @param ... passed down, e.g. na.rm
 #'
 #' @examples
-#' rfuns_sum(1:10)
-#' rfuns_min(1:10)
-#' rfuns_max(1:10)
+#' rfuns_sum(1:10, na.rm = FALSE)
+#' rfuns_min(1:10, na.rm = FALSE)
+#' rfuns_max(1:10, na.rm = FALSE)
 #'
 #' @rdname aggregate
 #' @export
