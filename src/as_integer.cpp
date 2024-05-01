@@ -35,6 +35,11 @@ int32_t cast<string_t>(string_t input, ValidityMask &mask, idx_t idx) {
 	return cast<double>(result, mask, idx);
 }
 
+template <>
+int32_t cast<date_t>(date_t input, ValidityMask &mask, idx_t idx) {
+	return input.days;
+}
+
 template <LogicalTypeId TYPE>
 ScalarFunction AsIntegerFunction() {
 	using physical_type = typename physical<TYPE>::type;
@@ -57,6 +62,8 @@ ScalarFunctionSet base_r_as_integer() {
 	set.AddFunction(AsIntegerFunction<LogicalType::DOUBLE>());
 
 	set.AddFunction(AsIntegerFunction<LogicalType::VARCHAR>());
+
+	set.AddFunction(AsIntegerFunction<LogicalType::DATE>());
 
 	return set;
 }

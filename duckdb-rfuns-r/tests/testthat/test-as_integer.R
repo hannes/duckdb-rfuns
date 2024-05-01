@@ -36,3 +36,11 @@ test_that("as.integer(<VARCHAR>", {
   expect_equal(rfuns_as.integer("x"), NA_integer_)
   expect_equal(rfuns_as.integer(NA_character_), NA_integer_)
 })
+
+test_that("as.integer(<DATE>", {
+  date <- Sys.Date()
+  expect_equal(rfuns_as.integer(date), as.integer(date))
+
+  date[] <- NA
+  expect_equal(rfuns_as.integer(date), as.integer(date))
+})
