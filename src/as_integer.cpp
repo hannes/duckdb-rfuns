@@ -35,26 +35,28 @@ int32_t cast<string_t>(string_t input, ValidityMask &mask, idx_t idx) {
 	return cast<double>(result, mask, idx);
 }
 
+template <LogicalTypeId TYPE>
+ScalarFunction AsIntegerFunction() {
+	using physical_type = typename physical<TYPE>::type;
+
+	auto fun = [](DataChunk &args, ExpressionState &state, Vector &result) {
+		UnaryExecutor::ExecuteWithNulls<physical_type, int32_t>(
+			args.data[0], result, args.size(), cast<physical_type>
+		);
+	};
+	return ScalarFunction({TYPE}, LogicalType::INTEGER, fun);
 }
 
-#define AS_INTEGER(__TYPE__) ScalarFunction(                                                      \
-	{LogicalType::__TYPE__},                                                                      \
-	LogicalType::INTEGER,                                                                         \
-	[](DataChunk &args, ExpressionState &state, Vector &result) {                                 \
-		UnaryExecutor::ExecuteWithNulls<typename physical<LogicalType::__TYPE__>::type, int32_t>( \
-			args.data[0], result, args.size(),                                                    \
-			cast<typename physical<LogicalType::__TYPE__>::type>                                  \
-		);                                                                                        \
-	})
+}
 
 ScalarFunctionSet base_r_as_integer() {
 	ScalarFunctionSet set("r_base::as.integer");
 
-	set.AddFunction(AS_INTEGER(BOOLEAN));
-	set.AddFunction(AS_INTEGER(INTEGER));
-	set.AddFunction(AS_INTEGER(DOUBLE));
+	set.AddFunction(AsIntegerFunction<LogicalType::BOOLEAN>());
+	set.AddFunction(AsIntegerFunction<LogicalType::INTEGER>());
+	set.AddFunction(AsIntegerFunction<LogicalType::DOUBLE>());
 
-	set.AddFunction(AS_INTEGER(VARCHAR));
+	set.AddFunction(AsIntegerFunction<LogicalType::VARCHAR>());
 
 	return set;
 }
