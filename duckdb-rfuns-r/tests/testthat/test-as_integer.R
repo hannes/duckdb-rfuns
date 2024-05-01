@@ -44,3 +44,11 @@ test_that("as.integer(<DATE>", {
   date[] <- NA
   expect_equal(rfuns_as.integer(date), as.integer(date))
 })
+
+test_that("as.integer(<TIMESTAMP>", {
+  now <- Sys.time()
+  expect_equal(rfuns_as.integer(now), as.integer(now))
+
+  now[] <- NA
+  expect_equal(rfuns_as.integer(now), as.integer(now))
+})

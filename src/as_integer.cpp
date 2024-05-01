@@ -12,17 +12,25 @@ namespace rfuns {
 namespace {
 
 template <typename T>
+int32_t check_range(T value, ValidityMask &mask, idx_t idx) {
+	if (value > std::numeric_limits<int32_t>::max() || value < std::numeric_limits<int32_t>::min() ) {
+		mask.SetInvalid(idx);
+	}
+
+	return static_cast<int32_t>(value);
+}
+
+template <typename T>
 int32_t cast(T input, ValidityMask &mask, idx_t idx) {
 	return static_cast<int32_t>(input);
 }
 
 template <>
 int32_t cast<double>(double input, ValidityMask &mask, idx_t idx) {
-	if (isnan(input) || input > std::numeric_limits<int32_t>::max() || input < std::numeric_limits<int32_t>::min() ) {
+	if (isnan(input)) {
 		mask.SetInvalid(idx);
 	}
-
-	return static_cast<int32_t>(input);
+	return check_range(input, mask, idx);
 }
 
 template <>
@@ -38,6 +46,11 @@ int32_t cast<string_t>(string_t input, ValidityMask &mask, idx_t idx) {
 template <>
 int32_t cast<date_t>(date_t input, ValidityMask &mask, idx_t idx) {
 	return input.days;
+}
+
+template <>
+int32_t cast<timestamp_t>(timestamp_t input, ValidityMask &mask, idx_t idx) {
+	return check_range(Timestamp::GetEpochSeconds(input), mask, idx);
 }
 
 template <LogicalTypeId TYPE>
@@ -64,6 +77,7 @@ ScalarFunctionSet base_r_as_integer() {
 	set.AddFunction(AsIntegerFunction<LogicalType::VARCHAR>());
 
 	set.AddFunction(AsIntegerFunction<LogicalType::DATE>());
+	set.AddFunction(AsIntegerFunction<LogicalType::TIMESTAMP>());
 
 	return set;
 }
