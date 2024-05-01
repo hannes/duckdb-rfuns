@@ -16,6 +16,6 @@ rfuns <- function(op = c("project", "aggregate"), fun, data, ..., error_call = c
   result <- switch(op,
     "project"   = duckdb:::rel_project(in_rel, exprs),
     "aggregate" = duckdb:::rel_aggregate(in_rel, list(), exprs)
-  )                                                                 %!% "binding error"
-  duckdb:::rel_to_altrep(result)[, 1][]                             %!% "runtime error"
+  )                                      %!% "binding error"
+  duckdb:::rel_to_altrep(result)[, 1][]  %!% "runtime error"
 }
