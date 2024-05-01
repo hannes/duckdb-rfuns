@@ -34,6 +34,8 @@ static void register_rfuns(DatabaseInstance &instance) {
 	register_binary(instance, base_r_gte());
 
 	ExtensionUtil::RegisterFunction(instance, base_r_is_na());
+	ExtensionUtil::RegisterFunction(instance, base_r_as_integer());
+
 	ExtensionUtil::RegisterFunction(instance, base_r_sum());
 	ExtensionUtil::RegisterFunction(instance, base_r_min());
 	ExtensionUtil::RegisterFunction(instance, base_r_max());
