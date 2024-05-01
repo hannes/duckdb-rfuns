@@ -13,6 +13,7 @@ set(EXTENSION_SOURCES src/rfuns_extension.cpp
                       src/add.cpp
                       src/relop.cpp
                       src/is_na.cpp
+                      src/as_integer.cpp
                       src/dispatch.cpp
                       src/sum.cpp
                       src/minmax.cpp)

@@ -7,6 +7,15 @@ rfuns_is.na <- function(x) {
   rfuns_project("is.na", tibble(x = x))
 }
 
+#' as.integer()
+#'
+#' @param x vector
+#'
+#' @export
+rfuns_as.integer <- function(x) {
+  rfuns_project("as.integer", tibble(x = x))
+}
+
 rfuns_project <- function(fun, data, ..., error_call = caller_env()) {
   con <- local_duckdb_con()
 
