@@ -68,8 +68,7 @@ spaceship_rfuns <- function(x, y, ops = c("==", "!=", "<", "<=", ">", ">="), kee
     })
   )
 
-  proj <- duckdb$rel_project(rel1, exprs) %!% "binding error"
-
+  proj <- duckdb$rel_project(rel1, exprs)                               %!% "binding error"
   spaceship <- as_tibble(map(duckdb$rel_to_altrep(proj), \(col) col[])) %!% "runtime error"
 
   if (!keep.data) {
