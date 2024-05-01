@@ -29,3 +29,10 @@ test_that("as.integer(<BOOLEAN>", {
   expect_equal(rfuns_as.integer(FALSE), 0L)
   expect_equal(rfuns_as.integer(NA), NA_integer_)
 })
+
+test_that("as.integer(<VARCHAR>", {
+  expect_equal(rfuns_as.integer("42"), 42L)
+  expect_equal(rfuns_as.integer("42.5"), 42L)
+  expect_equal(rfuns_as.integer("x"), NA_integer_)
+  expect_equal(rfuns_as.integer(NA_character_), NA_integer_)
+})
