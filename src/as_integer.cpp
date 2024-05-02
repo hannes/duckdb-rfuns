@@ -34,13 +34,19 @@ int32_t cast<double, int32_t>(double input, ValidityMask &mask, idx_t idx) {
 }
 
 template <>
-int32_t cast<string_t, int32_t>(string_t input, ValidityMask &mask, idx_t idx) {
+double cast<string_t, double>(string_t input, ValidityMask &mask, idx_t idx) {
 	double result;
 	if (!TryDoubleCast<double>(input.GetData(), input.GetSize(), result, false)) {
 		mask.SetInvalid(idx);
 	}
 
-	return cast<double, int32_t>(result, mask, idx);
+	return result;
+}
+
+template <>
+int32_t cast<string_t, int32_t>(string_t input, ValidityMask &mask, idx_t idx) {
+	auto dbl = cast<string_t, double>(input, mask, idx);
+	return cast<double, int32_t>(dbl, mask, idx);
 }
 
 template <>
@@ -49,7 +55,17 @@ int32_t cast<date_t, int32_t>(date_t input, ValidityMask &mask, idx_t idx) {
 }
 
 template <>
+double cast<date_t, double>(date_t input, ValidityMask &mask, idx_t idx) {
+	return input.days;
+}
+
+template <>
 int32_t cast<timestamp_t, int32_t>(timestamp_t input, ValidityMask &mask, idx_t idx) {
+	return check_int_range(Timestamp::GetEpochSeconds(input), mask, idx);
+}
+
+template <>
+double cast<timestamp_t, double>(timestamp_t input, ValidityMask &mask, idx_t idx) {
 	return check_int_range(Timestamp::GetEpochSeconds(input), mask, idx);
 }
 
@@ -84,6 +100,10 @@ ScalarFunctionSet as_number(std::string name) {
 
 ScalarFunctionSet base_r_as_integer() {
 	return as_number<LogicalTypeId::INTEGER>("r_base::as.integer");
+}
+
+ScalarFunctionSet base_r_as_numeric() {
+	return as_number<LogicalTypeId::DOUBLE>("r_base::as.numeric");
 }
 
 }

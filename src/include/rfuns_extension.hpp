@@ -61,7 +61,7 @@ ScalarFunctionSet base_r_gte();
 
 ScalarFunctionSet base_r_is_na();
 ScalarFunctionSet base_r_as_integer();
-// ScalarFunctionSet base_r_as_numeric();
+ScalarFunctionSet base_r_as_numeric();
 
 // sum
 AggregateFunctionSet base_r_sum();
