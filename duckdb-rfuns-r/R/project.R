@@ -15,3 +15,12 @@ rfuns_is.na <- function(x) {
 rfuns_as.integer <- function(x) {
   rfuns("project", "as.integer", tibble(x = x))
 }
+
+#' as.numeric()
+#'
+#' @param x vector
+#'
+#' @export
+rfuns_as.numeric <- function(x) {
+  rfuns("project", "as.numeric", tibble(x = x))
+}

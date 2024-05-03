@@ -35,6 +35,7 @@ static void register_rfuns(DatabaseInstance &instance) {
 
 	ExtensionUtil::RegisterFunction(instance, base_r_is_na());
 	ExtensionUtil::RegisterFunction(instance, base_r_as_integer());
+	ExtensionUtil::RegisterFunction(instance, base_r_as_numeric());
 
 	ExtensionUtil::RegisterFunction(instance, base_r_sum());
 	ExtensionUtil::RegisterFunction(instance, base_r_min());
