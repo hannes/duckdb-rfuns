@@ -36,7 +36,7 @@ test_that("rfuns.is.na() handles CONSTANT input", {
   expect_false(is_na_constant(TRUE))
   expect_false(is_na_constant(FALSE))
 
-  skip("I don't know why it returns NA: will investigate")
+  skip("This currently does not construct a LOGICAL NULL constant, see https://github.com/duckdb/duckdb-r/pull/161")
   expect_true(is_na_constant(NA))
 })
 
