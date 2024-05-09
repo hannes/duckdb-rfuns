@@ -4,6 +4,7 @@
 #include <math.h>
 #include <climits>
 #include <iostream>
+#include <cmath>
 
 namespace duckdb {
 namespace rfuns {
@@ -24,9 +25,9 @@ void isna_double(DataChunk &args, ExpressionState &state, Vector &result) {
 		idx_t next = MinValue<idx_t>(base_idx + ValidityMask::BITS_PER_VALUE, count);
 
 		if (ValidityMask::AllValid(validity_entry)) {
-			// all valid: check with isnan()
+			// all valid: check with std::isnan()
 			for (; base_idx < next; base_idx++) {
-				result_data[base_idx] = isnan(data[base_idx]);
+				result_data[base_idx] = std::isnan(data[base_idx]);
 			}
 		} else if (ValidityMask::NoneValid(validity_entry)) {
 			// None valid:
@@ -39,7 +40,7 @@ void isna_double(DataChunk &args, ExpressionState &state, Vector &result) {
 			for (; base_idx < next; base_idx++) {
 				if (ValidityMask::RowIsValid(validity_entry, base_idx - start)) {
 					D_ASSERT(mask.RowIsValid(base_idx));
-					result_data[base_idx] = isnan(data[base_idx]);
+					result_data[base_idx] = std::isnan(data[base_idx]);
 				} else {
 					result_data[base_idx] = true;
 				}
@@ -70,7 +71,7 @@ void isna_any(DataChunk &args, ExpressionState &state, Vector &result) {
 		idx_t next = MinValue<idx_t>(base_idx + ValidityMask::BITS_PER_VALUE, count);
 
 		if (ValidityMask::AllValid(validity_entry)) {
-			// all valid: check with isnan()
+			// all valid: check with std::isnan()
 			for (; base_idx < next; base_idx++) {
 				result_data[base_idx] = false;
 			}

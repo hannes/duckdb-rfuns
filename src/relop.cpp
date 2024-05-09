@@ -4,6 +4,7 @@
 #include <math.h>
 #include <climits>
 #include <iostream>
+#include <cmath>
 
 namespace duckdb {
 namespace rfuns {
@@ -167,7 +168,7 @@ bool set_null(T value, ValidityMask &mask, idx_t idx) {
 
 template <>
 bool set_null<double>(double value, ValidityMask &mask, idx_t idx) {
-	if (isnan(value)) {
+	if (std::isnan(value)) {
 		mask.SetInvalid(idx);
 		return true;
 	}

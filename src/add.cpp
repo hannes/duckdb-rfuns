@@ -4,6 +4,7 @@
 
 #include <math.h>
 #include <climits>
+#include <cmath>
 
 namespace duckdb {
 namespace rfuns {
@@ -29,7 +30,7 @@ void BaseRAddFunctionDouble(DataChunk &args, ExpressionState &state, Vector &res
 
 	BinaryExecutor::ExecuteWithNulls<double, double, double>(
 	    parts.lefts, parts.rights, result, args.size(), [&](double left, double right, ValidityMask &mask, idx_t idx) {
-		    if (isnan(left) || isnan(right)) {
+		    if (std::isnan(left) || std::isnan(right)) {
 			    mask.SetInvalid(idx);
 			    return 0.0;
 		    }
@@ -38,7 +39,7 @@ void BaseRAddFunctionDouble(DataChunk &args, ExpressionState &state, Vector &res
 }
 
 double ExecuteBaseRPlusFunctionIntDouble(int32_t left, double right, ValidityMask &mask, idx_t idx) {
-	if (isnan(right)) {
+	if (std::isnan(right)) {
 		mask.SetInvalid(idx);
 		return 0.0;
 	}
