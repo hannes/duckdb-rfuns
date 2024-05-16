@@ -4,6 +4,7 @@
 #include <math.h>
 #include <climits>
 #include <iostream>
+#include <cmath>
 
 namespace duckdb {
 namespace rfuns {

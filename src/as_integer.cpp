@@ -5,6 +5,7 @@
 #include <math.h>
 #include <climits>
 #include <limits>
+#include <cmath>
 
 namespace duckdb {
 namespace rfuns {
@@ -27,7 +28,7 @@ TO cast(FROM input, ValidityMask &mask, idx_t idx) {
 
 template <>
 int32_t cast<double, int32_t>(double input, ValidityMask &mask, idx_t idx) {
-	if (isnan(input)) {
+	if (std::isnan(input)) {
 		mask.SetInvalid(idx);
 	}
 	return check_int_range(input, mask, idx);
