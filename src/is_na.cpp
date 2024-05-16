@@ -9,15 +9,7 @@
 namespace duckdb {
 namespace rfuns {
 
-void isna_double(DataChunk &args, ExpressionState &state, Vector &result) {
-	auto count = args.size();
-	auto input = args.data[0];
-	auto mask = FlatVector::Validity(input);
-	auto* data = FlatVector::GetData<double>(input);
-
-	result.SetVectorType(VectorType::FLAT_VECTOR);
-	auto result_data = FlatVector::GetData<bool>(result);
-
+void isna_double_loop(idx_t count, const double* data, bool* result_data, ValidityMask mask) {
 	idx_t base_idx = 0;
 	auto entry_count = ValidityMask::EntryCount(count);
 	for (idx_t entry_idx = 0; entry_idx < entry_count; entry_idx++) {
@@ -25,9 +17,9 @@ void isna_double(DataChunk &args, ExpressionState &state, Vector &result) {
 		idx_t next = MinValue<idx_t>(base_idx + ValidityMask::BITS_PER_VALUE, count);
 
 		if (ValidityMask::AllValid(validity_entry)) {
-			// all valid: check with std::isnan()
+			// all valid: check with isnan()
 			for (; base_idx < next; base_idx++) {
-				result_data[base_idx] = std::isnan(data[base_idx]);
+				result_data[base_idx] = isnan(data[base_idx]);
 			}
 		} else if (ValidityMask::NoneValid(validity_entry)) {
 			// None valid:
@@ -40,7 +32,7 @@ void isna_double(DataChunk &args, ExpressionState &state, Vector &result) {
 			for (; base_idx < next; base_idx++) {
 				if (ValidityMask::RowIsValid(validity_entry, base_idx - start)) {
 					D_ASSERT(mask.RowIsValid(base_idx));
-					result_data[base_idx] = std::isnan(data[base_idx]);
+					result_data[base_idx] = isnan(data[base_idx]);
 				} else {
 					result_data[base_idx] = true;
 				}
@@ -49,14 +41,52 @@ void isna_double(DataChunk &args, ExpressionState &state, Vector &result) {
 	}
 }
 
-void isna_any(DataChunk &args, ExpressionState &state, Vector &result) {
+void isna_double(DataChunk &args, ExpressionState &state, Vector &result) {
 	auto count = args.size();
 	auto input = args.data[0];
-	auto mask = FlatVector::Validity(input);
 
-	result.SetVectorType(VectorType::FLAT_VECTOR);
-	auto result_data = FlatVector::GetData<bool>(result);
+	switch(input.GetVectorType()) {
+		case VectorType::FLAT_VECTOR: {
+			result.SetVectorType(VectorType::FLAT_VECTOR);
 
+			isna_double_loop(
+				count,
+				FlatVector::GetData<double>(input),
+				FlatVector::GetData<bool>(result),
+				FlatVector::Validity(input)
+			);
+
+			break;
+		}
+
+		case VectorType::CONSTANT_VECTOR: {
+			result.SetVectorType(VectorType::CONSTANT_VECTOR);
+			auto result_data = ConstantVector::GetData<bool>(result);
+			auto ldata = ConstantVector::GetData<double>(input);
+
+			*result_data = ConstantVector::IsNull(input) || isnan(*ldata);
+
+			break;
+		}
+
+		default: {
+			UnifiedVectorFormat vdata;
+			input.ToUnifiedFormat(count, vdata);
+			result.SetVectorType(VectorType::FLAT_VECTOR);
+
+			isna_double_loop(
+				count,
+				UnifiedVectorFormat::GetData<double>(vdata),
+				FlatVector::GetData<bool>(result),
+				vdata.validity
+			);
+
+			break;
+		}
+	}
+}
+
+void isna_any_loop(idx_t count, bool* result_data, ValidityMask mask) {
 	if (mask.AllValid()) {
 		for (idx_t i = 0; i < count; i++) {
 			result_data[i] = false;
@@ -71,7 +101,7 @@ void isna_any(DataChunk &args, ExpressionState &state, Vector &result) {
 		idx_t next = MinValue<idx_t>(base_idx + ValidityMask::BITS_PER_VALUE, count);
 
 		if (ValidityMask::AllValid(validity_entry)) {
-			// all valid: check with std::isnan()
+			// all valid: check with isnan()
 			for (; base_idx < next; base_idx++) {
 				result_data[base_idx] = false;
 			}
@@ -88,6 +118,47 @@ void isna_any(DataChunk &args, ExpressionState &state, Vector &result) {
 			}
 		}
 	}
+
+}
+
+void isna_any(DataChunk &args, ExpressionState &state, Vector &result) {
+	auto count = args.size();
+	auto input = args.data[0];
+
+	switch(input.GetVectorType()) {
+		case VectorType::FLAT_VECTOR: {
+			result.SetVectorType(VectorType::FLAT_VECTOR);
+			isna_any_loop(
+				count,
+				FlatVector::GetData<bool>(result),
+				FlatVector::Validity(input)
+			);
+
+			break;
+		}
+
+		case VectorType::CONSTANT_VECTOR: {
+			result.SetVectorType(VectorType::CONSTANT_VECTOR);
+			auto result_data = ConstantVector::GetData<bool>(result);
+			*result_data = ConstantVector::IsNull(input);
+
+			break;
+		}
+
+		default : {
+			UnifiedVectorFormat vdata;
+			input.ToUnifiedFormat(count, vdata);
+			result.SetVectorType(VectorType::FLAT_VECTOR);
+			isna_any_loop(
+				count,
+				FlatVector::GetData<bool>(result),
+				vdata.validity
+			);
+
+			break;
+		}
+	}
+
 }
 
 

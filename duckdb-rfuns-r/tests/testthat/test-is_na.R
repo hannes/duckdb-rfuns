@@ -1,3 +1,45 @@
+test_that("rfuns.is.na() handles CONSTANT input", {
+  withr::local_options(list(duckdb.materialize_message = FALSE))
+  con <- local_duckdb_con()
+
+  duckdb <- asNamespace("duckdb")
+  experimental <- FALSE
+  df1 <- data.frame(a = 42)
+
+  is_na_constant <- function(value) {
+    rel365 <- duckdb$rel_from_df(con, df1, experimental = experimental)
+    rel366 <- duckdb$rel_project(
+      rel365,
+      list({
+        tmp_expr <- duckdb$expr_constant(value)
+        duckdb$expr_set_alias(tmp_expr, "d")
+        tmp_expr
+      })
+    )
+    rel367 <- duckdb$rel_project(
+      rel366,
+      list({
+        tmp_expr <- duckdb$expr_function("r_base::is.na", list(duckdb$expr_reference("d")))
+        duckdb$expr_set_alias(tmp_expr, "e")
+        tmp_expr
+      })
+    )
+    duckdb$rel_to_altrep(rel367)[, 1L][]
+  }
+  expect_true(is_na_constant(NA_real_))
+  expect_true(is_na_constant(NaN))
+  expect_true(is_na_constant(NA_integer_))
+  expect_true(is_na_constant(NA_character_))
+
+  expect_false(is_na_constant(42))
+  expect_false(is_na_constant(42L))
+  expect_false(is_na_constant(TRUE))
+  expect_false(is_na_constant(FALSE))
+
+  skip("This currently does not construct a LOGICAL NULL constant, see https://github.com/duckdb/duckdb-r/pull/161")
+  expect_true(is_na_constant(NA))
+})
+
 test_that("rfuns_isna(<double>)", {
   x <- c(1, 2, NA, NaN)
   expect_equal(rfuns_is.na(x)         , is.na(x))
