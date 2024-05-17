@@ -1,3 +1,15 @@
+#' Call an rfuns function
+#'
+#' @param op project or aggregate
+#' @param fun function name, without the r_base:: prefix
+#' @param data data frame
+#' @param dots constants
+#' @inheritParams rlang::args_error_context
+#'
+#' @examples
+#' rfuns("aggregate", "sum", data.frame(x = 1:10))
+#'
+#' @export
 rfuns <- function(op = c("project", "aggregate"), fun, data, ..., error_call = caller_env()) {
   withr::local_options(list(duckdb.materialize_message = FALSE))
   con <- local_duckdb_con()
