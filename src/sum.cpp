@@ -127,5 +127,25 @@ AggregateFunctionSet base_r_sum() {
 	return set;
 }
 
+ScalarFunctionSet base_r_project_sum() {
+	ScalarFunctionSet set("r_base::project::sum");
+
+	set.AddFunction(
+		ScalarFunction(
+			{LogicalType::DOUBLE},
+			LogicalType::DOUBLE,
+			[](DataChunk &args, ExpressionState &state, Vector &result) {},
+			[](ClientContext &context, ScalarFunction &bound_function, vector<duckdb::unique_ptr<Expression>> &arguments) -> unique_ptr<FunctionData> {
+				auto aggregate = base_r_sum().GetFunctionByArguments(context, {LogicalType::DOUBLE});
+				// TODO: figure out how to call the aggregate, either here or
+				// probably delay that evaulation until the bound_function is executed
+			}
+		)
+
+	);
+
+	return set;
+}
+
 }
 }

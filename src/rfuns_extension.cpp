@@ -38,6 +38,8 @@ static void register_rfuns(DatabaseInstance &instance) {
 	ExtensionUtil::RegisterFunction(instance, base_r_as_numeric());
 
 	ExtensionUtil::RegisterFunction(instance, base_r_sum());
+	// ExtensionUtil::RegisterFunction(instance, base_r_project_sum());
+
 	ExtensionUtil::RegisterFunction(instance, base_r_min());
 	ExtensionUtil::RegisterFunction(instance, base_r_max());
 }

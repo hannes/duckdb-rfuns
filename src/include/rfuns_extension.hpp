@@ -65,6 +65,8 @@ ScalarFunctionSet base_r_as_numeric();
 
 // sum
 AggregateFunctionSet base_r_sum();
+ScalarFunctionSet base_r_project_sum();
+
 AggregateFunctionSet base_r_min();
 AggregateFunctionSet base_r_max();
 
