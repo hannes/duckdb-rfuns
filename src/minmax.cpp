@@ -142,12 +142,12 @@ AggregateFunctionSet base_r_minmax(std::string name) {
 	return set;
 }
 
-AggregateFunctionSet base_r_min() {
-	return base_r_minmax<RMinOperation>("r_base::min");
+AggregateFunctionSet base_r_aggregate_min() {
+	return base_r_minmax<RMinOperation>("r_base::aggregate::min");
 }
 
-AggregateFunctionSet base_r_max() {
-	return base_r_minmax<RMaxOperation>("r_base::max");
+AggregateFunctionSet base_r_aggregate_max() {
+	return base_r_minmax<RMaxOperation>("r_base::aggregate::max");
 }
 
 

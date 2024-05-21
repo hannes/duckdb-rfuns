@@ -64,9 +64,9 @@ ScalarFunctionSet base_r_as_integer();
 ScalarFunctionSet base_r_as_numeric();
 
 // sum
-AggregateFunctionSet base_r_sum();
-AggregateFunctionSet base_r_min();
-AggregateFunctionSet base_r_max();
+AggregateFunctionSet base_r_aggregate_sum();
+AggregateFunctionSet base_r_aggregate_min();
+AggregateFunctionSet base_r_aggregate_max();
 
 ScalarFunctionSet binary_dispatch(ScalarFunctionSet fn) ;
 
