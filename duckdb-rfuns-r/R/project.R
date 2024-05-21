@@ -4,7 +4,7 @@
 #'
 #' @export
 rfuns_is.na <- function(x) {
-  rfuns("project", "is.na", tibble(x = x))
+  rfuns("is.na", tibble(x = x))
 }
 
 #' as.integer()
@@ -13,7 +13,7 @@ rfuns_is.na <- function(x) {
 #'
 #' @export
 rfuns_as.integer <- function(x) {
-  rfuns("project", "as.integer", tibble(x = x))
+  rfuns("as.integer", tibble(x = x))
 }
 
 #' as.numeric()
@@ -22,5 +22,5 @@ rfuns_as.integer <- function(x) {
 #'
 #' @export
 rfuns_as.numeric <- function(x) {
-  rfuns("project", "as.numeric", tibble(x = x))
+  rfuns("as.numeric", tibble(x = x))
 }
