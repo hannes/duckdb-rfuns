@@ -11,18 +11,17 @@
 #' @rdname aggregate
 #' @export
 rfuns_sum <- function(x, ...) {
-  rfuns("aggregate::sum", tibble(x = x), ...)
+  rfuns("sum", tibble(x = x), ..., op = "aggregate")
 }
 
 #' @rdname aggregate
 #' @export
 rfuns_min <- function(x, ...) {
-  rfuns("aggregate::min", tibble(x = x), ...)
+  rfuns("min", tibble(x = x), ..., op = "aggregate")
 }
 
 #' @rdname aggregate
 #' @export
 rfuns_max <- function(x, ...) {
-  rfuns("aggregate::max", tibble(x = x), ...)
+  rfuns("max", tibble(x = x), ..., op = "aggregate")
 }
-

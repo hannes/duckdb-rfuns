@@ -117,8 +117,8 @@ void add_RSum(AggregateFunctionSet& set, const LogicalType& type) {
 	));
 }
 
-AggregateFunctionSet base_r_aggregate_sum() {
-	AggregateFunctionSet set("r_base::aggregate::sum");
+AggregateFunctionSet base_r_sum() {
+	AggregateFunctionSet set("r_base::sum");
 
 	add_RSum(set, LogicalType::BOOLEAN);
 	add_RSum(set, LogicalType::INTEGER);

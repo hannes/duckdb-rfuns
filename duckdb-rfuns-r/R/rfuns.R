@@ -1,4 +1,4 @@
-rfuns <- function(fun, data, ..., error_call = caller_env()) {
+rfuns <- function(fun, data, ..., error_call = caller_env(), op = c("project", "aggregate")) {
   withr::local_options(list(duckdb.materialize_message = FALSE))
   con <- local_duckdb_con()
 
@@ -13,12 +13,7 @@ rfuns <- function(fun, data, ..., error_call = caller_env()) {
     )
   )
 
-  op <- if (grepl("aggregate::", fun)) {
-    "aggregate"
-  } else {
-    "project"
-  }
-
+  op <- rlang::arg_match(op, error_call = error_call)
   result <- switch(op,
     "project"   = duckdb:::rel_project(in_rel, exprs),
     "aggregate" = duckdb:::rel_aggregate(in_rel, list(), exprs)
