@@ -2,13 +2,13 @@ test_that("r_base::sum(<BOOLEAN>)", {
   x <- c(TRUE, TRUE, FALSE, NA)
   empty <- logical()
 
-  expect_equal(rfuns_sum(x, na.rm = TRUE) , sum(x, na.rm = TRUE))
-  expect_equal(rfuns_sum(x, na.rm = FALSE), sum(x, na.rm = FALSE))
+  expect_equal(rfuns_sum(x, na.rm = TRUE)[1] , sum(x, na.rm = TRUE))
+  expect_equal(rfuns_sum(x, na.rm = FALSE)[1], sum(x, na.rm = FALSE))
   expect_equal(rfuns_sum(empty, na.rm = FALSE), sum(empty, na.rm = TRUE))
   expect_equal(rfuns_sum(empty, na.rm = TRUE) , sum(empty, na.rm = FALSE))
 
-  expect_equal(rfuns_sum(x) , sum(x))
-  expect_equal(rfuns_sum(x), sum(x))
+  expect_equal(rfuns_sum(x)[1] , sum(x))
+  expect_equal(rfuns_sum(x)[1], sum(x))
   expect_equal(rfuns_sum(empty), sum(empty))
   expect_equal(rfuns_sum(empty), sum(empty))
 })
