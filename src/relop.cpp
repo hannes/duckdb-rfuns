@@ -226,8 +226,11 @@ void InExecute(DataChunk &args, ExpressionState &state, Vector &result) {
 
 #define IN_VARIANT(__LHS__, __RHS__) ScalarFunction(                                      \
 	/* arguments   = */ {LogicalType::__LHS__, LogicalType::LIST(LogicalType::__RHS__)},  \
-	/* return_type = */ LogicalType::BOOLEAN,                                             \
-	/* function    = */ InExecute<LogicalType::__LHS__, LogicalType::__RHS__> )
+	/* return_type = */ LogicalType::BOOLEAN,                                \
+	/* function    = */ InExecute<                                           \
+		typename physical<LogicalType::__LHS__>::type, \
+	    typename physical<LogicalType::__RHS__>::type  \
+	>)
 
 template <Relop OP>
 ScalarFunctionSet base_r_relop(string name) {
@@ -293,7 +296,34 @@ ScalarFunctionSet base_r_gte() {
 ScalarFunctionSet base_r_in() {
 	ScalarFunctionSet set("r_base::%in%");
 
+	set.AddFunction(IN_VARIANT(BOOLEAN, BOOLEAN));
+	set.AddFunction(IN_VARIANT(BOOLEAN, INTEGER));
+	set.AddFunction(IN_VARIANT(INTEGER, BOOLEAN));
+	set.AddFunction(IN_VARIANT(INTEGER, INTEGER));
+
+	set.AddFunction(IN_VARIANT(DOUBLE, INTEGER));
+	set.AddFunction(IN_VARIANT(INTEGER, DOUBLE));
+	set.AddFunction(IN_VARIANT(DOUBLE, BOOLEAN));
+	set.AddFunction(IN_VARIANT(BOOLEAN, DOUBLE));
+
+	set.AddFunction(IN_VARIANT(VARCHAR, INTEGER));
+	set.AddFunction(IN_VARIANT(INTEGER, VARCHAR));
+	set.AddFunction(IN_VARIANT(VARCHAR, BOOLEAN));
+	set.AddFunction(IN_VARIANT(BOOLEAN, VARCHAR));
+
 	set.AddFunction(IN_VARIANT(DOUBLE, DOUBLE));
+	set.AddFunction(IN_VARIANT(VARCHAR, VARCHAR));
+	set.AddFunction(IN_VARIANT(VARCHAR, DOUBLE));
+	set.AddFunction(IN_VARIANT(DOUBLE, VARCHAR));
+
+	set.AddFunction(IN_VARIANT(TIMESTAMP, TIMESTAMP));
+	set.AddFunction(IN_VARIANT(DATE, DATE));
+
+	set.AddFunction(IN_VARIANT(DATE, VARCHAR));
+	set.AddFunction(IN_VARIANT(VARCHAR, DATE));
+
+	set.AddFunction(IN_VARIANT(TIMESTAMP, VARCHAR));
+	set.AddFunction(IN_VARIANT(VARCHAR, TIMESTAMP));
 
 	return set;
 }
