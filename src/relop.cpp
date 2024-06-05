@@ -203,6 +203,68 @@ void RelopExecute(DataChunk &args, ExpressionState &state, Vector &result) {
 		throw InvalidInputException("%s : %s <=> %s", __WHY__, EnumUtil::ToChars(LogicalType::__LHS__), EnumUtil::ToChars(LogicalType::__RHS__)); \
 		})
 
+template <Relop OP>
+ScalarFunctionSet base_r_relop(string name) {
+	ScalarFunctionSet set(name);
+
+	set.AddFunction(RELOP_VARIANT(BOOLEAN, BOOLEAN));
+	set.AddFunction(RELOP_VARIANT(BOOLEAN, INTEGER));
+	set.AddFunction(RELOP_VARIANT(INTEGER, BOOLEAN));
+	set.AddFunction(RELOP_VARIANT(INTEGER, INTEGER));
+
+	set.AddFunction(RELOP_VARIANT(DOUBLE, INTEGER));
+	set.AddFunction(RELOP_VARIANT(INTEGER, DOUBLE));
+	set.AddFunction(RELOP_VARIANT(DOUBLE, BOOLEAN));
+	set.AddFunction(RELOP_VARIANT(BOOLEAN, DOUBLE));
+
+	set.AddFunction(RELOP_VARIANT(VARCHAR, INTEGER));
+	set.AddFunction(RELOP_VARIANT(INTEGER, VARCHAR));
+	set.AddFunction(RELOP_VARIANT(VARCHAR, BOOLEAN));
+	set.AddFunction(RELOP_VARIANT(BOOLEAN, VARCHAR));
+
+	set.AddFunction(RELOP_VARIANT(DOUBLE, DOUBLE));
+	set.AddFunction(RELOP_VARIANT(VARCHAR, VARCHAR));
+	set.AddFunction(RELOP_VARIANT(VARCHAR, DOUBLE));
+	set.AddFunction(RELOP_VARIANT(DOUBLE, VARCHAR));
+
+	set.AddFunction(RELOP_VARIANT(TIMESTAMP, TIMESTAMP));
+	set.AddFunction(RELOP_VARIANT(DATE, DATE));
+
+	set.AddFunction(RELOP_VARIANT(DATE, VARCHAR));
+	set.AddFunction(RELOP_VARIANT(VARCHAR, DATE));
+
+	set.AddFunction(RELOP_VARIANT(TIMESTAMP, VARCHAR));
+	set.AddFunction(RELOP_VARIANT(VARCHAR, TIMESTAMP));
+
+	set.AddFunction(RELOP_VARIANT_BIND_FAIL(TIMESTAMP, DATE, "Comparing times and dates is not supported"));
+	set.AddFunction(RELOP_VARIANT_BIND_FAIL(DATE, TIMESTAMP, "Comparing dates and times is not supported"));
+
+	return set;
+}
+
+} // namespace
+
+ScalarFunctionSet base_r_eq() {
+	return base_r_relop<EQ>("r_base::==");
+}
+ScalarFunctionSet base_r_neq() {
+	return base_r_relop<NEQ>("r_base::!=");
+}
+ScalarFunctionSet base_r_lt() {
+	return base_r_relop<LT>("r_base::<");
+}
+ScalarFunctionSet base_r_lte() {
+	return base_r_relop<LTE>("r_base::<=");
+}
+ScalarFunctionSet base_r_gt() {
+	return base_r_relop<GT>("r_base::>");
+}
+ScalarFunctionSet base_r_gte() {
+	return base_r_relop<GTE>("r_base::>=");
+}
+
+namespace {
+
 template <typename LHS_TYPE, typename RHS_TYPE>
 void InExecute(DataChunk &args, ExpressionState &state, Vector &result) {
 
@@ -347,25 +409,6 @@ ScalarFunctionSet base_r_relop(string name) {
 }
 
 } // namespace
-
-ScalarFunctionSet base_r_eq() {
-	return base_r_relop<EQ>("r_base::==");
-}
-ScalarFunctionSet base_r_neq() {
-	return base_r_relop<NEQ>("r_base::!=");
-}
-ScalarFunctionSet base_r_lt() {
-	return base_r_relop<LT>("r_base::<");
-}
-ScalarFunctionSet base_r_lte() {
-	return base_r_relop<LTE>("r_base::<=");
-}
-ScalarFunctionSet base_r_gt() {
-	return base_r_relop<GT>("r_base::>");
-}
-ScalarFunctionSet base_r_gte() {
-	return base_r_relop<GTE>("r_base::>=");
-}
 
 ScalarFunctionSet base_r_in() {
 	ScalarFunctionSet set("r_base::%in%");
