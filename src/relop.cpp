@@ -203,6 +203,28 @@ void RelopExecute(DataChunk &args, ExpressionState &state, Vector &result) {
 		throw InvalidInputException("%s : %s <=> %s", __WHY__, EnumUtil::ToChars(LogicalType::__LHS__), EnumUtil::ToChars(LogicalType::__RHS__)); \
 		})
 
+template <LogicalTypeId LHS_LOGICAL, typename LHS_TYPE, LogicalTypeId RHS_LOGICAL, typename RHS_TYPE>
+void InExecute(DataChunk &args, ExpressionState &state, Vector &result) {
+
+	if (args.data[1].GetVectorType() != VectorType::CONSTANT_VECTOR) {
+		throw InvalidInputException("rhs must be a constant");
+	}
+	double right = 0;
+
+	auto fun = [&](LHS_TYPE left, ValidityMask &mask, idx_t idx) {
+		return relop<LHS_TYPE, RHS_TYPE, EQ>(left, right);
+	};
+	UnaryExecutor::ExecuteWithNulls<LHS_TYPE, bool>(args.data[0], result, args.size(), fun);
+}
+
+#define IN_VARIANT(__LHS__, __RHS__) ScalarFunction(                                      \
+	/* arguments   = */ {LogicalType::__LHS__, LogicalType::LIST(LogicalType::__RHS__)},  \
+	/* return_type = */ LogicalType::BOOLEAN,                                \
+	/* function    = */ InExecute<                                           \
+		LogicalType::__LHS__, typename physical<LogicalType::__LHS__>::type, \
+	    LogicalType::__RHS__, typename physical<LogicalType::__RHS__>::type  \
+	>)
+
 template <Relop OP>
 ScalarFunctionSet base_r_relop(string name) {
 	ScalarFunctionSet set(name);
@@ -263,6 +285,16 @@ ScalarFunctionSet base_r_gt() {
 ScalarFunctionSet base_r_gte() {
 	return base_r_relop<GTE>("r_base::>=");
 }
+
+ScalarFunctionSet base_r_in() {
+	ScalarFunctionSet set("r_base::%in%");
+
+	set.AddFunction(IN_VARIANT(DOUBLE, DOUBLE));
+
+	return set;
+}
+
+
 
 } // namespace rfuns
 } // namespace duckdb
