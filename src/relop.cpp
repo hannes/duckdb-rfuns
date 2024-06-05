@@ -229,8 +229,15 @@ void InExecute(DataChunk &args, ExpressionState &state, Vector &result) {
 		idx_t base_idx = 0;
 		auto entry_count = ValidityMask::EntryCount(count);
 		for (idx_t entry_idx = 0; entry_idx < entry_count; entry_idx++) {
-			auto validity_entry = mask.GetValidityEntry(entry_idx);
 			idx_t next = MinValue<idx_t>(base_idx + ValidityMask::BITS_PER_VALUE, count);
+
+			for (; base_idx < next; base_idx++) {
+				result_data[base_idx] = is_in_y(x_data[base_idx]);
+			}
+
+			/*
+			we might need to adapt the code based on validity of x, as in is_na
+			but for now it does not seem useful
 
 			if (ValidityMask::AllValid(validity_entry)) {
 				for (; base_idx < next; base_idx++) {
@@ -248,6 +255,7 @@ void InExecute(DataChunk &args, ExpressionState &state, Vector &result) {
 					result_data[base_idx] = is_in_y(x_data[base_idx]);
 				}
 			}
+			*/
 		}
 	};
 
