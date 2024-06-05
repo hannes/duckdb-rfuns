@@ -206,22 +206,88 @@ void RelopExecute(DataChunk &args, ExpressionState &state, Vector &result) {
 template <typename LHS_TYPE, typename RHS_TYPE>
 void InExecute(DataChunk &args, ExpressionState &state, Vector &result) {
 
+	auto count = args.size();
+	auto x = args.data[0];
+
 	auto y = args.data[1];
 	if (y.GetVectorType() != VectorType::CONSTANT_VECTOR) {
 		throw InvalidInputException("rhs must be a constant");
 	}
-	auto size = ListVector::GetListSize(y);
+	auto y_size = ListVector::GetListSize(y);
 	auto y_data = FlatVector::GetData<RHS_TYPE>(ListVector::GetEntry(y));
 
-	auto fun = [&](LHS_TYPE left, ValidityMask &mask, idx_t idx) {
-		for (int i = 0; i < size; i++) {
+	auto is_in_y = [&](LHS_TYPE left) {
+		for (int i = 0; i < y_size; i++) {
 			if (relop<LHS_TYPE, RHS_TYPE, EQ>(left, y_data[i])) {
 				return true;
 			}
 		}
 		return false;
 	};
-	UnaryExecutor::ExecuteWithNulls<LHS_TYPE, bool>(args.data[0], result, args.size(), fun);
+
+	auto in_loop = [&](idx_t count, LHS_TYPE* x_data, bool* result_data, ValidityMask mask) {
+		idx_t base_idx = 0;
+		auto entry_count = ValidityMask::EntryCount(count);
+		for (idx_t entry_idx = 0; entry_idx < entry_count; entry_idx++) {
+			auto validity_entry = mask.GetValidityEntry(entry_idx);
+			idx_t next = MinValue<idx_t>(base_idx + ValidityMask::BITS_PER_VALUE, count);
+
+			if (ValidityMask::AllValid(validity_entry)) {
+				for (; base_idx < next; base_idx++) {
+					result_data[base_idx] = is_in_y(x_data[base_idx]);
+				}
+			} else if (ValidityMask::NoneValid(validity_entry)) {
+				// None valid:
+				for (; base_idx < next; base_idx++) {
+					result_data[base_idx] = is_in_y(x_data[base_idx]);
+				}
+			} else {
+				// partially valid: need to check individual elements for validity
+				idx_t start = base_idx;
+				for (; base_idx < next; base_idx++) {
+					result_data[base_idx] = is_in_y(x_data[base_idx]);
+				}
+			}
+		}
+	};
+
+	switch(x.GetVectorType()) {
+		case VectorType::FLAT_VECTOR: {
+			result.SetVectorType(VectorType::FLAT_VECTOR);
+
+			in_loop(
+				count,
+				FlatVector::GetData<LHS_TYPE>(x),
+				FlatVector::GetData<bool>(result),
+				FlatVector::Validity(x)
+			);
+
+			break;
+		}
+
+		case VectorType::CONSTANT_VECTOR: {
+			result.SetVectorType(VectorType::CONSTANT_VECTOR);
+			auto result_data = ConstantVector::GetData<bool>(result);
+			*result_data = is_in_y(*ConstantVector::GetData<LHS_TYPE>(x));
+
+			break;
+		}
+
+		default : {
+			UnifiedVectorFormat vdata;
+			x.ToUnifiedFormat(count, vdata);
+			result.SetVectorType(VectorType::FLAT_VECTOR);
+			in_loop(
+				count,
+				FlatVector::GetData<LHS_TYPE>(x),
+				FlatVector::GetData<bool>(result),
+				vdata.validity
+			);
+
+			break;
+		}
+	}
+
 }
 
 #define IN_VARIANT(__LHS__, __RHS__) ScalarFunction(                                      \
