@@ -277,12 +277,74 @@ void InExecute(DataChunk &args, ExpressionState &state, Vector &result) {
 	}
 	auto y_size = ListVector::GetListSize(y);
 	auto y_data = FlatVector::GetData<RHS_TYPE>(ListVector::GetEntry(y));
+	auto y_mask = FlatVector::Validity(ListVector::GetEntry(y));
+
+	bool na_in_y = [&](){
+		if (!y_mask.AllValid()) {
+			idx_t y_base_idx = 0;
+			auto y_entry_count = ValidityMask::EntryCount(y_size);
+			for (idx_t y_entry_idx = 0; y_entry_idx < y_entry_count; y_entry_idx++) {
+				auto y_validity_entry = y_mask.GetValidityEntry(y_entry_idx);
+				idx_t y_next = MinValue<idx_t>(y_base_idx + ValidityMask::BITS_PER_VALUE, y_size);
+
+				if (!ValidityMask::AllValid(y_validity_entry)) {
+					if (ValidityMask::NoneValid(y_validity_entry)) {
+						return true;
+					} else {
+						idx_t y_start = y_base_idx;
+						for (; y_base_idx < y_next; y_base_idx++) {
+							if (!ValidityMask::RowIsValid(y_validity_entry, y_base_idx - y_start)) {
+								return true;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return false;
+	}();
+
 
 	auto is_in_y = [&](LHS_TYPE left) {
-		for (int i = 0; i < y_size; i++) {
-			if (relop<LHS_TYPE, RHS_TYPE, EQ>(left, y_data[i])) {
-				return true;
+		// special case when there are no NAs in y
+		if (!na_in_y) {
+			for (int i = 0; i < y_size; i++) {
+				if (relop<LHS_TYPE, RHS_TYPE, EQ>(left, y_data[i])) {
+					return true;
+				}
 			}
+			return false;
+		}
+
+		// there are NAs in y, so do entry by entry
+		idx_t y_base_idx = 0;
+		auto y_entry_count = ValidityMask::EntryCount(y_size);
+		for (idx_t y_entry_idx = 0; y_entry_idx < y_entry_count; y_entry_idx++) {
+			auto y_validity_entry = y_mask.GetValidityEntry(y_entry_idx);
+			idx_t y_next = MinValue<idx_t>(y_base_idx + ValidityMask::BITS_PER_VALUE, y_size);
+
+			if (ValidityMask::AllValid(y_validity_entry)) {
+				for (; y_base_idx < y_next; y_base_idx++) {
+					if (relop<LHS_TYPE, RHS_TYPE, EQ>(left, y_data[y_base_idx])) {
+						return true;
+					}
+				}
+			} else if (ValidityMask::NoneValid(y_validity_entry)) {
+				// nothing to do, because inside is_in_y() we know left is valid
+				for (; y_base_idx < y_next; y_base_idx++) {}
+			} else {
+				idx_t y_start = y_base_idx;
+
+				for (; y_base_idx < y_next; y_base_idx++) {
+					if (ValidityMask::RowIsValid(y_validity_entry, y_base_idx - y_start)) {
+						if (relop<LHS_TYPE, RHS_TYPE, EQ>(left, y_data[y_base_idx])) {
+							return true;
+						}
+					}
+				}
+			}
+
 		}
 		return false;
 	};
@@ -291,15 +353,8 @@ void InExecute(DataChunk &args, ExpressionState &state, Vector &result) {
 		idx_t base_idx = 0;
 		auto entry_count = ValidityMask::EntryCount(count);
 		for (idx_t entry_idx = 0; entry_idx < entry_count; entry_idx++) {
+			auto validity_entry = mask.GetValidityEntry(entry_idx);
 			idx_t next = MinValue<idx_t>(base_idx + ValidityMask::BITS_PER_VALUE, count);
-
-			for (; base_idx < next; base_idx++) {
-				result_data[base_idx] = is_in_y(x_data[base_idx]);
-			}
-
-			/*
-			we might need to adapt the code based on validity of x, as in is_na
-			but for now it does not seem useful
 
 			if (ValidityMask::AllValid(validity_entry)) {
 				for (; base_idx < next; base_idx++) {
@@ -308,16 +363,20 @@ void InExecute(DataChunk &args, ExpressionState &state, Vector &result) {
 			} else if (ValidityMask::NoneValid(validity_entry)) {
 				// None valid:
 				for (; base_idx < next; base_idx++) {
-					result_data[base_idx] = is_in_y(x_data[base_idx]);
+					result_data[base_idx] = !y_mask.AllValid();
 				}
 			} else {
 				// partially valid: need to check individual elements for validity
 				idx_t start = base_idx;
+
 				for (; base_idx < next; base_idx++) {
-					result_data[base_idx] = is_in_y(x_data[base_idx]);
+					if (ValidityMask::RowIsValid(validity_entry, base_idx - start)) {
+						result_data[base_idx] = is_in_y(x_data[base_idx]);
+					} else {
+						result_data[base_idx] = na_in_y;
+					}
 				}
 			}
-			*/
 		}
 	};
 
@@ -413,6 +472,7 @@ ScalarFunctionSet base_r_relop(string name) {
 ScalarFunctionSet base_r_in() {
 	ScalarFunctionSet set("r_base::%in%");
 
+	set.AddFunction(IN_VARIANT(DOUBLE, DOUBLE));
 	set.AddFunction(IN_VARIANT(BOOLEAN, BOOLEAN));
 	set.AddFunction(IN_VARIANT(BOOLEAN, INTEGER));
 	set.AddFunction(IN_VARIANT(INTEGER, BOOLEAN));
@@ -423,12 +483,13 @@ ScalarFunctionSet base_r_in() {
 	set.AddFunction(IN_VARIANT(DOUBLE, BOOLEAN));
 	set.AddFunction(IN_VARIANT(BOOLEAN, DOUBLE));
 
+/*
 	set.AddFunction(IN_VARIANT(VARCHAR, INTEGER));
 	set.AddFunction(IN_VARIANT(INTEGER, VARCHAR));
 	set.AddFunction(IN_VARIANT(VARCHAR, BOOLEAN));
 	set.AddFunction(IN_VARIANT(BOOLEAN, VARCHAR));
 
-	set.AddFunction(IN_VARIANT(DOUBLE, DOUBLE));
+
 	set.AddFunction(IN_VARIANT(VARCHAR, VARCHAR));
 	set.AddFunction(IN_VARIANT(VARCHAR, DOUBLE));
 	set.AddFunction(IN_VARIANT(DOUBLE, VARCHAR));
@@ -441,6 +502,7 @@ ScalarFunctionSet base_r_in() {
 
 	set.AddFunction(IN_VARIANT(TIMESTAMP, VARCHAR));
 	set.AddFunction(IN_VARIANT(VARCHAR, TIMESTAMP));
+*/
 
 	return set;
 }
