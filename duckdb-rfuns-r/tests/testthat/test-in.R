@@ -60,11 +60,28 @@ test_that("%in% with <str>", {
   expect_rfuns_in(c("1", NA_character_), c(NA_real_))
   expect_rfuns_in(c(NA_character_), c(NA_real_))
 
+  # <str> %in% <lgl>
+  expect_rfuns_in(c("TRUE", "true", "false", "FALSE"), c(TRUE))
+  expect_rfuns_in(c("TRUE", NA_character_), c(NA))
+  expect_rfuns_in(c(NA_character_), c(NA))
+
   # <int> %in% <str>
   expect_rfuns_in(c(1L, 2L), c("2", "5", "abc"))
   expect_rfuns_in(c(1L, 2L, NA_integer_), c("2", "5", "abc"))
   expect_rfuns_in(c(1L, 2L), c("2", "5", "", NA_character_))
   expect_rfuns_in(c(NA_integer_), c(NA_character_))
+
+  # <dbl> %in% <str>
+  expect_rfuns_in(c(1, 2), c("2", "5", "abc"))
+  expect_rfuns_in(c(1, 2, NA_real_), c("2", "5", "abc"))
+  expect_rfuns_in(c(1, 2), c("2", "5", "", NA_character_))
+  expect_rfuns_in(c(NA_real_), c(NA_character_))
+
+  # <lgl> %in% <str>
+  expect_rfuns_in(c(FALSE), c("FALSE", "abc"))
+  expect_rfuns_in(c(FALSE, TRUE, NA), c("TRUE", "5", "abc"))
+  expect_rfuns_in(c(FALSE), c("TRUE", NA_character_))
+  expect_rfuns_in(c(NA), c(NA_character_))
 
   skip("until relop<VARCHAR, DOUBLE> is fixed")
   expect_rfuns_in(c(NA_character_, "42.3", "abc"), c(42.3))
