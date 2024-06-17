@@ -48,6 +48,29 @@ test_that("%in%", {
   expect_rfuns_in(c(NA), c(NA_real_))
 })
 
+test_that("%in% with <str>", {
+  # <str> %in% <int>
+  expect_rfuns_in(c("1", "abc"), c(1L))
+  expect_rfuns_in(c("1", NA_character_), c(NA_integer_))
+  expect_rfuns_in(c(NA_character_, "42", "abc"), c(42L))
+  expect_rfuns_in(c(NA_character_), c(NA_integer_))
+
+  # <str> %in% <dbl>
+  expect_rfuns_in(c("1", "abc", "1.2"), c(1, 1.2))
+  expect_rfuns_in(c("1", NA_character_), c(NA_real_))
+  expect_rfuns_in(c(NA_character_), c(NA_real_))
+
+  # <int> %in% <str>
+  expect_rfuns_in(c(1L, 2L), c("2", "5", "abc"))
+  expect_rfuns_in(c(1L, 2L, NA_integer_), c("2", "5", "abc"))
+  expect_rfuns_in(c(1L, 2L), c("2", "5", "", NA_character_))
+  expect_rfuns_in(c(NA_integer_), c(NA_character_))
+
+  skip("until relop<VARCHAR, DOUBLE> is fixed")
+  expect_rfuns_in(c(NA_character_, "42.3", "abc"), c(42.3))
+})
+
+
 test_that("%in% skipped", {
   skip("Value::LIST without providing a child-type requires a non-empty list of values")
 
