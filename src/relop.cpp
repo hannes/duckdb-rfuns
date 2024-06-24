@@ -266,6 +266,11 @@ ScalarFunctionSet base_r_gte() {
 namespace {
 
 template <typename LHS_TYPE, typename RHS_TYPE>
+bool try_equal(LHS_TYPE lhs, RHS_TYPE rhs) {
+	return relop<LHS_TYPE, RHS_TYPE, EQ>(lhs, rhs);
+}
+
+template <typename LHS_TYPE, typename RHS_TYPE>
 void InExecute(DataChunk &args, ExpressionState &state, Vector &result) {
 
 	auto count = args.size();
@@ -310,7 +315,7 @@ void InExecute(DataChunk &args, ExpressionState &state, Vector &result) {
 		// special case when there are no NAs in y
 		if (!na_in_y) {
 			for (int i = 0; i < y_size; i++) {
-				if (relop<LHS_TYPE, RHS_TYPE, EQ>(left, y_data[i])) {
+				if (try_equal(left, y_data[i])) {
 					return true;
 				}
 			}
@@ -326,7 +331,7 @@ void InExecute(DataChunk &args, ExpressionState &state, Vector &result) {
 
 			if (ValidityMask::AllValid(y_validity_entry)) {
 				for (; y_base_idx < y_next; y_base_idx++) {
-					if (relop<LHS_TYPE, RHS_TYPE, EQ>(left, y_data[y_base_idx])) {
+					if (try_equal(left, y_data[y_base_idx])) {
 						return true;
 					}
 				}
@@ -338,7 +343,7 @@ void InExecute(DataChunk &args, ExpressionState &state, Vector &result) {
 
 				for (; y_base_idx < y_next; y_base_idx++) {
 					if (ValidityMask::RowIsValid(y_validity_entry, y_base_idx - y_start)) {
-						if (relop<LHS_TYPE, RHS_TYPE, EQ>(left, y_data[y_base_idx])) {
+						if (try_equal(left, y_data[y_base_idx])) {
 							return true;
 						}
 					}
