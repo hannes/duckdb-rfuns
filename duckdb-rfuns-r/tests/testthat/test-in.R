@@ -116,14 +116,13 @@ test_that("<timestamp> %in% <str>", {
 })
 
 test_that("<str> %in% <timestamp>", {
-  now <- Sys.time()
+  now <- as.POSIXct("2024-06-24 15:24:00 UTC")
   na_time <- as.POSIXct(NA)
 
   now_chr <- format(now, "%Y-%m-%d %H:%M:%S %Z")
-  expect_equal(rfuns_in(c(now_chr), now)                , FALSE)
+  expect_equal(rfuns_in(c(now_chr), now)                , TRUE)
   expect_equal(rfuns_in(c(now_chr), na_time)            , FALSE)
 
-  skip("until this does not throw an error")
   expect_equal(rfuns_in(c(now_chr, "hello"), c(now, NA)), c(TRUE, FALSE))
 })
 
