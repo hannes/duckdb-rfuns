@@ -516,10 +516,10 @@ ScalarFunctionSet base_r_in() {
 	set.AddFunction(IN_VARIANT(TIMESTAMP, VARCHAR));
 	set.AddFunction(IN_VARIANT(VARCHAR, TIMESTAMP));
 
+	set.AddFunction(IN_VARIANT(DATE, DATE));
+
 /*
 
-
-	set.AddFunction(IN_VARIANT(DATE, DATE));
 
 	set.AddFunction(IN_VARIANT(DATE, VARCHAR));
 	set.AddFunction(IN_VARIANT(VARCHAR, DATE));
