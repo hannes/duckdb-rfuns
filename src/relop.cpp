@@ -270,6 +270,22 @@ bool try_equal(LHS_TYPE lhs, RHS_TYPE rhs) {
 	return relop<LHS_TYPE, RHS_TYPE, EQ>(lhs, rhs);
 }
 
+template <>
+bool try_equal<string_t, timestamp_t> (string_t lhs, timestamp_t rhs) {
+	timestamp_t result;
+	auto cast_result = Timestamp::TryConvertTimestamp(lhs.GetString().c_str(), lhs.GetString().length(), result);
+	if (cast_result == TimestampCastResult::SUCCESS) {
+		return result == rhs;
+	} else {
+		return false;
+	}
+}
+
+template <>
+bool try_equal<timestamp_t, string_t> (timestamp_t lhs, string_t rhs) {
+	return try_equal(rhs, lhs);
+}
+
 template <typename LHS_TYPE, typename RHS_TYPE>
 void InExecute(DataChunk &args, ExpressionState &state, Vector &result) {
 
