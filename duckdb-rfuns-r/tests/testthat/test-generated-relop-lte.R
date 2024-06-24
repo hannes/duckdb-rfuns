@@ -1949,6 +1949,63 @@ test_that(r"(<str> <= <dbl> :: "2" <= 1)", {
   expect_identical(out_df[, 1], FALSE)
 })
 
+test_that(r"(<str> <= <dbl> :: "42.3" <= 42.3)", {
+  con <- local_duckdb_con()
+  in_df <- tibble::tibble(x1 = "42.3", x2 = 42.3)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<=",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], TRUE)
+})
+
+test_that(r"(<str> <= <dbl> :: "42.4" <= 42.3)", {
+  con <- local_duckdb_con()
+  in_df <- tibble::tibble(x1 = "42.4", x2 = 42.3)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<=",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], FALSE)
+})
+
+test_that(r"(<str> <= <dbl> :: "42.299999999" <= 42.3)", {
+  con <- local_duckdb_con()
+  in_df <- tibble::tibble(x1 = "42.299999999", x2 = 42.3)
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+  out_rel <- duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<=",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  )
+  out_df <- duckdb:::rel_to_altrep(out_rel)
+
+  expect_identical(out_df[, 1], TRUE)
+})
+
 test_that(r"(<str> <= <dbl> :: "1" <= 1)", {
   con <- local_duckdb_con()
   in_df <- tibble::tibble(x1 = "1", x2 = 1)
