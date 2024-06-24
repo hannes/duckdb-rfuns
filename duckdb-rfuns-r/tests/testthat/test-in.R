@@ -83,7 +83,6 @@ test_that("%in% with <str>", {
   expect_rfuns_in(c(FALSE), c("TRUE", NA_character_))
   expect_rfuns_in(c(NA), c(NA_character_))
 
-  skip("until relop<VARCHAR, DOUBLE> is fixed")
   expect_rfuns_in(c(NA_character_, "42.3", "abc"), c(42.3))
 })
 
