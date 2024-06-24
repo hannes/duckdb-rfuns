@@ -87,28 +87,28 @@ string_t bool_to_string(bool x) {
 template <Relop OP>
 struct RelopDispatch<string_t, date_t, OP> {
 	inline bool operator()(string_t lhs, date_t rhs) {
-		return SimpleDispatch<date_t, date_t, OP>()(Date::FromString(lhs.GetData(), false), rhs);
+		return SimpleDispatch<date_t, date_t, OP>()(Date::FromString(lhs.GetString(), false), rhs);
 	}
 };
 
 template <Relop OP>
 struct RelopDispatch<date_t, string_t, OP> {
 	inline bool operator()(date_t lhs, string_t rhs) {
-		return SimpleDispatch<date_t, date_t, OP>()(lhs, Date::FromString(rhs.GetData(), false));
+		return SimpleDispatch<date_t, date_t, OP>()(lhs, Date::FromString(rhs.GetString(), false));
 	}
 };
 
 template <Relop OP>
 struct RelopDispatch<string_t, timestamp_t, OP> {
 	inline bool operator()(string_t lhs, timestamp_t rhs) {
-		return SimpleDispatch<timestamp_t, timestamp_t, OP>()(Timestamp::FromString(lhs.GetData()), rhs);
+		return SimpleDispatch<timestamp_t, timestamp_t, OP>()(Timestamp::FromString(lhs.GetString()), rhs);
 	}
 };
 
 template <Relop OP>
 struct RelopDispatch<timestamp_t, string_t, OP> {
 	inline bool operator()(timestamp_t lhs, string_t rhs) {
-		return SimpleDispatch<timestamp_t, timestamp_t, OP>()(lhs, Timestamp::FromString(rhs.GetData()));
+		return SimpleDispatch<timestamp_t, timestamp_t, OP>()(lhs, Timestamp::FromString(rhs.GetString()));
 	}
 };
 
@@ -491,16 +491,18 @@ ScalarFunctionSet base_r_in() {
 	set.AddFunction(IN_VARIANT(VARCHAR, BOOLEAN));
 	set.AddFunction(IN_VARIANT(BOOLEAN, VARCHAR));
 
+	set.AddFunction(IN_VARIANT(TIMESTAMP, TIMESTAMP));
+	set.AddFunction(IN_VARIANT(TIMESTAMP, VARCHAR));
+	set.AddFunction(IN_VARIANT(VARCHAR, TIMESTAMP));
+
 /*
 
-	set.AddFunction(IN_VARIANT(TIMESTAMP, TIMESTAMP));
+
 	set.AddFunction(IN_VARIANT(DATE, DATE));
 
 	set.AddFunction(IN_VARIANT(DATE, VARCHAR));
 	set.AddFunction(IN_VARIANT(VARCHAR, DATE));
 
-	set.AddFunction(IN_VARIANT(TIMESTAMP, VARCHAR));
-	set.AddFunction(IN_VARIANT(VARCHAR, TIMESTAMP));
 */
 
 	return set;

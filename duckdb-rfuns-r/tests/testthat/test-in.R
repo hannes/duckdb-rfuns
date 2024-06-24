@@ -91,6 +91,42 @@ test_that("%in% with <str>", {
   expect_rfuns_in(c(NA_character_), c(NA_character_))
 })
 
+test_that("%in% with <timestamp>", {
+  now <- Sys.time()
+  na_time <- as.POSIXct(NA)
+  expect_rfuns_in(c(now, now + 1), now)
+  expect_rfuns_in(c(now, now + 1), na_time)
+  expect_rfuns_in(c(now, now + 1), c(now, na_time))
+
+  times <- c(now, NA)
+  expect_rfuns_in(c(times), now)
+  expect_rfuns_in(c(times), na_time)
+  expect_rfuns_in(c(times), c(now, na_time))
+})
+
+test_that("<timestamp> %in% <str>", {
+  now <- as.POSIXct("2024-06-24 15:24:00 UTC")
+  now_chr <- format(now, "%Y-%m-%d %H:%M:%S %Z")
+  na_time <- as.POSIXct(NA)
+
+  expect_equal(rfuns_in(c(now), now_chr)                           , TRUE)
+  expect_equal(rfuns_in(c(now, now + 1), NA_character_)            , c(FALSE, FALSE))
+  expect_equal(rfuns_in(c(now, now + 1), c(now_chr, NA_character_)), c(TRUE, FALSE))
+  expect_equal(rfuns_in(c(na_time), c(now_chr, NA_character_))     , TRUE)
+})
+
+test_that("<str> %in% <timestamp>", {
+  now <- Sys.time()
+  na_time <- as.POSIXct(NA)
+
+  now_chr <- format(now, "%Y-%m-%d %H:%M:%S %Z")
+  expect_equal(rfuns_in(c(now_chr), now)                , FALSE)
+  expect_equal(rfuns_in(c(now_chr), na_time)            , FALSE)
+
+  skip("until this does not throw an error")
+  expect_equal(rfuns_in(c(now_chr, "hello"), c(now, NA)), c(TRUE, FALSE))
+})
+
 
 test_that("%in% skipped", {
   skip("Value::LIST without providing a child-type requires a non-empty list of values")
