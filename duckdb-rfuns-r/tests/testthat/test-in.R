@@ -91,7 +91,7 @@ test_that("%in% with <str>", {
   expect_rfuns_in(c(NA_character_), c(NA_character_))
 })
 
-test_that("%in% with <timestamp>", {
+test_that(" <timestamp> %in% <timestamp>", {
   now <- Sys.time()
   na_time <- as.POSIXct(NA)
   expect_rfuns_in(c(now, now + 1), now)
@@ -126,6 +126,13 @@ test_that("<str> %in% <timestamp>", {
   expect_equal(rfuns_in(c(now_chr, "hello"), c(now, NA)), c(TRUE, FALSE))
 })
 
+test_that(" <date> %in% <date>", {
+  today <- Sys.Date()
+  na_date <- as.Date(NA)
+  expect_rfuns_in(c(today), today)
+  expect_rfuns_in(c(today, today + 1), na_date)
+  expect_rfuns_in(c(today, today + 1), c(today, na_date))
+})
 
 test_that("%in% skipped", {
   skip("Value::LIST without providing a child-type requires a non-empty list of values")
