@@ -1,5 +1,7 @@
 #include "rfuns_extension.hpp"
 #include "duckdb/parser/parsed_data/create_scalar_function_info.hpp"
+#include "duckdb/common/operator/string_cast.hpp"
+#include "duckdb/common/operator/double_cast_operator.hpp"
 
 #include <math.h>
 #include <climits>
@@ -90,9 +92,8 @@ string_t to_string(bool x) {
 }
 
 string_t to_string(double x) {
-	char s[100];
-	snprintf(s, sizeof(s), "%.17g", x);
-	return string_t(s);
+	Vector v(LogicalType::VARCHAR, 1);
+	return StringCast::Operation<double>(x, v);
 }
 
 template <Relop OP>
@@ -130,10 +131,34 @@ struct RelopDispatch<LHS, string_t, OP> {
 	}
 };
 
+template <Relop OP>
+struct RelopDispatch<double, string_t, OP> {
+	inline bool operator()(double lhs, string_t rhs) {
+		double rhs_dbl;
+		if (!TryDoubleCast<double>(rhs.GetData(), rhs.GetSize(), rhs_dbl, false)) {
+			return SimpleDispatch<string_t, string_t, OP>()(to_string(lhs), rhs);
+		}
+		return SimpleDispatch<double, double, OP>()(lhs, rhs_dbl);
+	}
+};
+
 template <typename RHS, Relop OP>
 struct RelopDispatch<string_t, RHS, OP> {
 	inline bool operator()(string_t lhs, RHS rhs) {
 		return SimpleDispatch<string_t, string_t, OP>()(lhs, to_string(rhs));
+	}
+};
+
+
+template <Relop OP>
+struct RelopDispatch<string_t, double, OP> {
+	inline bool operator()(string_t lhs, double rhs) {
+		double lhs_dbl;
+		if (!TryDoubleCast<double>(lhs.GetData(), lhs.GetSize(), lhs_dbl, false)) {
+			return SimpleDispatch<string_t, string_t, OP>()(lhs, to_string(rhs));
+		}
+
+		return SimpleDispatch<double, double, OP>()(lhs_dbl, rhs);
 	}
 };
 

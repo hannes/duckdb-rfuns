@@ -1,3 +1,14 @@
+test_that("<str> <=> <dbl>", {
+  expect_equal(
+    spaceship_rfuns("1.0", 1),
+    spaceship_rfuns(1.0, 1)
+  )
+  expect_equal(
+    spaceship_rfuns(1, "1.0"),
+    spaceship_rfuns(1, 1.0)
+  )
+})
+
 test_that("time <=> date", {
   time <- as.POSIXct(Sys.Date(), tz = "UTC")
   date <- Sys.Date()
