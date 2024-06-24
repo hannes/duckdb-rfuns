@@ -59,6 +59,7 @@ test_that("%in% with <str>", {
   expect_rfuns_in(c("1", "abc", "1.2"), c(1, 1.2))
   expect_rfuns_in(c("1", NA_character_), c(NA_real_))
   expect_rfuns_in(c(NA_character_), c(NA_real_))
+  expect_rfuns_in(c(NA_character_, "42.3", "abc"), c(42.3))
 
   # <str> %in% <lgl>
   expect_rfuns_in(c("TRUE", "true", "false", "FALSE"), c(TRUE))
@@ -83,7 +84,11 @@ test_that("%in% with <str>", {
   expect_rfuns_in(c(FALSE), c("TRUE", NA_character_))
   expect_rfuns_in(c(NA), c(NA_character_))
 
-  expect_rfuns_in(c(NA_character_, "42.3", "abc"), c(42.3))
+  # <str> %in% <str>
+  expect_rfuns_in(c("abc"), c(NA_character_))
+  expect_rfuns_in(c("abc", NA_character_), c(NA_character_))
+  expect_rfuns_in(c("abc", NA_character_), c("abc", "def"))
+  expect_rfuns_in(c(NA_character_), c(NA_character_))
 })
 
 
