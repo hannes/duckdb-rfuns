@@ -273,16 +273,30 @@ bool try_equal(LHS_TYPE lhs, RHS_TYPE rhs) {
 template <>
 bool try_equal<string_t, timestamp_t> (string_t lhs, timestamp_t rhs) {
 	timestamp_t result;
-	auto cast_result = Timestamp::TryConvertTimestamp(lhs.GetString().c_str(), lhs.GetString().length(), result);
-	if (cast_result == TimestampCastResult::SUCCESS) {
-		return result == rhs;
-	} else {
+	if (Timestamp::TryConvertTimestamp(lhs.GetString().c_str(), lhs.GetString().length(), result) != TimestampCastResult::SUCCESS ){
 		return false;
 	}
+	return result == rhs;
 }
 
 template <>
 bool try_equal<timestamp_t, string_t> (timestamp_t lhs, string_t rhs) {
+	return try_equal(rhs, lhs);
+}
+
+template <>
+bool try_equal<string_t, date_t> (string_t lhs, date_t rhs) {
+	date_t result;
+	idx_t pos;
+	bool special = false;
+	if (!Date::TryConvertDate(lhs.GetString().c_str(), lhs.GetString().length(), pos, result, special, false)) {
+		return false;
+	}
+	return result == rhs;
+}
+
+template <>
+bool try_equal<date_t, string_t> (date_t lhs, string_t rhs) {
 	return try_equal(rhs, lhs);
 }
 
@@ -517,14 +531,8 @@ ScalarFunctionSet base_r_in() {
 	set.AddFunction(IN_VARIANT(VARCHAR, TIMESTAMP));
 
 	set.AddFunction(IN_VARIANT(DATE, DATE));
-
-/*
-
-
 	set.AddFunction(IN_VARIANT(DATE, VARCHAR));
 	set.AddFunction(IN_VARIANT(VARCHAR, DATE));
-
-*/
 
 	return set;
 }

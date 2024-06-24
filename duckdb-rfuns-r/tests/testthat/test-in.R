@@ -134,6 +134,26 @@ test_that(" <date> %in% <date>", {
   expect_rfuns_in(c(today, today + 1), c(today, na_date))
 })
 
+test_that(" <date> %in% <string>", {
+  today <- Sys.Date()
+  today_chr <- as.character(today)
+  na_date <- as.Date(NA)
+
+  expect_rfuns_in(c(today), today_chr)
+  expect_rfuns_in(c(today, today + 1), NA_character_)
+  expect_rfuns_in(c(today, today + 1), c(today_chr, NA_character_))
+})
+
+test_that(" <string> %in% <date>", {
+  today <- Sys.Date()
+  today_chr <- as.character(today)
+  na_date <- as.Date(NA)
+
+  expect_rfuns_in(c(today_chr), today)
+  expect_rfuns_in(c(today_chr, "hello"), na_date)
+  expect_rfuns_in(c(today_chr, "hello"), c(today, na_date))
+})
+
 test_that("%in% skipped", {
   skip("Value::LIST without providing a child-type requires a non-empty list of values")
 
