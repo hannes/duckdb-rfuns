@@ -155,7 +155,7 @@ test_that(" <string> %in% <date>", {
 })
 
 test_that("%in% skipped", {
-  skip("Value::LIST without providing a child-type requires a non-empty list of values")
+  skip("until https://github.com/duckdb/duckdb-r/pull/186")
 
   expect_rfuns_in(c(NA_real_), numeric())
 })
