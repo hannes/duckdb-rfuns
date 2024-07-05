@@ -48,47 +48,50 @@ test_that("%in%", {
   expect_rfuns_in(c(NA), c(NA_real_))
 })
 
-test_that("%in% with <str>", {
-  # <str> %in% <int>
-  expect_rfuns_in(c("1", "abc"), c(1L))
-  expect_rfuns_in(c("1", NA_character_), c(NA_integer_))
-  expect_rfuns_in(c(NA_character_, "42", "abc"), c(42L))
-  expect_rfuns_in(c(NA_character_), c(NA_integer_))
-
-  # <str> %in% <dbl>
-  expect_rfuns_in(c("1", "abc", "1.2"), c(1, 1.2))
-  expect_rfuns_in(c("1", NA_character_), c(NA_real_))
-  expect_rfuns_in(c(NA_character_), c(NA_real_))
-  expect_rfuns_in(c(NA_character_, "42.3", "abc"), c(42.3))
-
+test_that("<lgl> %in% <str>", {
   # <str> %in% <lgl>
   expect_rfuns_in(c("TRUE", "true", "false", "FALSE"), c(TRUE))
   expect_rfuns_in(c("TRUE", NA_character_), c(NA))
   expect_rfuns_in(c(NA_character_), c(NA))
-
-  # <int> %in% <str>
-  expect_rfuns_in(c(1L, 2L), c("2", "5", "abc"))
-  expect_rfuns_in(c(1L, 2L, NA_integer_), c("2", "5", "abc"))
-  expect_rfuns_in(c(1L, 2L), c("2", "5", "", NA_character_))
-  expect_rfuns_in(c(NA_integer_), c(NA_character_))
-
-  # <dbl> %in% <str>
-  expect_rfuns_in(c(1, 2), c("2", "5", "abc"))
-  expect_rfuns_in(c(1, 2, NA_real_), c("2", "5", "abc"))
-  expect_rfuns_in(c(1, 2), c("2", "5", "", NA_character_))
-  expect_rfuns_in(c(NA_real_), c(NA_character_))
 
   # <lgl> %in% <str>
   expect_rfuns_in(c(FALSE), c("FALSE", "abc"))
   expect_rfuns_in(c(FALSE, TRUE, NA), c("TRUE", "5", "abc"))
   expect_rfuns_in(c(FALSE), c("TRUE", NA_character_))
   expect_rfuns_in(c(NA), c(NA_character_))
+})
 
-  # <str> %in% <str>
+test_that("<str> %in% <str>", {
   expect_rfuns_in(c("abc"), c(NA_character_))
   expect_rfuns_in(c("abc", NA_character_), c(NA_character_))
   expect_rfuns_in(c("abc", NA_character_), c("abc", "def"))
   expect_rfuns_in(c(NA_character_), c(NA_character_))
+})
+
+test_that("numbers %in% <str>", {
+  # <str> %in% <int>
+  expect_error_rfuns_in(c("1", "abc"), c(1L))
+  expect_error_rfuns_in(c("1", NA_character_), c(NA_integer_))
+  expect_error_rfuns_in(c(NA_character_, "42", "abc"), c(42L))
+  expect_error_rfuns_in(c(NA_character_), c(NA_integer_))
+
+  # <str> %in% <dbl>
+  expect_error_rfuns_in(c("1", "abc", "1.2"), c(1, 1.2))
+  expect_error_rfuns_in(c("1", NA_character_), c(NA_real_))
+  expect_error_rfuns_in(c(NA_character_), c(NA_real_))
+  expect_error_rfuns_in(c(NA_character_, "42.3", "abc"), c(42.3))
+
+  # <int> %in% <str>
+  expect_error_rfuns_in(c(1L, 2L), c("2", "5", "abc"))
+  expect_error_rfuns_in(c(1L, 2L, NA_integer_), c("2", "5", "abc"))
+  expect_error_rfuns_in(c(1L, 2L), c("2", "5", "", NA_character_))
+  expect_error_rfuns_in(c(NA_integer_), c(NA_character_))
+
+  # <dbl> %in% <str>
+  expect_error_rfuns_in(c(1, 2), c("2", "5", "abc"))
+  expect_error_rfuns_in(c(1, 2, NA_real_), c("2", "5", "abc"))
+  expect_error_rfuns_in(c(1, 2), c("2", "5", "", NA_character_))
+  expect_error_rfuns_in(c(NA_real_), c(NA_character_))
 })
 
 test_that(" <timestamp> %in% <timestamp>", {
