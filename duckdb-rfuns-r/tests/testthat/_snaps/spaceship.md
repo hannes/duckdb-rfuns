@@ -82,3 +82,183 @@
       Caused by error in `as.POSIXlt.character()`:
       ! character string is not in a standard unambiguous format
 
+# spaceship(<str> <=> <dbl>)
+
+    Code
+      spaceship_rfuns(x, y, keep.data = FALSE)
+    Condition
+      Error in `spaceship_rfuns()`:
+      ! binding error
+      Caused by error:
+      ! {"exception_type":"Invalid Input","exception_message":"Comparing strings and doubles is not supported : VARCHAR <=> DOUBLE"}
+
+---
+
+    Code
+      spaceship_rfuns(x, y, keep.data = FALSE)
+    Condition
+      Error in `spaceship_rfuns()`:
+      ! binding error
+      Caused by error:
+      ! {"exception_type":"Invalid Input","exception_message":"Comparing strings and doubles is not supported : VARCHAR <=> DOUBLE"}
+
+---
+
+    Code
+      spaceship_rfuns(x, y, keep.data = FALSE)
+    Condition
+      Error in `spaceship_rfuns()`:
+      ! binding error
+      Caused by error:
+      ! {"exception_type":"Invalid Input","exception_message":"Comparing strings and doubles is not supported : VARCHAR <=> DOUBLE"}
+
+---
+
+    Code
+      spaceship_rfuns(x, y, keep.data = FALSE)
+    Condition
+      Error in `spaceship_rfuns()`:
+      ! binding error
+      Caused by error:
+      ! {"exception_type":"Invalid Input","exception_message":"Comparing strings and doubles is not supported : VARCHAR <=> DOUBLE"}
+
+---
+
+    Code
+      spaceship_rfuns(x, y, keep.data = FALSE)
+    Condition
+      Error in `spaceship_rfuns()`:
+      ! binding error
+      Caused by error:
+      ! {"exception_type":"Invalid Input","exception_message":"Comparing strings and doubles is not supported : VARCHAR <=> DOUBLE"}
+
+# spaceship(<dbl> <=> <str>)
+
+    Code
+      spaceship_rfuns(x, y, keep.data = FALSE)
+    Condition
+      Error in `spaceship_rfuns()`:
+      ! binding error
+      Caused by error:
+      ! {"exception_type":"Invalid Input","exception_message":"Comparing strings and doubles is not supported : DOUBLE <=> VARCHAR"}
+
+---
+
+    Code
+      spaceship_rfuns(x, y, keep.data = FALSE)
+    Condition
+      Error in `spaceship_rfuns()`:
+      ! binding error
+      Caused by error:
+      ! {"exception_type":"Invalid Input","exception_message":"Comparing strings and doubles is not supported : DOUBLE <=> VARCHAR"}
+
+---
+
+    Code
+      spaceship_rfuns(x, y, keep.data = FALSE)
+    Condition
+      Error in `spaceship_rfuns()`:
+      ! binding error
+      Caused by error:
+      ! {"exception_type":"Invalid Input","exception_message":"Comparing strings and doubles is not supported : DOUBLE <=> VARCHAR"}
+
+---
+
+    Code
+      spaceship_rfuns(x, y, keep.data = FALSE)
+    Condition
+      Error in `spaceship_rfuns()`:
+      ! binding error
+      Caused by error:
+      ! {"exception_type":"Invalid Input","exception_message":"Comparing strings and doubles is not supported : DOUBLE <=> VARCHAR"}
+
+---
+
+    Code
+      spaceship_rfuns(x, y, keep.data = FALSE)
+    Condition
+      Error in `spaceship_rfuns()`:
+      ! binding error
+      Caused by error:
+      ! {"exception_type":"Invalid Input","exception_message":"Comparing strings and doubles is not supported : DOUBLE <=> VARCHAR"}
+
+# spaceship(<int> <=> <str>)
+
+    Code
+      spaceship_rfuns(x, y, keep.data = FALSE)
+    Condition
+      Error in `spaceship_rfuns()`:
+      ! binding error
+      Caused by error:
+      ! {"exception_type":"Invalid Input","exception_message":"Comparing strings and integers is not supported : INTEGER <=> VARCHAR"}
+
+---
+
+    Code
+      spaceship_rfuns(x, y, keep.data = FALSE)
+    Condition
+      Error in `spaceship_rfuns()`:
+      ! binding error
+      Caused by error:
+      ! {"exception_type":"Invalid Input","exception_message":"Comparing strings and integers is not supported : INTEGER <=> VARCHAR"}
+
+---
+
+    Code
+      spaceship_rfuns(x, y, keep.data = FALSE)
+    Condition
+      Error in `spaceship_rfuns()`:
+      ! binding error
+      Caused by error:
+      ! {"exception_type":"Invalid Input","exception_message":"Comparing strings and integers is not supported : INTEGER <=> VARCHAR"}
+
+---
+
+    Code
+      spaceship_rfuns(x, y, keep.data = FALSE)
+    Condition
+      Error in `spaceship_rfuns()`:
+      ! binding error
+      Caused by error:
+      ! {"exception_type":"Invalid Input","exception_message":"Comparing strings and integers is not supported : INTEGER <=> VARCHAR"}
+
+# spaceship(<str> <=> <int>)
+
+    Code
+      spaceship_rfuns(x, y, keep.data = FALSE)
+    Condition
+      Error in `spaceship_rfuns()`:
+      ! binding error
+      Caused by error:
+      ! {"exception_type":"Invalid Input","exception_message":"Comparing strings and integers is not supported : VARCHAR <=> INTEGER"}
+
+---
+
+    Code
+      spaceship_rfuns(x, y, keep.data = FALSE)
+    Condition
+      Error in `spaceship_rfuns()`:
+      ! binding error
+      Caused by error:
+      ! {"exception_type":"Invalid Input","exception_message":"Comparing strings and integers is not supported : VARCHAR <=> INTEGER"}
+
+---
+
+    Code
+      spaceship_rfuns(x, y, keep.data = FALSE)
+    Condition
+      Error in `spaceship_rfuns()`:
+      ! binding error
+      Caused by error:
+      ! {"exception_type":"Invalid Input","exception_message":"Comparing strings and integers is not supported : VARCHAR <=> INTEGER"}
+
+---
+
+    Code
+      spaceship_rfuns(x, y, keep.data = FALSE)
+    Condition
+      Error in `spaceship_rfuns()`:
+      ! binding error
+      Caused by error:
+      ! {"exception_type":"Invalid Input","exception_message":"Comparing strings and integers is not supported : VARCHAR <=> INTEGER"}
+
