@@ -519,10 +519,10 @@ ScalarFunctionSet base_r_in() {
 	set.AddFunction(IN_VARIANT(BOOLEAN, DOUBLE));
 
 	set.AddFunction(IN_VARIANT(VARCHAR, VARCHAR));
-	set.AddFunction(IN_VARIANT(VARCHAR, INTEGER));
-	set.AddFunction(IN_VARIANT(INTEGER, VARCHAR));
-	set.AddFunction(IN_VARIANT(VARCHAR, DOUBLE));
-	set.AddFunction(IN_VARIANT(DOUBLE, VARCHAR));
+	// set.AddFunction(IN_VARIANT(VARCHAR, INTEGER));
+	// set.AddFunction(IN_VARIANT(INTEGER, VARCHAR));
+	// set.AddFunction(IN_VARIANT(VARCHAR, DOUBLE));
+	// set.AddFunction(IN_VARIANT(DOUBLE, VARCHAR));
 	set.AddFunction(IN_VARIANT(VARCHAR, BOOLEAN));
 	set.AddFunction(IN_VARIANT(BOOLEAN, VARCHAR));
 
