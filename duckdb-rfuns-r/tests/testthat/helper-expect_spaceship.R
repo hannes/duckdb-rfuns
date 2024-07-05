@@ -24,3 +24,6 @@ expect_spaceship <- function(x, y) {
 
 }
 
+expect_spaceship_error <- function(x, y) {
+  expect_snapshot(error = TRUE, spaceship_rfuns(x, y, keep.data = FALSE))
+}
