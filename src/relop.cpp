@@ -80,20 +80,8 @@ struct RelopDispatch {
 template <typename LHS, typename RHS, Relop OP>
 inline bool relop(LHS lhs, RHS rhs);
 
-// borrowed from EncodeInteger
-string_t to_string(int x) {
-	char s[100];
-	snprintf(s, sizeof(s), "%d", x);
-	return string_t(s);
-}
-
-string_t to_string(bool x) {
+string_t bool_to_string(bool x) {
 	return string_t(x ? "TRUE" : "FALSE");
-}
-
-string_t to_string(double x) {
-	Vector v(LogicalType::VARCHAR, 1);
-	return StringCast::Operation<double>(x, v);
 }
 
 template <Relop OP>
@@ -124,41 +112,17 @@ struct RelopDispatch<timestamp_t, string_t, OP> {
 	}
 };
 
-template <typename LHS, Relop OP>
-struct RelopDispatch<LHS, string_t, OP> {
-	inline bool operator()(LHS lhs, string_t rhs) {
-		return SimpleDispatch<string_t, string_t, OP>()(to_string(lhs), rhs);
+template <Relop OP>
+struct RelopDispatch<bool, string_t, OP> {
+	inline bool operator()(bool lhs, string_t rhs) {
+		return SimpleDispatch<string_t, string_t, OP>()(bool_to_string(lhs), rhs);
 	}
 };
 
 template <Relop OP>
-struct RelopDispatch<double, string_t, OP> {
-	inline bool operator()(double lhs, string_t rhs) {
-		double rhs_dbl;
-		if (!TryDoubleCast<double>(rhs.GetData(), rhs.GetSize(), rhs_dbl, false)) {
-			return SimpleDispatch<string_t, string_t, OP>()(to_string(lhs), rhs);
-		}
-		return SimpleDispatch<double, double, OP>()(lhs, rhs_dbl);
-	}
-};
-
-template <typename RHS, Relop OP>
-struct RelopDispatch<string_t, RHS, OP> {
-	inline bool operator()(string_t lhs, RHS rhs) {
-		return SimpleDispatch<string_t, string_t, OP>()(lhs, to_string(rhs));
-	}
-};
-
-
-template <Relop OP>
-struct RelopDispatch<string_t, double, OP> {
-	inline bool operator()(string_t lhs, double rhs) {
-		double lhs_dbl;
-		if (!TryDoubleCast<double>(lhs.GetData(), lhs.GetSize(), lhs_dbl, false)) {
-			return SimpleDispatch<string_t, string_t, OP>()(lhs, to_string(rhs));
-		}
-
-		return SimpleDispatch<double, double, OP>()(lhs_dbl, rhs);
+struct RelopDispatch<string_t, bool, OP> {
+	inline bool operator()(string_t lhs, bool rhs) {
+		return SimpleDispatch<string_t, string_t, OP>()(lhs, bool_to_string(rhs));
 	}
 };
 
@@ -253,15 +217,11 @@ ScalarFunctionSet base_r_relop(string name) {
 	set.AddFunction(RELOP_VARIANT(DOUBLE, BOOLEAN));
 	set.AddFunction(RELOP_VARIANT(BOOLEAN, DOUBLE));
 
-	set.AddFunction(RELOP_VARIANT(VARCHAR, INTEGER));
-	set.AddFunction(RELOP_VARIANT(INTEGER, VARCHAR));
 	set.AddFunction(RELOP_VARIANT(VARCHAR, BOOLEAN));
 	set.AddFunction(RELOP_VARIANT(BOOLEAN, VARCHAR));
 
 	set.AddFunction(RELOP_VARIANT(DOUBLE, DOUBLE));
 	set.AddFunction(RELOP_VARIANT(VARCHAR, VARCHAR));
-	set.AddFunction(RELOP_VARIANT(VARCHAR, DOUBLE));
-	set.AddFunction(RELOP_VARIANT(DOUBLE, VARCHAR));
 
 	set.AddFunction(RELOP_VARIANT(TIMESTAMP, TIMESTAMP));
 	set.AddFunction(RELOP_VARIANT(DATE, DATE));
@@ -271,6 +231,11 @@ ScalarFunctionSet base_r_relop(string name) {
 
 	set.AddFunction(RELOP_VARIANT(TIMESTAMP, VARCHAR));
 	set.AddFunction(RELOP_VARIANT(VARCHAR, TIMESTAMP));
+
+	set.AddFunction(RELOP_VARIANT_BIND_FAIL(VARCHAR, INTEGER, "Comparing strings and integers is not supported"));
+	set.AddFunction(RELOP_VARIANT_BIND_FAIL(INTEGER, VARCHAR, "Comparing strings and integers is not supported"));
+	set.AddFunction(RELOP_VARIANT_BIND_FAIL(VARCHAR, DOUBLE , "Comparing strings and doubles is not supported"));
+	set.AddFunction(RELOP_VARIANT_BIND_FAIL(DOUBLE, VARCHAR, "Comparing strings and doubles is not supported"));
 
 	set.AddFunction(RELOP_VARIANT_BIND_FAIL(TIMESTAMP, DATE, "Comparing times and dates is not supported"));
 	set.AddFunction(RELOP_VARIANT_BIND_FAIL(DATE, TIMESTAMP, "Comparing dates and times is not supported"));

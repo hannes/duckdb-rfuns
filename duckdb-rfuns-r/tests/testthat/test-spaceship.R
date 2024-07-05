@@ -1,14 +1,3 @@
-test_that("<str> <=> <dbl>", {
-  expect_equal(
-    spaceship_rfuns("1.0", 1),
-    spaceship_rfuns(1.0, 1)
-  )
-  expect_equal(
-    spaceship_rfuns(1, "1.0"),
-    spaceship_rfuns(1, 1.0)
-  )
-})
-
 test_that("time <=> date", {
   time <- as.POSIXct(Sys.Date(), tz = "UTC")
   date <- Sys.Date()
@@ -215,31 +204,31 @@ test_that("spaceship(<lgl> <=> <str>)", {
 })
 
 test_that("spaceship(<str> <=> <dbl>)", {
-  expect_spaceship('2' , 1.0)
-  expect_spaceship('1' , 1.0)
-  expect_spaceship('1' , NA_real_)
-  expect_spaceship(NA_character_, 3.0)
-  expect_spaceship("a", 1.0)
+  expect_spaceship_error('2' , 1.0)
+  expect_spaceship_error('1' , 1.0)
+  expect_spaceship_error('1' , NA_real_)
+  expect_spaceship_error(NA_character_, 3.0)
+  expect_spaceship_error("a", 1.0)
 })
 
 test_that("spaceship(<dbl> <=> <str>)", {
-  expect_spaceship(1.0 ,'2')
-  expect_spaceship(1.0 , '1')
-  expect_spaceship(NA_real_ , "2")
-  expect_spaceship(3.0 , NA_character_)
-  expect_spaceship(1.0 , "a")
+  expect_spaceship_error(1.0 ,'2')
+  expect_spaceship_error(1.0 , '1')
+  expect_spaceship_error(NA_real_ , "2")
+  expect_spaceship_error(3.0 , NA_character_)
+  expect_spaceship_error(1.0 , "a")
 })
 
 test_that("spaceship(<int> <=> <str>)", {
-  expect_spaceship(NA_integer_, "string")
-  expect_spaceship(1L , "1")
-  expect_spaceship(1L , NA_character_)
-  expect_spaceship(1L , "a")
+  expect_spaceship_error(NA_integer_, "string")
+  expect_spaceship_error(1L , "1")
+  expect_spaceship_error(1L , NA_character_)
+  expect_spaceship_error(1L , "a")
 })
 
 test_that("spaceship(<str> <=> <int>)", {
-  expect_spaceship("string", NA_integer_)
-  expect_spaceship("1", 1L)
-  expect_spaceship(NA_character_ , 2L)
-  expect_spaceship("a", 1L)
+  expect_spaceship_error("string", NA_integer_)
+  expect_spaceship_error("1", 1L)
+  expect_spaceship_error(NA_character_ , 2L)
+  expect_spaceship_error("a", 1L)
 })
