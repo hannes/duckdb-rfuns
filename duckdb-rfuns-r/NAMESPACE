@@ -2,6 +2,7 @@
 
 export(rfuns_as.integer)
 export(rfuns_as.numeric)
+export(rfuns_in)
 export(rfuns_is.na)
 export(rfuns_max)
 export(rfuns_min)

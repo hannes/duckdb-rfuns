@@ -8,31 +8,8 @@ test_that("time <=> date", {
 
 test_that("spaceship(<date> <=> <string>)", {
   date <- as.Date("2024-03-21")
-  expect_spaceship(date, "2024-03-21")
-  expect_spaceship(date, "2024-03-20")
-  expect_spaceship(date, "2024-03-20")
-
-  expect_spaceship("2024-03-21", date)
-  expect_spaceship("2024-03-20", date)
-  expect_spaceship("2024-03-20", date)
-
-  # ok because both R and Date::FromString(strict = false)
-  # are forgiving about extra stuff after YYYY-MM-DD format
-  expect_spaceship(date, "2024-03-21 and then some")
-  expect_spaceship(date, "2024-03-20 and then some")
-  expect_spaceship("2024-03-21 and then some", date)
-  expect_spaceship("2024-03-20 and then some", date)
-
-  # ok because they fail in both cases
-  expect_spaceship(date, "not a date")
-  expect_spaceship("not a date", date)
-
-  expect_snapshot(error = TRUE,
-    spaceship_rfuns(as.Date("2024-03-21"), "not a date", "==")
-  )
-  expect_snapshot(error = TRUE,
-    spaceship_r(as.Date("2024-03-21"), "not a date", "==")
-  )
+  expect_spaceship_error(date, "2024-03-21")
+  expect_spaceship_error("2024-03-21", date)
 })
 
 test_that("spaceship(<date> <=> <date>)", {
@@ -56,41 +33,11 @@ test_that("spaceship(<time> <=> <time>)", {
 })
 
 test_that("spaceship(<time> <=> <string>)", {
-  withr::local_envvar(c("TZ" = "UTC"))
+  chr <- '2024-02-21 14:00:00'
+  time <- as.POSIXct(strptime(chr, format = '%Y-%m-%d %H:%M:%S'))
 
-  time_chr <- '2024-02-21 14:00:00'
-  time_chr_gibberish <- '2024-02-21 14:00:00 gibberish'
-  time <- as.POSIXct(strptime(time_chr, format = '%Y-%m-%d %H:%M:%S'))
-
-  expect_spaceship(time    , time_chr)
-  expect_spaceship(time + 1, time_chr)
-  expect_spaceship(time - 1, time_chr)
-
-  expect_spaceship(time_chr, time)
-  expect_spaceship(time_chr, time + 1)
-  expect_spaceship(time_chr, time - 1)
-
-  # r treats extra text with forgiveness
-  expect_equal(
-    spaceship_r(time, time_chr),
-    spaceship_r(time, time_chr_gibberish)
-  )
-
-  # but Timestamp::FromString() does not
-  expect_snapshot(error = TRUE,
-    spaceship_rfuns(time, time_chr_gibberish, "==")
-  )
-
-  # ok because they fail in both cases
-  expect_spaceship(time, "not a time")
-  expect_spaceship("not a time", time)
-
-  expect_snapshot(error = TRUE,
-    spaceship_rfuns(as.POSIXct(strptime("2024-02-21 14:00:00", format = '%Y-%m-%d %H:%M:%S')), "not a time", "==")
-  )
-  expect_snapshot(error = TRUE,
-    spaceship_r(as.POSIXct(strptime("2024-02-21 14:00:00", format = '%Y-%m-%d %H:%M:%S')), "not a time", "==")
-  )
+  expect_spaceship_error(time    , chr)
+  expect_spaceship_error(chr, time)
 })
 
 
@@ -180,27 +127,27 @@ test_that("spaceship(<str> <=> <str>)", {
 })
 
 test_that("spaceship(<str> <=> <lgl>)", {
-  expect_spaceship('TRUE'        , TRUE)
-  expect_spaceship('TRUE'        , FALSE)
-  expect_spaceship('TRUE'        , NA)
-  expect_spaceship(NA_character_ , TRUE)
-  expect_spaceship(NA_character_ , FALSE)
-  expect_spaceship('FALSE'       , TRUE)
-  expect_spaceship('FALSE'       , FALSE)
-  expect_spaceship('tRue'        , TRUE)
-  expect_spaceship('fAlse'       , FALSE)
+  expect_spaceship_error('TRUE'        , TRUE)
+  expect_spaceship_error('TRUE'        , FALSE)
+  expect_spaceship_error('TRUE'        , NA)
+  expect_spaceship_error(NA_character_ , TRUE)
+  expect_spaceship_error(NA_character_ , FALSE)
+  expect_spaceship_error('FALSE'       , TRUE)
+  expect_spaceship_error('FALSE'       , FALSE)
+  expect_spaceship_error('tRue'        , TRUE)
+  expect_spaceship_error('fAlse'       , FALSE)
 })
 
 test_that("spaceship(<lgl> <=> <str>)", {
-  expect_spaceship(TRUE  , 'TRUE')
-  expect_spaceship(FALSE , 'TRUE')
-  expect_spaceship(NA    , 'TRUE')
-  expect_spaceship(TRUE  , NA_character_)
-  expect_spaceship(FALSE , NA_character_)
-  expect_spaceship(TRUE  , 'FALSE')
-  expect_spaceship(FALSE , 'FALSE')
-  expect_spaceship(TRUE  , 'tRue')
-  expect_spaceship(FALSE , 'fAlse')
+  expect_spaceship_error(TRUE  , 'TRUE')
+  expect_spaceship_error(FALSE , 'TRUE')
+  expect_spaceship_error(NA    , 'TRUE')
+  expect_spaceship_error(TRUE  , NA_character_)
+  expect_spaceship_error(FALSE , NA_character_)
+  expect_spaceship_error(TRUE  , 'FALSE')
+  expect_spaceship_error(FALSE , 'FALSE')
+  expect_spaceship_error(TRUE  , 'tRue')
+  expect_spaceship_error(FALSE , 'fAlse')
 })
 
 test_that("spaceship(<str> <=> <dbl>)", {
