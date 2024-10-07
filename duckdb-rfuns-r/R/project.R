@@ -25,6 +25,16 @@ rfuns_as.numeric <- function(x) {
   rfuns("as.numeric", tibble(x = x))
 }
 
+#' as.character()
+#'
+#' @param x vector
+#'
+#' @export
+rfuns_as.character <- function(x) {
+  rfuns("as.character", tibble(x = x))
+}
+
+
 #' %in%
 #'
 #' @param x vector
