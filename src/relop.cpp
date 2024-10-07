@@ -23,113 +23,50 @@ enum Relop {
 };
 
 template <typename LHS, typename RHS, Relop OP>
-struct SimpleDispatch {
+struct RelopDispatch {
 	inline bool operator()(LHS lhs, RHS rhs);
 };
 
 
 template <typename LHS, typename RHS>
-struct SimpleDispatch<LHS, RHS, EQ> {
+struct RelopDispatch<LHS, RHS, EQ> {
 	inline bool operator()(LHS lhs, RHS rhs) {
 		return lhs == rhs;
 	}
 };
 
 template <typename LHS, typename RHS>
-struct SimpleDispatch<LHS, RHS, NEQ> {
+struct RelopDispatch<LHS, RHS, NEQ> {
 	inline bool operator()(LHS lhs, RHS rhs) {
 		return !(lhs == rhs);
 	}
 };
 
 template <typename LHS, typename RHS>
-struct SimpleDispatch<LHS, RHS, LT> {
+struct RelopDispatch<LHS, RHS, LT> {
 	inline bool operator()(LHS lhs, RHS rhs) {
 		return lhs < rhs;
 	}
 };
 
 template <typename LHS, typename RHS>
-struct SimpleDispatch<LHS, RHS, LTE> {
+struct RelopDispatch<LHS, RHS, LTE> {
 	inline bool operator()(LHS lhs, RHS rhs) {
 		return lhs < rhs || lhs == rhs;
 	}
 };
 
 template <typename LHS, typename RHS>
-struct SimpleDispatch<LHS, RHS, GT> {
+struct RelopDispatch<LHS, RHS, GT> {
 	inline bool operator()(LHS lhs, RHS rhs) {
 		return lhs > rhs;
 	}
 };
 
 template <typename LHS, typename RHS>
-struct SimpleDispatch<LHS, RHS, GTE> {
+struct RelopDispatch<LHS, RHS, GTE> {
 	inline bool operator()(LHS lhs, RHS rhs) {
 		return lhs > rhs || lhs == rhs;
-	}
-};
-
-template <typename LHS, typename RHS, Relop OP>
-struct RelopDispatch {
-	inline bool operator()(LHS lhs, RHS rhs) {
-		return SimpleDispatch<LHS, RHS, OP>()(lhs, rhs);
-	}
-};
-
-template <typename LHS, typename RHS, Relop OP>
-inline bool relop(LHS lhs, RHS rhs);
-
-string_t bool_to_string(bool x) {
-	return string_t(x ? "TRUE" : "FALSE");
-}
-
-template <Relop OP>
-struct RelopDispatch<string_t, date_t, OP> {
-	inline bool operator()(string_t lhs, date_t rhs) {
-		return SimpleDispatch<date_t, date_t, OP>()(Date::FromString(lhs.GetString(), false), rhs);
-	}
-};
-
-template <Relop OP>
-struct RelopDispatch<date_t, string_t, OP> {
-	inline bool operator()(date_t lhs, string_t rhs) {
-		return SimpleDispatch<date_t, date_t, OP>()(lhs, Date::FromString(rhs.GetString(), false));
-	}
-};
-
-template <Relop OP>
-struct RelopDispatch<string_t, timestamp_t, OP> {
-	inline bool operator()(string_t lhs, timestamp_t rhs) {
-		return SimpleDispatch<timestamp_t, timestamp_t, OP>()(Timestamp::FromString(lhs.GetString()), rhs);
-	}
-};
-
-template <Relop OP>
-struct RelopDispatch<timestamp_t, string_t, OP> {
-	inline bool operator()(timestamp_t lhs, string_t rhs) {
-		return SimpleDispatch<timestamp_t, timestamp_t, OP>()(lhs, Timestamp::FromString(rhs.GetString()));
-	}
-};
-
-template <Relop OP>
-struct RelopDispatch<bool, string_t, OP> {
-	inline bool operator()(bool lhs, string_t rhs) {
-		return SimpleDispatch<string_t, string_t, OP>()(bool_to_string(lhs), rhs);
-	}
-};
-
-template <Relop OP>
-struct RelopDispatch<string_t, bool, OP> {
-	inline bool operator()(string_t lhs, bool rhs) {
-		return SimpleDispatch<string_t, string_t, OP>()(lhs, bool_to_string(rhs));
-	}
-};
-
-template <Relop OP>
-struct RelopDispatch<string_t, string_t, OP> {
-	inline bool operator()(string_t lhs, string_t rhs) {
-		return SimpleDispatch<string_t, string_t, OP>()(lhs, rhs);
 	}
 };
 
