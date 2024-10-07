@@ -217,15 +217,15 @@ ScalarFunctionSet base_r_relop(string name) {
 	set.AddFunction(RELOP_VARIANT(DOUBLE, BOOLEAN));
 	set.AddFunction(RELOP_VARIANT(BOOLEAN, DOUBLE));
 
-	set.AddFunction(RELOP_VARIANT(VARCHAR, INTEGER));
-	set.AddFunction(RELOP_VARIANT(INTEGER, VARCHAR));
-	set.AddFunction(RELOP_VARIANT(VARCHAR, BOOLEAN));
-	set.AddFunction(RELOP_VARIANT(BOOLEAN, VARCHAR));
+	// set.AddFunction(RELOP_VARIANT(VARCHAR, INTEGER));
+	// set.AddFunction(RELOP_VARIANT(INTEGER, VARCHAR));
+	// set.AddFunction(RELOP_VARIANT(VARCHAR, BOOLEAN));
+	// set.AddFunction(RELOP_VARIANT(BOOLEAN, VARCHAR));
 
 	set.AddFunction(RELOP_VARIANT(DOUBLE, DOUBLE));
 	set.AddFunction(RELOP_VARIANT(VARCHAR, VARCHAR));
-	set.AddFunction(RELOP_VARIANT(VARCHAR, DOUBLE));
-	set.AddFunction(RELOP_VARIANT(DOUBLE, VARCHAR));
+	// set.AddFunction(RELOP_VARIANT(VARCHAR, DOUBLE));
+	// set.AddFunction(RELOP_VARIANT(DOUBLE, VARCHAR));
 
 	set.AddFunction(RELOP_VARIANT(TIMESTAMP, TIMESTAMP));
 	set.AddFunction(RELOP_VARIANT(DATE, DATE));
@@ -461,46 +461,6 @@ void InExecute(DataChunk &args, ExpressionState &state, Vector &result) {
 		typename physical<LogicalType::__LHS__>::type, \
 	    typename physical<LogicalType::__RHS__>::type  \
 	>)
-
-template <Relop OP>
-ScalarFunctionSet base_r_relop(string name) {
-	ScalarFunctionSet set(name);
-
-	set.AddFunction(RELOP_VARIANT(BOOLEAN, BOOLEAN));
-	set.AddFunction(RELOP_VARIANT(BOOLEAN, INTEGER));
-	set.AddFunction(RELOP_VARIANT(INTEGER, BOOLEAN));
-	set.AddFunction(RELOP_VARIANT(INTEGER, INTEGER));
-
-	set.AddFunction(RELOP_VARIANT(DOUBLE, INTEGER));
-	set.AddFunction(RELOP_VARIANT(INTEGER, DOUBLE));
-	set.AddFunction(RELOP_VARIANT(DOUBLE, BOOLEAN));
-	set.AddFunction(RELOP_VARIANT(BOOLEAN, DOUBLE));
-
-	set.AddFunction(RELOP_VARIANT(VARCHAR, BOOLEAN));
-	set.AddFunction(RELOP_VARIANT(BOOLEAN, VARCHAR));
-
-	set.AddFunction(RELOP_VARIANT(DOUBLE, DOUBLE));
-	set.AddFunction(RELOP_VARIANT(VARCHAR, VARCHAR));
-
-	set.AddFunction(RELOP_VARIANT(TIMESTAMP, TIMESTAMP));
-	set.AddFunction(RELOP_VARIANT(DATE, DATE));
-
-	set.AddFunction(RELOP_VARIANT(DATE, VARCHAR));
-	set.AddFunction(RELOP_VARIANT(VARCHAR, DATE));
-
-	set.AddFunction(RELOP_VARIANT(TIMESTAMP, VARCHAR));
-	set.AddFunction(RELOP_VARIANT(VARCHAR, TIMESTAMP));
-
-	set.AddFunction(RELOP_VARIANT_BIND_FAIL(VARCHAR, INTEGER, "Comparing strings and integers is not supported"));
-	set.AddFunction(RELOP_VARIANT_BIND_FAIL(INTEGER, VARCHAR, "Comparing strings and integers is not supported"));
-	set.AddFunction(RELOP_VARIANT_BIND_FAIL(VARCHAR, DOUBLE , "Comparing strings and doubles is not supported"));
-	set.AddFunction(RELOP_VARIANT_BIND_FAIL(DOUBLE, VARCHAR, "Comparing strings and doubles is not supported"));
-
-	set.AddFunction(RELOP_VARIANT_BIND_FAIL(TIMESTAMP, DATE, "Comparing times and dates is not supported"));
-	set.AddFunction(RELOP_VARIANT_BIND_FAIL(DATE, TIMESTAMP, "Comparing dates and times is not supported"));
-
-	return set;
-}
 
 } // namespace
 
