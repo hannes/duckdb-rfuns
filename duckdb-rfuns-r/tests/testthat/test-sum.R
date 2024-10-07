@@ -28,6 +28,13 @@ test_that("r_base::sum(<INTEGER>)", {
   expect_equal(rfuns_sum(empty), sum(empty))
 })
 
+test_that("r_base::sum(<INTEGER>) -> dbl", {
+  x <- 1:10
+  expect_true(is.double(rfuns_sum(x, na.rm = TRUE)))
+  expect_true(is.double(rfuns_sum(x, na.rm = FALSE)))
+  expect_true(is.double(rfuns_sum(x)))
+})
+
 test_that("r_base::sum(<DOUBLE>)", {
   x <- c(1, 2, 3, NA)
   empty <- double()
