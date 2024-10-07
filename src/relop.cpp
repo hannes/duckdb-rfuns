@@ -217,15 +217,8 @@ ScalarFunctionSet base_r_relop(string name) {
 	set.AddFunction(RELOP_VARIANT(DOUBLE, BOOLEAN));
 	set.AddFunction(RELOP_VARIANT(BOOLEAN, DOUBLE));
 
-	// set.AddFunction(RELOP_VARIANT(VARCHAR, INTEGER));
-	// set.AddFunction(RELOP_VARIANT(INTEGER, VARCHAR));
-	// set.AddFunction(RELOP_VARIANT(VARCHAR, BOOLEAN));
-	// set.AddFunction(RELOP_VARIANT(BOOLEAN, VARCHAR));
-
 	set.AddFunction(RELOP_VARIANT(DOUBLE, DOUBLE));
 	set.AddFunction(RELOP_VARIANT(VARCHAR, VARCHAR));
-	// set.AddFunction(RELOP_VARIANT(VARCHAR, DOUBLE));
-	// set.AddFunction(RELOP_VARIANT(DOUBLE, VARCHAR));
 
 	set.AddFunction(RELOP_VARIANT(TIMESTAMP, TIMESTAMP));
 	set.AddFunction(RELOP_VARIANT(DATE, DATE));

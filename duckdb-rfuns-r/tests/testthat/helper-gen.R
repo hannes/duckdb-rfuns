@@ -5,14 +5,16 @@ if (Sys.getenv("CI") == "" ) {
 
   # TODO: this should live in the package somewhere
   udfs <- c(
-    "==" = "r_base::==",
+    # relop
+    "=="  = "r_base::==",
     "!="  = "r_base::!=",
-    "<"  = "r_base::<",
+    "<"   = "r_base::<",
     "<="  = "r_base::<=",
-    ">"  = "r_base::>",
+    ">"   = "r_base::>",
     ">="  = "r_base::>=",
 
-    "+"  = "r_base::+"
+    # +
+    "+"   = "r_base::+"
   )
 
   convert_expr <- function(expr) {

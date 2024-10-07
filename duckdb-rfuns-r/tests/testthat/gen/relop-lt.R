@@ -105,25 +105,3 @@ FALSE < NA_real_
 'a' < 'a'
 'a' < NA_character_
 NA_character_  < 'a'
-
-"<str>        < <lgl>"
-'TRUE'        < TRUE
-'TRUE'        < FALSE
-'TRUE'        < NA
-NA_character_ < TRUE
-NA_character_ < FALSE
-'FALSE'       < TRUE
-'FALSE'       < FALSE
-'tRue'        < TRUE
-'fAlse'       < FALSE
-
-"<lgl> < <str>"
-TRUE  < 'TRUE'
-FALSE < 'TRUE'
-NA    < 'TRUE'
-TRUE  < NA_character_
-FALSE < NA_character_
-TRUE  < 'FALSE'
-FALSE < 'FALSE'
-TRUE  < 'tRue'
-FALSE < 'fAlse'
