@@ -101,7 +101,7 @@ void isna_any_loop(idx_t count, bool* result_data, ValidityMask mask) {
 		idx_t next = MinValue<idx_t>(base_idx + ValidityMask::BITS_PER_VALUE, count);
 
 		if (ValidityMask::AllValid(validity_entry)) {
-			// all valid: check with std::isnan()
+			// all valid
 			for (; base_idx < next; base_idx++) {
 				result_data[base_idx] = false;
 			}
