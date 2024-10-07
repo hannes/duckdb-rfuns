@@ -335,3 +335,227 @@ test_that(r"(<str> < <int> :: "a" < 1L)", {
     ))
   ))
 })
+test_that(r"(<time> < <string> :: time < "2024-02-21 14:00:00")", {
+  con <- local_duckdb_con()
+  in_df <- tibble::tibble(x1 = as.POSIXct("2024-02-21 14:00:00", tz = "UTC"), x2 = "2024-02-21 14:00:00")
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+
+  expect_snapshot(error = TRUE, duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  ))
+})
+test_that(r"(<time> < <string> :: time < "2024-02-21 13:00:00")", {
+  con <- local_duckdb_con()
+  in_df <- tibble::tibble(x1 = as.POSIXct("2024-02-21 14:00:00", tz = "UTC"), x2 = "2024-02-21 13:00:00")
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+
+  expect_snapshot(error = TRUE, duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  ))
+})
+test_that(r"(<time> < <string> :: time < "2024-02-21 15:00:00")", {
+  con <- local_duckdb_con()
+  in_df <- tibble::tibble(x1 = as.POSIXct("2024-02-21 14:00:00", tz = "UTC"), x2 = "2024-02-21 15:00:00")
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+
+  expect_snapshot(error = TRUE, duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  ))
+})
+test_that(r"(<time> < <string> :: "2024-02-21 14:00:00" < time)", {
+  con <- local_duckdb_con()
+  in_df <- tibble::tibble(x1 = "2024-02-21 14:00:00", x2 = as.POSIXct("2024-02-21 14:00:00", tz = "UTC"))
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+
+  expect_snapshot(error = TRUE, duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  ))
+})
+test_that(r"(<time> < <string> :: "2024-02-21 13:00:00" < time)", {
+  con <- local_duckdb_con()
+  in_df <- tibble::tibble(x1 = "2024-02-21 13:00:00", x2 = as.POSIXct("2024-02-21 14:00:00", tz = "UTC"))
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+
+  expect_snapshot(error = TRUE, duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  ))
+})
+test_that(r"(<time> < <string> :: "2024-02-21 15:00:00" < time)", {
+  con <- local_duckdb_con()
+  in_df <- tibble::tibble(x1 = "2024-02-21 15:00:00", x2 = as.POSIXct("2024-02-21 14:00:00", tz = "UTC"))
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+
+  expect_snapshot(error = TRUE, duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  ))
+})
+test_that(r"(<date> < <string> :: date < "2024-02-21")", {
+  con <- local_duckdb_con()
+  in_df <- tibble::tibble(x1 = as.Date("2024-02-21"), x2 = "2024-02-21")
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+
+  expect_snapshot(error = TRUE, duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  ))
+})
+test_that(r"(<date> < <string> :: date < "2024-02-22")", {
+  con <- local_duckdb_con()
+  in_df <- tibble::tibble(x1 = as.Date("2024-02-21"), x2 = "2024-02-22")
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+
+  expect_snapshot(error = TRUE, duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  ))
+})
+test_that(r"(<date> < <string> :: date < "2024-02-20")", {
+  con <- local_duckdb_con()
+  in_df <- tibble::tibble(x1 = as.Date("2024-02-21"), x2 = "2024-02-20")
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+
+  expect_snapshot(error = TRUE, duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  ))
+})
+test_that(r"(<date> < <string> :: date < "2024-03-21 and then some")", {
+  con <- local_duckdb_con()
+  in_df <- tibble::tibble(x1 = as.Date("2024-02-21"), x2 = "2024-03-21 and then some")
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+
+  expect_snapshot(error = TRUE, duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  ))
+})
+test_that(r"(<date> < <string> :: "2024-02-21" < date)", {
+  con <- local_duckdb_con()
+  in_df <- tibble::tibble(x1 = "2024-02-21", x2 = as.Date("2024-02-21"))
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+
+  expect_snapshot(error = TRUE, duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  ))
+})
+test_that(r"(<date> < <string> :: "2024-02-22" < date)", {
+  con <- local_duckdb_con()
+  in_df <- tibble::tibble(x1 = "2024-02-22", x2 = as.Date("2024-02-21"))
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+
+  expect_snapshot(error = TRUE, duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  ))
+})
+test_that(r"(<date> < <string> :: "2024-02-20" < date)", {
+  con <- local_duckdb_con()
+  in_df <- tibble::tibble(x1 = "2024-02-20", x2 = as.Date("2024-02-21"))
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+
+  expect_snapshot(error = TRUE, duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  ))
+})
+test_that(r"(<date> < <string> :: "2024-03-21 and then some" < date)", {
+  con <- local_duckdb_con()
+  in_df <- tibble::tibble(x1 = "2024-03-21 and then some", x2 = as.Date("2024-02-21"))
+  in_rel <- duckdb:::rel_from_df(con, in_df)
+
+  expect_snapshot(error = TRUE, duckdb:::rel_project(
+    in_rel,
+    list(duckdb:::expr_function(
+      "r_base::<",
+      list(
+        duckdb:::expr_reference("x1"), 
+        duckdb:::expr_reference("x2")
+      )
+    ))
+  ))
+})

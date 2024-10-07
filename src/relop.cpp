@@ -223,12 +223,6 @@ ScalarFunctionSet base_r_relop(string name) {
 	set.AddFunction(RELOP_VARIANT(TIMESTAMP, TIMESTAMP));
 	set.AddFunction(RELOP_VARIANT(DATE, DATE));
 
-	set.AddFunction(RELOP_VARIANT(DATE, VARCHAR));
-	set.AddFunction(RELOP_VARIANT(VARCHAR, DATE));
-
-	set.AddFunction(RELOP_VARIANT(TIMESTAMP, VARCHAR));
-	set.AddFunction(RELOP_VARIANT(VARCHAR, TIMESTAMP));
-
 	set.AddFunction(RELOP_VARIANT_BIND_FAIL(TIMESTAMP, DATE, "Comparing times and dates is not supported"));
 	set.AddFunction(RELOP_VARIANT_BIND_FAIL(DATE, TIMESTAMP, "Comparing dates and times is not supported"));
 

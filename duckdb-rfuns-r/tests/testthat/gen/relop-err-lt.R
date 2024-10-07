@@ -27,3 +27,21 @@ NA_integer_ < "string"
 "1" < 1L
 NA_character_ < 2L
 "a" < 1L
+
+"<time> < <string>"
+time < "2024-02-21 14:00:00"
+time < "2024-02-21 13:00:00"
+time < "2024-02-21 15:00:00"
+"2024-02-21 14:00:00" < time
+"2024-02-21 13:00:00" < time
+"2024-02-21 15:00:00" < time
+
+"<date> < <string>"
+date < "2024-02-21"
+date < "2024-02-22"
+date < "2024-02-20"
+date < "2024-03-21 and then some"
+"2024-02-21" < date
+"2024-02-22" < date
+"2024-02-20" < date
+"2024-03-21 and then some" < date
