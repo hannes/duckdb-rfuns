@@ -257,36 +257,6 @@ bool try_equal(LHS_TYPE lhs, RHS_TYPE rhs) {
 	return relop<LHS_TYPE, RHS_TYPE, EQ>(lhs, rhs);
 }
 
-template <>
-bool try_equal<string_t, timestamp_t> (string_t lhs, timestamp_t rhs) {
-	timestamp_t result;
-	if (Timestamp::TryConvertTimestamp(lhs.GetString().c_str(), lhs.GetString().length(), result) != TimestampCastResult::SUCCESS ){
-		return false;
-	}
-	return result == rhs;
-}
-
-template <>
-bool try_equal<timestamp_t, string_t> (timestamp_t lhs, string_t rhs) {
-	return try_equal(rhs, lhs);
-}
-
-template <>
-bool try_equal<string_t, date_t> (string_t lhs, date_t rhs) {
-	date_t result;
-	idx_t pos;
-	bool special = false;
-	if (!Date::TryConvertDate(lhs.GetString().c_str(), lhs.GetString().length(), pos, result, special, false)) {
-		return false;
-	}
-	return result == rhs;
-}
-
-template <>
-bool try_equal<date_t, string_t> (date_t lhs, string_t rhs) {
-	return try_equal(rhs, lhs);
-}
-
 template <typename LHS_TYPE, typename RHS_TYPE>
 void InExecute(DataChunk &args, ExpressionState &state, Vector &result) {
 
