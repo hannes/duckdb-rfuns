@@ -14,6 +14,7 @@ set(EXTENSION_SOURCES src/rfuns_extension.cpp
                       src/relop.cpp
                       src/is_na.cpp
                       src/as_integer.cpp
+                      src/as_character.cpp
                       src/dispatch.cpp
                       src/sum.cpp
                       src/minmax.cpp)
