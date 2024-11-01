@@ -31,7 +31,7 @@ jobs:
       - name: Checkout DuckDB to version
         run: |
           cd duckdb
-          git checkout v1.1.0
+          git checkout v1.1.2
 
       - name: build duckdb extension
         run: make
