@@ -6,6 +6,7 @@
 #include <climits>
 #include <limits>
 #include <cmath>
+#include <iostream>
 
 namespace duckdb {
 namespace rfuns {
@@ -13,28 +14,28 @@ namespace rfuns {
 namespace {
 
 template <typename physical_type>
-string_t to_string(physical_type x) {
-	return string_t(std::to_string(x));
+string to_string(physical_type x) {
+	return std::to_string(x);
 }
 
 template <>
-string_t to_string<bool>(bool x) {
-	return string_t(x ? "TRUE" : "FALSE");
+string to_string<bool>(bool x) {
+	return string(x ? "TRUE" : "FALSE");
 }
 
 template <>
-string_t to_string<string_t>(string_t x) {
-	return x;
+string to_string<string_t>(string_t x) {
+	return x.GetString();
 }
 
 template <>
-string_t to_string<date_t>(date_t x) {
-	return string_t(Date::ToString(x));
+string to_string<date_t>(date_t x) {
+	return Date::ToString(x);
 }
 
 template <>
-string_t to_string<timestamp_t>(timestamp_t x) {
-	return string_t(Timestamp::ToString(x));
+string to_string<timestamp_t>(timestamp_t x) {
+	return Timestamp::ToString(x);
 }
 
 template <LogicalTypeId TYPE>
@@ -43,7 +44,12 @@ ScalarFunction AsCharacterFunction() {
 
 	auto fun = [](DataChunk &args, ExpressionState &state, Vector &result) {
 		UnaryExecutor::Execute<physical_type, string_t>(
-			args.data[0], result, args.size(), to_string<physical_type>
+			args.data[0], 
+			result, 
+			args.size(), 
+			[&](physical_type input) {
+				return StringVector::AddString(result, to_string<physical_type>(input));
+			}
 		);
 	};
 	return ScalarFunction({TYPE}, LogicalType::VARCHAR, fun);
